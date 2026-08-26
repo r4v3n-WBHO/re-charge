@@ -1798,24 +1798,33 @@ body.webgl-off .partner__visual::after {
 
 .partner {
   display: grid;
-  grid-template-columns: 220px 1fr minmax(280px, 340px);
+  grid-template-columns: 1fr minmax(300px, 380px);
+  grid-template-areas:
+    "visual form"
+    "text   form";
+  column-gap: 3rem;
+  row-gap: 1.4rem;
   align-items: center;
-  gap: 2rem;
   background: #fff;
   border: 1px solid var(--border);
   border-left: 4px solid var(--accent);
   border-radius: var(--radius);
-  padding: 1.5rem 1.8rem;
+  padding: 1.8rem 2rem;
   box-shadow: var(--shadow);
 }
 
-.partner__done { grid-column: 3; }
+.partner__visual { grid-area: visual; justify-self: center; }
+.partner__text { grid-area: text; }
+.partner__form { grid-area: form; align-self: center; }
+.partner__done { grid-area: form; }
 
-@media (max-width: 1080px) {
-  .partner { grid-template-columns: 1fr; justify-items: start; }
+@media (max-width: 900px) {
+  .partner {
+    grid-template-columns: 1fr;
+    grid-template-areas: "visual" "text" "form";
+    justify-items: stretch;
+  }
   .partner__visual { justify-self: center; }
-  .partner__done { grid-column: auto; }
-  .partner__form { width: 100%; }
 }
 
 .partner__text h3 { margin-bottom: 0.35rem; }
