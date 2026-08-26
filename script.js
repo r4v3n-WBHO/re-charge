@@ -1,5 +1,9 @@
 // Re-Charge — interactions & scroll animations
 
+// Every form on this site is handled in JS; block native submission globally
+// (capture phase) so personal data can never end up in the URL.
+document.addEventListener('submit', (e) => e.preventDefault(), true);
+
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* ---------- Mobile nav toggle ---------- */
@@ -29,17 +33,20 @@ if (window.gsap && !reduceMotion) {
   document.documentElement.classList.add('js-anim');
   gsap.registerPlugin(ScrollTrigger);
 
-  // Hero entrance
-  const intro = gsap.timeline({ defaults: { ease: 'power3.out' } });
+  // Hero entrance (kept short — CTAs must be usable fast)
+  const intro = gsap.timeline({
+    defaults: { ease: 'power3.out' },
+    onComplete: () => { window.__introDone = true; },
+  });
   intro
-    .from('#heroTitle .line > span', { yPercent: 110, duration: 0.9, stagger: 0.12 }, 0.1)
+    .from('#heroTitle .line > span', { yPercent: 110, duration: 0.7, stagger: 0.08 }, 0.05)
     .fromTo('.hero-fade',
       { opacity: 0, y: 18 },
-      { opacity: 1, y: 0, duration: 0.7, stagger: 0.12 }, 0.4)
-    .from('#heroVisual', { opacity: 0, scale: 0.85, duration: 1.1, ease: 'power2.out' }, 0.3)
+      { opacity: 1, y: 0, duration: 0.5, stagger: 0.08 }, 0.25)
+    .from('#heroVisual', { opacity: 0, scale: 0.88, duration: 0.8, ease: 'power2.out' }, 0.2)
     .from('.hero__flow .flow__step, .hero__flow .flow__arrow', {
-      opacity: 0, y: 24, duration: 0.5, stagger: 0.08,
-    }, 0.8);
+      opacity: 0, y: 20, duration: 0.4, stagger: 0.05,
+    }, 0.5);
 
   // Section reveals
   document.querySelectorAll('.reveal').forEach((el) => {
@@ -82,6 +89,7 @@ if (window.gsap && !reduceMotion) {
 } else {
   // No GSAP (CDN blocked) or reduced motion: content stays visible via CSS defaults
   document.documentElement.classList.remove('js-anim');
+  window.__introDone = true;
 }
 
 /* ---------- 3D tilt on cards ---------- */
@@ -117,9 +125,14 @@ if (!reduceMotion && window.matchMedia('(hover: hover)').matches) {
 }
 
 /* ---------- Feedback form ---------- */
-// Submissions are stored in localStorage for now. To collect real responses,
-// point FEEDBACK_ENDPOINT at a Formspree/Google Apps Script/API endpoint.
-const FEEDBACK_ENDPOINT = ''; // e.g. 'https://formspree.io/f/xxxxxxx'
+// Endpoint lives in config.js (window.RECHARGE_CONFIG) — one place for all pages.
+// Until it's set, submissions are stored in the visitor's localStorage.
+const FEEDBACK_ENDPOINT = (window.RECHARGE_CONFIG || {}).FEEDBACK_ENDPOINT || '';
+
+// honeypot: bots fill the hidden "website" field; humans never see it
+function isSpam(form) {
+  return Boolean(form.website && form.website.value);
+}
 
 async function submitEntry(data) {
   data.submittedAt = new Date().toISOString();
@@ -147,8 +160,9 @@ form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
   const data = Object.fromEntries(new FormData(form).entries());
+  delete data.website;
   data.type = 'feedback';
-  await submitEntry(data);
+  if (!isSpam(form)) await submitEntry(data);
 
   form.hidden = true;
   thanks.hidden = false;
@@ -229,7 +243,7 @@ if (
     e.preventDefault();
     const email = slideinForm.email.value.trim();
     if (!email || !slideinForm.email.checkValidity()) { slideinForm.email.focus(); return; }
-    await submitEntry({ type: 'interest', source: 'slidein', email });
+    if (!isSpam(slideinForm)) await submitEntry({ type: 'interest', source: 'slidein', email });
     slideinForm.hidden = true;
     document.getElementById('slideinDone').hidden = false;
     setTimeout(() => {
@@ -238,6 +252,28 @@ if (
     }, 2500);
   });
 }
+
+/* ---------- Partner interest form ---------- */
+const partnerForm = document.getElementById('partnerForm');
+const partnerDone = document.getElementById('partnerDone');
+
+partnerForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (!partnerForm.business.value.trim() || !partnerForm.email.checkValidity()) {
+    (partnerForm.business.value.trim() ? partnerForm.email : partnerForm.business).focus();
+    return;
+  }
+  if (!isSpam(partnerForm)) {
+    await submitEntry({
+      type: 'partner',
+      business: partnerForm.business.value.trim(),
+      area: partnerForm.area.value.trim(),
+      email: partnerForm.email.value.trim(),
+    });
+  }
+  partnerForm.hidden = true;
+  partnerDone.hidden = false;
+});
 
 /* ---------- Notify strip (email capture) ---------- */
 const notifyForm = document.getElementById('notifyForm');
@@ -252,7 +288,7 @@ notifyForm.addEventListener('submit', async (e) => {
     return;
   }
 
-  await submitEntry({ type: 'interest', email });
+  if (!isSpam(notifyForm)) await submitEntry({ type: 'interest', email });
 
   notifyForm.querySelector('.notify__row').hidden = true;
   notifyDone.hidden = false;

@@ -53,9 +53,17 @@ the `main` branch root.
 
 ## TODO
 
-- [ ] Wire the feedback + notify + pre-order forms to a real endpoint
-      (`FEEDBACK_ENDPOINT` in `script.js` AND in `store.html`'s module —
-      Formspree free tier or a Google Apps Script → Sheet)
+- [ ] Wire all forms to a real endpoint: set `FEEDBACK_ENDPOINT` in
+      **`config.js`** (single place now — Formspree free tier or a Google
+      Apps Script → Sheet). Honeypot spam traps are already in every form.
+- [ ] Footer "Contact" currently points at the feedback form — swap for a
+      real `mailto:` once a project email address exists (marked with a TODO
+      comment in index.html; also store/scan footers)
+- [ ] Review the founder note wording in the Why section (index.html)
+- [ ] SRI hashes for CDN scripts deliberately omitted: hashes computed
+      through the WBHO proxy can't be trusted to match origin bytes, and a
+      wrong hash would block GSAP for all visitors. Add them from an
+      unproxied machine if wanted.
 - [ ] Sanity-check the indicative pre-order prices (R399/R599/R899) and
       rewards points values (50 RP/vape; 500/1000/2000 RP tiers)
 - [ ] **Legal review before anything is sold or any live rewards programme

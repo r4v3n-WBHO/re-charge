@@ -9,12 +9,13 @@
   <meta property="og:url" content="https://r4v3n-wbho.github.io/re-charge/store.html" />
   <meta property="og:title" content="Back Your Re-Charge One — A Pre-Order Is a Vote" />
   <meta property="og:description" content="Configure a power bank built from waste — reclaimed vape cells, recycled-bottle shell — and cast a free pre-order vote. No payment taken." />
-  <meta property="og:image" content="https://r4v3n-wbho.github.io/re-charge/og-image.png" />
+  <meta property="og:image" content="https://r4v3n-wbho.github.io/re-charge/store-og.png" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+  <script src="config.js"></script>
 </head>
 <body>
 
@@ -43,9 +44,10 @@
       </a>
       <nav class="nav__links">
         <a href="index.html#concept">The Concept</a>
+        <a href="index.html#rewards">Rewards</a>
         <a href="index.html#faq">FAQ</a>
         <a href="index.html#feedback">Give Feedback</a>
-        <a href="#configure" class="btn btn--small btn--primary">Back It</a>
+        <a href="#configure" class="btn btn--small btn--primary">Pre-Order (Free)</a>
       </nav>
       <button class="nav__toggle" aria-label="Open menu" aria-expanded="false">
         <span></span><span></span><span></span>
@@ -66,6 +68,13 @@
             inside, a recycled-bottle shell outside. If enough people back a build,
             we make it real.
           </p>
+        </div>
+
+        <!-- context for visitors who land here directly (ads, shares) -->
+        <div class="store__made" aria-label="What you're backing">
+          <span>🔋 Cells reclaimed from disposable vapes</span>
+          <span>🧴 Shell 3D-printed from recycled bottles</span>
+          <span>🗳️ Built only if enough people back it</span>
         </div>
 
         <div class="configurator">
@@ -105,7 +114,7 @@
               </dl>
 
               <!-- inline guard: never allow a native GET submit (would leak email into the URL) -->
-              <form class="preorder" id="preorderForm" novalidate onsubmit="event.preventDefault()">
+              <form class="preorder" id="preorderForm" novalidate action="javascript:void(0)" onsubmit="event.preventDefault()">
                 <label>
                   Name <span class="optional">optional</span>
                   <input type="text" name="name" autocomplete="name" placeholder="Your name" />
@@ -123,12 +132,18 @@
                     and independently safety-certified before sale.
                   </span>
                 </label>
+                <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
                 <button type="submit" class="btn btn--primary btn--large btn--full">Cast My Vote — Pre-Order Free</button>
                 <p class="preorder__small">
                   A pre-order is a free, non-binding vote with your name on it. No
                   payment details are taken and you can walk away at any time. If
                   enough people back a build, Re-Charge becomes real — and you'll be
                   first in line at the estimated price.
+                </p>
+                <p class="preorder__small">
+                  <strong>Honest timeline:</strong> if enough people back a build, we'd
+                  target a first prototype run in 2027. We'll email real progress —
+                  or the honest news that it didn't work out.
                 </p>
               </form>
 
@@ -138,7 +153,7 @@
                 <p id="preorderDoneDetail"></p>
                 <p class="preorder__small">We'll email you if Re-Charge One goes into production. Nothing to pay, nothing to cancel.</p>
 
-                <form class="followup" id="followupForm" onsubmit="event.preventDefault()">
+                <form class="followup" id="followupForm" action="javascript:void(0)" onsubmit="event.preventDefault()">
                   <label>
                     One last thing — what almost stopped you? <span class="optional">optional</span>
                     <textarea name="hesitation" rows="3" placeholder="Price? Safety worries? Trust? Nothing at all?"></textarea>
@@ -215,9 +230,9 @@
       <nav class="footer__links">
         <a href="index.html">Home</a>
         <a href="index.html#concept">The Concept</a>
-        <a href="store.html">Back It (Pre-Order)</a>
+        <a href="store.html">Pre-Order (Free)</a>
         <a href="index.html#feedback">Give Feedback</a>
-        <a href="mailto:hello@example.com">Contact</a>
+        <a href="index.html#feedback">Contact</a>
       </nav>
       <p class="footer__disclaimer">
         Re-Charge is an early-stage concept exploring battery recovery and
@@ -229,6 +244,10 @@
   </footer>
 
   <script>
+    // all forms here are JS-handled: block native submission globally so data
+    // can never leak into the URL
+    document.addEventListener('submit', (e) => e.preventDefault(), true);
+
     // nav toggle (self-contained — index's script.js expects index-only elements)
     const navToggle = document.querySelector('.nav__toggle');
     const navLinks = document.querySelector('.nav__links');
@@ -517,9 +536,26 @@
     }
     updateSummary();
 
+    /* ================= keyboard support for the radiogroups ================= */
+    function radiogroupKeys(groupEl, selector) {
+      groupEl.addEventListener('keydown', (e) => {
+        if (!['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp'].includes(e.key)) return;
+        e.preventDefault();
+        const items = [...groupEl.querySelectorAll(selector)];
+        const i = items.indexOf(document.activeElement);
+        if (i === -1) return;
+        const next = ['ArrowRight', 'ArrowDown'].includes(e.key)
+          ? items[(i + 1) % items.length]
+          : items[(i - 1 + items.length) % items.length];
+        next.focus();
+        next.click();
+      });
+    }
+    radiogroupKeys(swatchesEl, '.swatch');
+    radiogroupKeys(capacityEl, '.capacity__option');
+
     /* ================= pre-order submission ================= */
-    // keep in sync with FEEDBACK_ENDPOINT in script.js
-    const FEEDBACK_ENDPOINT = '';
+    const FEEDBACK_ENDPOINT = (window.RECHARGE_CONFIG || {}).FEEDBACK_ENDPOINT || '';
 
     const preorderForm = document.getElementById('preorderForm');
     const preorderDone = document.getElementById('preorderDone');
@@ -529,6 +565,7 @@
       e.preventDefault();
       if (!preorderForm.email.checkValidity()) { preorderForm.email.focus(); return; }
       if (!preorderForm.ack.checked) { preorderForm.ack.focus(); return; }
+      if (preorderForm.website.value) { preorderForm.hidden = true; preorderDone.hidden = false; return; } // honeypot
 
       const data = {
         type: 'preorder',

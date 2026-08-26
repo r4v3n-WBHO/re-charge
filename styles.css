@@ -754,6 +754,47 @@ h1 .line > span { display: inline-block; }
   white-space: nowrap;
 }
 
+/* ---------- Founder note ---------- */
+
+.founder {
+  margin-top: 2.6rem;
+  padding-top: 2.2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.founder__avatar {
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), #12c493);
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.3rem;
+  box-shadow: 0 6px 20px rgba(14, 159, 122, 0.4);
+}
+
+.founder__quote {
+  max-width: 34rem;
+  font-size: 1.02rem;
+  font-style: italic;
+  color: var(--text-light);
+  line-height: 1.7;
+}
+
+.founder__name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--accent-bright);
+}
+
 /* ---------- Feedback form ---------- */
 
 .feedback-form {
@@ -1117,6 +1158,44 @@ input:focus, textarea:focus {
 
 .footer__copyright { font-size: 0.8rem; opacity: 0.6; }
 
+/* ---------- Focus visibility (keyboard users) ---------- */
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.swatch:focus-visible {
+  outline: 3px solid var(--accent-strong);
+  outline-offset: 3px;
+}
+
+/* ---------- Honeypot (spam trap — humans never see it) ---------- */
+
+.hp {
+  position: absolute !important;
+  left: -9999px !important;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ---------- Animation safety net ---------- */
+/* if GSAP never starts (slow/blocked CDN), a 3s head timer adds this class */
+
+.anim-timeout .hero-fade,
+.anim-timeout .reveal,
+.anim-timeout .reveal-item,
+.anim-timeout #heroTitle .line > span,
+.anim-timeout .hero__flow .flow__step,
+.anim-timeout .hero__flow .flow__arrow,
+.anim-timeout #heroVisual {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
 /* ---------- Skip link ---------- */
 
 .skip-link {
@@ -1464,9 +1543,60 @@ input:focus, textarea:focus {
 .partner__text h3 { margin-bottom: 0.35rem; }
 .partner__text p { color: var(--text-muted); font-size: 0.95rem; max-width: 36rem; }
 
+.partner__points {
+  list-style: none;
+  margin-top: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.partner__points li {
+  position: relative;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.partner__points li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--accent-strong);
+  font-weight: 700;
+}
+
+.partner__form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  min-width: min(300px, 100%);
+}
+
+.partner__form label { font-weight: 600; font-size: 0.9rem; }
+.partner__form input { margin-top: 0.3rem; }
+
+.partner__small {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+}
+
+.partner__done {
+  font-weight: 600;
+  color: var(--accent-strong);
+  min-width: min(300px, 100%);
+}
+
 /* ---------- Scan demo ---------- */
 
 .scan { padding-top: clamp(2rem, 4vw, 3rem); }
+
+.scan__context {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-bottom: 1.1rem;
+  text-align: center;
+}
 
 .scan__demo-banner {
   background: #fff7e6;
@@ -1729,6 +1859,24 @@ input:focus, textarea:focus {
 .store__head { max-width: 44rem; margin-bottom: 2.5rem; }
 .store__head .pill { margin-bottom: 1.2rem; }
 .store__head h1 { margin-bottom: 0.9rem; }
+
+.store__made {
+  display: flex;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.store__made span {
+  padding: 0.5rem 1.05rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid var(--border);
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
 
 .configurator {
   display: grid;

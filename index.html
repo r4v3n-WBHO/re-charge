@@ -32,7 +32,7 @@
         "@type": "Organization",
         "name": "Re-Charge",
         "url": "https://r4v3n-wbho.github.io/re-charge/",
-        "logo": "https://r4v3n-wbho.github.io/re-charge/assets/logo-mark.svg",
+        "logo": "https://r4v3n-wbho.github.io/re-charge/assets/logo-mark.png",
         "slogan": "Power. Reclaimed.",
         "description": "An early-stage concept exploring how lithium-ion batteries from discarded disposable vapes could be safely recovered, tested and given a second life."
       },
@@ -83,6 +83,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+  <script src="config.js"></script>
+  <!-- safety net: if GSAP never runs (slow/blocked CDN), reveal all content after 3s -->
+  <script>setTimeout(function () { if (!window.__introDone) document.documentElement.classList.add('anim-timeout'); }, 3000);</script>
 </head>
 <body>
 
@@ -111,11 +114,10 @@
         RE<span class="logo-hyphen">-</span>CHARGE
       </a>
       <nav class="nav__links">
-        <a href="#problem">The Problem</a>
         <a href="#concept">The Concept</a>
         <a href="#product">Re-Charge One</a>
         <a href="#rewards">Rewards</a>
-        <a href="store.html">Back It</a>
+        <a href="store.html">Pre-Order (Free)</a>
         <a href="#feedback" class="btn btn--small btn--primary magnetic">Give Feedback</a>
       </nav>
       <button class="nav__toggle" aria-label="Open menu" aria-expanded="false">
@@ -144,7 +146,7 @@
             sending them straight to waste.
           </p>
           <div class="hero__actions hero-fade">
-            <a href="#feedback" class="btn btn--primary btn--large magnetic">Tell Us What You Think</a>
+            <a href="store.html" class="btn btn--primary btn--large magnetic">Back a Build — It's Free</a>
             <a href="#concept" class="btn btn--ghost btn--large magnetic">How It Works ↓</a>
           </div>
         </div>
@@ -186,7 +188,7 @@
           <span class="way__text"><strong>Tell us what you think</strong><small>Two minutes of honest feedback shapes the idea.</small></span>
           <span class="way__arrow" aria-hidden="true">→</span>
         </a>
-        <a href="#feedback" class="way">
+        <a href="#partners" class="way">
           <span class="way__icon" aria-hidden="true">🏪</span>
           <span class="way__text"><strong>Host a collection box</strong><small>For vape shops &amp; recycling partners.</small></span>
           <span class="way__arrow" aria-hidden="true">→</span>
@@ -374,16 +376,33 @@
           </div>
         </div>
 
-        <div class="partner reveal">
+        <div class="partner reveal" id="partners">
           <div class="partner__text">
-            <h3>🏪 Run a vape shop?</h3>
-            <p>
-              Host a collection box and your counter becomes a Re-Charge point —
-              foot traffic for you, deposits validated by your staff, less e-waste
-              for everyone.
-            </p>
+            <h3>🏪 Run a vape shop or collection-friendly business?</h3>
+            <p>Host a Re-Charge collection box and your counter becomes a collection point.</p>
+            <ul class="partner__points">
+              <li>Box supplied free — we'd handle collection and recycling logistics</li>
+              <li>Deposits validated with one staff tap — no admin, no storage headaches beyond the box</li>
+              <li>Foot traffic and co-branding as a founding collection point</li>
+            </ul>
           </div>
-          <a href="#feedback" class="btn btn--ghost magnetic">I'd Host a Box →</a>
+          <form class="partner__form" id="partnerForm" novalidate action="javascript:void(0)" onsubmit="event.preventDefault()">
+            <label>Business name
+              <input type="text" name="business" required placeholder="Your shop or business" />
+            </label>
+            <label>Area / suburb <span class="optional">optional</span>
+              <input type="text" name="area" placeholder="e.g. Randburg, JHB" />
+            </label>
+            <label>Email
+              <input type="email" name="email" required placeholder="you@business.co.za" />
+            </label>
+            <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+            <button type="submit" class="btn btn--primary">Register Interest — Free</button>
+            <p class="partner__small">No commitment. Founding partners get first pick of locations if this launches.</p>
+          </form>
+          <p class="partner__done" id="partnerDone" hidden>
+            Thanks — you're on the founding-partner list. We'll be in touch as the concept develops. 🏪⚡
+          </p>
         </div>
       </div>
     </section>
@@ -404,6 +423,16 @@
           outside. Before we build anything, we want to hear from the people who would
           actually use it.
         </p>
+
+        <div class="founder reveal">
+          <span class="founder__avatar" aria-hidden="true">R</span>
+          <blockquote class="founder__quote">
+            "I kept seeing dead disposables on pavements and in bins and thought:
+            that's a battery, not rubbish. Before building anything, I want to know
+            if you see it too."
+          </blockquote>
+          <span class="founder__name">— Revan, founder</span>
+        </div>
       </div>
     </section>
 
@@ -421,7 +450,7 @@
         </div>
 
         <!-- inline guard: never allow a native GET submit (would leak answers into the URL) -->
-        <form class="feedback-form reveal" id="feedbackForm" novalidate onsubmit="event.preventDefault()">
+        <form class="feedback-form reveal" id="feedbackForm" novalidate action="javascript:void(0)" onsubmit="event.preventDefault()">
           <div class="form-row form-row--split">
             <label>
               Name <span class="optional">optional</span>
@@ -480,6 +509,7 @@
             </label>
           </div>
 
+          <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
           <button type="submit" class="btn btn--primary btn--large btn--full magnetic">Submit Feedback</button>
         </form>
 
@@ -588,10 +618,11 @@
           <a href="#feedback" class="btn btn--ghost-light btn--large magnetic">Share Your Feedback</a>
         </div>
 
-        <form class="notify" id="notifyForm" novalidate onsubmit="event.preventDefault()">
+        <form class="notify" id="notifyForm" novalidate action="javascript:void(0)" onsubmit="event.preventDefault()">
           <p class="notify__label">Or just leave your email — we'll let you know if Re-Charge becomes real.</p>
           <div class="notify__row">
             <input type="email" name="email" required placeholder="you@example.com" autocomplete="email" aria-label="Email address" />
+            <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
             <button type="submit" class="btn btn--primary">Notify Me</button>
           </div>
           <p class="notify__done" id="notifyDone" hidden>You're on the list. Thanks for believing in second lives. ⚡</p>
@@ -623,14 +654,17 @@
         <a href="#top">Home</a>
         <a href="#concept">The Concept</a>
         <a href="#rewards">Rewards</a>
-        <a href="store.html">Back It (Pre-Order)</a>
+        <a href="store.html">Pre-Order (Free)</a>
         <a href="#feedback">Give Feedback</a>
         <a href="#faq">FAQ</a>
-        <a href="mailto:hello@example.com">Contact</a>
+        <a href="#partners">Partners</a>
+        <!-- TODO: swap for a real mailto once a project address exists -->
+        <a href="#feedback">Contact</a>
       </nav>
       <p class="footer__disclaimer">
         Re-Charge is an early-stage concept exploring battery recovery and
-        circular-economy solutions. No products are currently available for purchase.
+        circular-economy solutions — concept phase started August 2026.
+        No products are currently available for purchase.
         Products, rewards and points values shown are illustrative. Any future product
         using reclaimed lithium-ion cells would be clearly labelled as such and sold
         only after independent safety testing and certification.
@@ -651,8 +685,9 @@
     <button type="button" class="slidein__close" id="slideinClose" aria-label="Dismiss">✕</button>
     <p class="slidein__title"><strong>Like the idea?</strong></p>
     <p class="slidein__text">One email if Re-Charge becomes real. No spam, ever.</p>
-    <form id="slideinForm" onsubmit="event.preventDefault()">
+    <form id="slideinForm" action="javascript:void(0)" onsubmit="event.preventDefault()">
       <input type="email" name="email" required placeholder="you@example.com" aria-label="Email address" />
+      <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
       <button type="submit" class="btn btn--primary btn--small">Notify Me</button>
     </form>
     <p class="slidein__done" id="slideinDone" hidden>You're on the list ⚡</p>
