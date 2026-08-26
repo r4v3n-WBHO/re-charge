@@ -488,9 +488,27 @@ h1 .line > span { display: inline-block; }
   background: var(--bg-tint);
   border: 1px solid var(--border);
   transition: transform 0.2s;
+  animation: flow-active 6s ease-in-out infinite;
 }
 
-.flow__step:hover .flow__icon { transform: scale(1.08); }
+/* the process runs: each stage lights up in turn, forever */
+.flow > .flow__step:nth-child(1) .flow__icon { animation-delay: 0s; }
+.flow > .flow__step:nth-child(3) .flow__icon { animation-delay: 1.5s; }
+.flow > .flow__step:nth-child(5) .flow__icon { animation-delay: 3s; }
+.flow > .flow__step:nth-child(7) .flow__icon { animation-delay: 4.5s; }
+
+@keyframes flow-active {
+  0%, 22%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(14, 159, 122, 0);
+  }
+  9% {
+    transform: scale(1.14);
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    box-shadow: 0 0 18px rgba(14, 159, 122, 0.45);
+  }
+}
 
 .flow__step--accent .flow__icon {
   background: var(--accent-soft);
@@ -503,12 +521,17 @@ h1 .line > span { display: inline-block; }
   color: var(--accent);
   font-weight: 700;
   font-size: 1.1rem;
-  animation: arrow-nudge 1.6s ease-in-out infinite;
+  animation: flow-arrow 6s ease-in-out infinite;
 }
 
-@keyframes arrow-nudge {
-  0%, 100% { transform: translateX(0); opacity: 0.6; }
-  50% { transform: translateX(5px); opacity: 1; }
+/* arrows "pass the charge" to the next stage, in sync with the icons */
+.flow > .flow__arrow:nth-child(2) { animation-delay: 0.95s; }
+.flow > .flow__arrow:nth-child(4) { animation-delay: 2.45s; }
+.flow > .flow__arrow:nth-child(6) { animation-delay: 3.95s; }
+
+@keyframes flow-arrow {
+  0%, 14%, 100% { transform: translateX(0); opacity: 0.45; }
+  6% { transform: translateX(6px); opacity: 1; color: var(--accent-strong); }
 }
 
 /* ---------- Marquee ---------- */
@@ -2395,8 +2418,8 @@ input:focus, select:focus, textarea:focus {
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .hero-fade, .reveal, .reveal-item { opacity: 1 !important; transform: none !important; }
-  .marquee__track, .bg__blob, .flow__arrow, .cta__spark, .hero__glow, .pill__dot,
-  .nav__charge-fill { animation: none; }
+  .marquee__track, .bg__blob, .flow__arrow, .flow__icon, .cta__spark, .hero__glow,
+  .pill__dot, .nav__charge-fill { animation: none; }
 }
 
 /* ---------- Responsive ---------- */

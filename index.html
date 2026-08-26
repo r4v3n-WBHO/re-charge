@@ -876,6 +876,34 @@
       ).observe(entry.canvas);
     }
 
+    // draws the Circular Energy mark (battery + bolt in the loop) on a 2D canvas
+    function drawMark(c, cx, cy, size, color) {
+      const k = size / 64, ox = cx - 32 * k, oy = cy - 32 * k;
+      const rad = (d) => (d * Math.PI) / 180;
+      const rr = (x, y, w, h, r) => {
+        c.beginPath();
+        if (c.roundRect) c.roundRect(x * k + ox, y * k + oy, w * k, h * k, r * k);
+        else c.rect(x * k + ox, y * k + oy, w * k, h * k);
+      };
+      const poly = (pts) => {
+        c.beginPath();
+        pts.forEach(([x, y], i) => c[i ? 'lineTo' : 'moveTo'](x * k + ox, y * k + oy));
+        c.closePath(); c.fill();
+      };
+      c.save();
+      c.strokeStyle = color; c.fillStyle = color; c.lineCap = 'round';
+      c.lineWidth = 5 * k;
+      c.beginPath(); c.arc(32 * k + ox, 32 * k + oy, 24 * k, rad(200), rad(340)); c.stroke();
+      c.beginPath(); c.arc(32 * k + ox, 32 * k + oy, 24 * k, rad(20), rad(160)); c.stroke();
+      poly([[56.95, 30.4], [51.25, 25], [57.85, 22.6]]);
+      poly([[7.05, 33.6], [12.75, 39], [6.15, 41.4]]);
+      rr(28.5, 13, 7, 4.5, 1.5); c.fill();
+      c.lineWidth = 3.2 * k;
+      rr(23, 17, 18, 30, 4); c.stroke();
+      poly([[33.5, 21], [26.5, 33.5], [31.2, 33.5], [30, 43], [37.8, 29.5], [32.8, 29.5]]);
+      c.restore();
+    }
+
     /* ---------- Hero: recovered battery cell ---------- */
     function initHero() {
       const canvas = document.getElementById('heroCanvas');
@@ -905,14 +933,18 @@
       c.fillStyle = 'rgba(255,255,255,0.12)';
       c.fillRect(0, 0, 1024, 26);
       c.fillRect(0, 486, 1024, 26);
-      c.fillStyle = '#ffffff';
-      c.font = '700 92px "Space Grotesk", sans-serif';
+      // two logo lockups so the mark faces the viewer from most angles
       c.textAlign = 'center';
-      c.textBaseline = 'middle';
-      c.fillText('RE-CHARGE ⚡ RE-CHARGE ⚡', 512, 236);
-      c.font = '600 40px "Inter", sans-serif';
-      c.fillStyle = 'rgba(255,255,255,0.75)';
-      c.fillText('RECOVERED  LITHIUM-ION  CELL', 512, 344);
+      c.textBaseline = 'alphabetic';
+      [256, 768].forEach((cx) => {
+        drawMark(c, cx, 180, 185, '#ffffff');
+        c.fillStyle = '#ffffff';
+        c.font = '700 72px "Space Grotesk", sans-serif';
+        c.fillText('RE-CHARGE', cx, 372);
+        c.fillStyle = 'rgba(255,255,255,0.75)';
+        c.font = '600 30px "Inter", sans-serif';
+        c.fillText('RECOVERED LI-ION CELL', cx, 424);
+      });
       const labelTex = new THREE.CanvasTexture(label);
       labelTex.colorSpace = THREE.SRGBColorSpace;
       labelTex.anisotropy = 8;
@@ -1039,12 +1071,13 @@
       label.width = 512; label.height = 1024;
       const c = label.getContext('2d');
       c.textAlign = 'center';
+      drawMark(c, 256, 92, 125, '#ffffff');
       c.fillStyle = '#ffffff';
-      c.font = '700 64px "Space Grotesk", sans-serif';
-      c.fillText('RE-CHARGE', 256, 170);
+      c.font = '700 60px "Space Grotesk", sans-serif';
+      c.fillText('RE-CHARGE', 256, 252);
       c.fillStyle = '#2df0b2';
-      c.font = '700 46px "Space Grotesk", sans-serif';
-      c.fillText('O N E', 256, 240);
+      c.font = '700 42px "Space Grotesk", sans-serif';
+      c.fillText('O N E', 256, 316);
       // charge bars
       const barW = 300, barH = 42, bx = (512 - barW) / 2;
       for (let i = 0; i < 4; i++) {
@@ -1162,9 +1195,7 @@
       lc.fillStyle = 'rgba(255,255,255,0.85)';
       lc.fillText("DON'T BIN YOUR VAPE.", 256, 400);
       lc.fillText('DROP IT HERE.', 256, 448);
-      lc.fillStyle = '#2df0b2';
-      lc.font = '700 120px "Space Grotesk", sans-serif';
-      lc.fillText('⚡', 256, 300);
+      drawMark(lc, 256, 275, 150, '#ffffff');
       const lblTex = new THREE.CanvasTexture(lbl);
       lblTex.colorSpace = THREE.SRGBColorSpace;
       const label = new THREE.Mesh(

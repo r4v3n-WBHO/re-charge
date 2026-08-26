@@ -386,17 +386,46 @@
     indicator.rotation.x = Math.PI / 2;
     bank.add(board, indicator);
 
+    // draws the Circular Energy mark (battery + bolt in the loop) on a 2D canvas
+    function drawMark(c, cx, cy, size, color) {
+      const k = size / 64, ox = cx - 32 * k, oy = cy - 32 * k;
+      const rad = (d) => (d * Math.PI) / 180;
+      const rr = (x, y, w, h, r) => {
+        c.beginPath();
+        if (c.roundRect) c.roundRect(x * k + ox, y * k + oy, w * k, h * k, r * k);
+        else c.rect(x * k + ox, y * k + oy, w * k, h * k);
+      };
+      const poly = (pts) => {
+        c.beginPath();
+        pts.forEach(([x, y], i) => c[i ? 'lineTo' : 'moveTo'](x * k + ox, y * k + oy));
+        c.closePath(); c.fill();
+      };
+      c.save();
+      c.strokeStyle = color; c.fillStyle = color; c.lineCap = 'round';
+      c.lineWidth = 5 * k;
+      c.beginPath(); c.arc(32 * k + ox, 32 * k + oy, 24 * k, rad(200), rad(340)); c.stroke();
+      c.beginPath(); c.arc(32 * k + ox, 32 * k + oy, 24 * k, rad(20), rad(160)); c.stroke();
+      poly([[56.95, 30.4], [51.25, 25], [57.85, 22.6]]);
+      poly([[7.05, 33.6], [12.75, 39], [6.15, 41.4]]);
+      rr(28.5, 13, 7, 4.5, 1.5); c.fill();
+      c.lineWidth = 3.2 * k;
+      rr(23, 17, 18, 30, 4); c.stroke();
+      poly([[33.5, 21], [26.5, 33.5], [31.2, 33.5], [30, 43], [37.8, 29.5], [32.8, 29.5]]);
+      c.restore();
+    }
+
     // logo plane on the front face
     const logoCanvas = document.createElement('canvas');
     logoCanvas.width = 512; logoCanvas.height = 256;
     const lc = logoCanvas.getContext('2d');
+    drawMark(lc, 96, 128, 145, '#ffffff');
     lc.textAlign = 'center';
     lc.fillStyle = '#ffffff';
-    lc.font = '700 58px "Space Grotesk", sans-serif';
-    lc.fillText('RE-CHARGE', 256, 110);
+    lc.font = '700 52px "Space Grotesk", sans-serif';
+    lc.fillText('RE-CHARGE', 316, 118);
     lc.fillStyle = '#2df0b2';
-    lc.font = '700 40px "Space Grotesk", sans-serif';
-    lc.fillText('O N E', 256, 170);
+    lc.font = '700 36px "Space Grotesk", sans-serif';
+    lc.fillText('O N E', 316, 172);
     const logoTex = new THREE.CanvasTexture(logoCanvas);
     logoTex.colorSpace = THREE.SRGBColorSpace;
     const logo = new THREE.Mesh(
