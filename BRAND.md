@@ -62,6 +62,19 @@ Gradient: `linear-gradient(135deg, #0e9f7a, #12c493)` for buttons/mark fills.
 - *Recover. Reuse. Re-Charge.* — bin/loop messaging, pairs with the marquee chant
 - *Built for a second life.* — product & bin messaging
 
+## Rewards economics (design principles, decided Aug 2026)
+
+- A returner with many vapes is a **supplier, not an exploiter** — each device
+  delivers the raw material. Welcome volume; route big hauls through a bulk
+  channel at a negotiated rate instead of per-device points.
+- Guardrails: per-person **daily earn caps**, **redemption capped per order**
+  (points discount a product, never below marginal cash cost — no accidental
+  free products), **12-month expiry**, and points issued only against
+  **validated deposits** (append-only ledger when the backend exists).
+- The deliberate exception: if unit economics prove out, "bring us ~80 dead
+  vapes, walk away with a power bank built from them" can be enabled
+  intentionally as a flagship marketing story — a decision, not a loophole.
+
 ## Collection bin (concept spec, Aug 2026 board)
 
 Re-Charge Green wheelie bin, ~30 L HDPE, 560×310×290 mm, lockable lid
