@@ -81,6 +81,12 @@ the `main` branch root.
       safety certification (e.g. IEC 62133) and product-liability insurance
 - [ ] Rewards backend when real: unique per-deposit QR codes or shop-staff
       validation (anti-fraud), accounts + point balances (Supabase would fit)
+- [ ] **Bin locations map** (when real bins exist): Leaflet + OpenStreetMap
+      (free, no API key, no tracking — fits the privacy stance; Google Maps
+      would need an API key + billing account). Pins from a simple JSON file
+      at first (name, venue type, lat/lng, hours), later from the backend.
+      Partner-form "area" answers are the seed data for where the first pins
+      go. Each bin's QR should carry ?src=bin-<id> so scans attribute per bin.
 - [ ] Replace `hello@example.com` contact link in the footer
 - [ ] Add analytics (Plausible/GoatCounter snippet placeholder is in `<head>`)
 - [ ] Swap the placeholder domain `https://re-charge.example` for the real one
