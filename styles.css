@@ -535,6 +535,99 @@ h1 .line > span { display: inline-block; }
 .card h3 { margin-bottom: 0.55rem; transform: translateZ(20px); }
 .card p { color: var(--text-muted); font-size: 0.97rem; transform: translateZ(12px); }
 
+/* ---------- Problem stats band ---------- */
+
+.stats {
+  margin-top: 2.6rem;
+  background:
+    radial-gradient(ellipse 70% 80% at 50% 0%, rgba(14, 159, 122, 0.2), transparent),
+    var(--bg-dark);
+  border-radius: var(--radius-lg);
+  padding: clamp(1.8rem, 4vw, 2.8rem);
+  color: var(--text-light);
+}
+
+.stats__title {
+  font-size: 0.85rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent-bright);
+  margin-bottom: 1.6rem;
+}
+
+.stats__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.8rem;
+}
+
+.stat__num {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  line-height: 1.05;
+  color: #fff;
+  margin-bottom: 0.4rem;
+}
+
+.stat__num em {
+  font-style: normal;
+  font-size: 0.42em;
+  color: var(--accent-bright);
+  margin-left: 0.25rem;
+}
+
+.stat p {
+  font-size: 0.92rem;
+  color: var(--text-light-muted);
+  line-height: 1.55;
+}
+
+.stat sup a,
+.stats__note sup a {
+  color: var(--accent-bright);
+  text-decoration: none;
+  font-weight: 700;
+  padding: 0 0.15em;
+}
+
+.stats__note {
+  margin-top: 1.8rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  font-size: 0.97rem;
+  color: var(--text-light);
+  max-width: 52rem;
+}
+
+.stats__note strong { color: var(--accent-bright); }
+
+.stats__sources {
+  margin-top: 1.2rem;
+  padding-left: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.stats__sources li {
+  font-size: 0.74rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.stats__sources a {
+  color: rgba(255, 255, 255, 0.65);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.stats__sources a:hover { color: var(--accent-bright); }
+
+@media (max-width: 720px) {
+  .stats__grid { grid-template-columns: 1fr; gap: 1.4rem; }
+}
+
 /* ---------- Steps timeline ---------- */
 
 .steps {
@@ -834,6 +927,7 @@ fieldset.form-row { border: 0; }
 
 input[type="text"],
 input[type="email"],
+select,
 textarea {
   width: 100%;
   margin-top: 0.45rem;
@@ -848,7 +942,7 @@ textarea {
   resize: vertical;
 }
 
-input:focus, textarea:focus {
+input:focus, select:focus, textarea:focus {
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 4px rgba(14, 159, 122, 0.14);

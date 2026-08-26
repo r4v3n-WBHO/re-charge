@@ -254,6 +254,32 @@ if (
   });
 }
 
+/* ---------- Stat count-up (problem section) ---------- */
+const statCounts = document.querySelectorAll('.stat__count');
+if (statCounts.length) {
+  const runCount = (el) => {
+    const target = parseInt(el.dataset.count, 10);
+    if (reduceMotion) { el.textContent = target.toLocaleString('en-ZA'); return; }
+    const start = performance.now();
+    const dur = 1400;
+    (function tick(now) {
+      const t = Math.min(1, (now - start) / dur);
+      const eased = 1 - Math.pow(1 - t, 3);
+      el.textContent = Math.round(target * eased).toLocaleString('en-ZA');
+      if (t < 1) requestAnimationFrame(tick);
+    })(start);
+  };
+  const statObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        runCount(entry.target);
+        statObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.6 });
+  statCounts.forEach((el) => statObserver.observe(el));
+}
+
 /* ---------- Partner interest form ---------- */
 const partnerForm = document.getElementById('partnerForm');
 const partnerDone = document.getElementById('partnerDone');
@@ -268,6 +294,7 @@ partnerForm.addEventListener('submit', async (e) => {
     await submitEntry({
       type: 'partner',
       business: partnerForm.business.value.trim(),
+      venueType: partnerForm.venueType.value,
       area: partnerForm.area.value.trim(),
       email: partnerForm.email.value.trim(),
     });

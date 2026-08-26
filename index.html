@@ -189,8 +189,8 @@
           <span class="way__arrow" aria-hidden="true">→</span>
         </a>
         <a href="#partners" class="way">
-          <span class="way__icon" aria-hidden="true">🏪</span>
-          <span class="way__text"><strong>Host a collection box</strong><small>For vape shops &amp; recycling partners.</small></span>
+          <span class="way__icon" aria-hidden="true">📍</span>
+          <span class="way__text"><strong>Host a collection bin</strong><small>Vape shops, bars, clubs, festivals, campuses.</small></span>
           <span class="way__arrow" aria-hidden="true">→</span>
         </a>
       </div>
@@ -232,6 +232,37 @@
             <h3>A Second Life</h3>
             <p>Re-Charge wants to explore recovering suitable components for new applications.</p>
           </div>
+        </div>
+
+        <div class="stats reveal" aria-label="The scale of the vape waste problem">
+          <h3 class="stats__title">The scale of it</h3>
+          <div class="stats__grid">
+            <div class="stat">
+              <span class="stat__num"><span class="stat__count" data-count="8">0</span><em>/second</em></span>
+              <p>single-use vapes binned in the UK alone — 5 million every week<sup><a href="#stat-sources">1</a></sup></p>
+            </div>
+            <div class="stat">
+              <span class="stat__num"><span class="stat__count" data-count="844">0</span><em>million</em></span>
+              <p>vaping devices discarded worldwide every single year<sup><a href="#stat-sources">2</a></sup></p>
+            </div>
+            <div class="stat">
+              <span class="stat__num">~<span class="stat__count" data-count="5000">0</span></span>
+              <p>electric cars could be powered by the lithium &amp; copper in the UK's yearly binned vapes<sup><a href="#stat-sources">3</a></sup></p>
+            </div>
+          </div>
+          <p class="stats__note">
+            And here's the part that drives Re-Charge: the battery inside a "disposable"
+            vape is a <strong>rechargeable</strong> cell, built to survive hundreds of
+            charge cycles<sup><a href="#stat-sources">4</a></sup> — used once, then thrown
+            away. South African numbers aren't even properly tracked yet. That's part of
+            what we want to change.
+          </p>
+          <ol class="stats__sources" id="stat-sources">
+            <li><a href="https://materialfocus.org.uk/?press-releases=disposable-single-use-vapes-thrown-away-have-quadrupled-to-5-million-per-week" target="_blank" rel="noopener">Material Focus (UK, 2023)</a> — 5 million single-use vapes thrown away weekly, 8 per second</li>
+            <li><a href="https://pirg.org/edfund/resources/vape-waste-the-environmental-harms-of-disposable-vapes/" target="_blank" rel="noopener">UNITAR, via US PIRG</a> — 844 million vaping devices discarded per year globally</li>
+            <li><a href="https://materialfocus.org.uk/?press-releases=disposable-single-use-vapes-thrown-away-have-quadrupled-to-5-million-per-week" target="_blank" rel="noopener">Material Focus</a> — lithium &amp; copper in the UK's ~360 million yearly vapes ≈ 5,000 EV batteries</li>
+            <li><a href="https://www.ox.ac.uk/news/2023-12-14-study-finds-vast-amounts-waste-are-caused-single-use-e-cigarette-batteries" target="_blank" rel="noopener">University of Oxford / UCL (2023)</a> — single-use vape cells can endure hundreds of recharge cycles</li>
+          </ol>
         </div>
       </div>
     </section>
@@ -378,17 +409,31 @@
 
         <div class="partner reveal" id="partners">
           <div class="partner__text">
-            <h3>🏪 Run a vape shop or collection-friendly business?</h3>
-            <p>Host a Re-Charge collection box and your counter becomes a collection point.</p>
+            <h3>📍 Put a Re-Charge bin at your venue</h3>
+            <p>
+              Vape shop, bar, nightclub, festival, campus, office park — anywhere
+              vapes get used is somewhere they get thrown away. Your venue becomes
+              a collection point.
+            </p>
             <ul class="partner__points">
-              <li>Box supplied free — we'd handle collection and recycling logistics</li>
-              <li>Deposits validated with one staff tap — no admin, no storage headaches beyond the box</li>
-              <li>Foot traffic and co-branding as a founding collection point</li>
+              <li>Bin supplied free, sized for your space — we'd handle collection and recycling logistics</li>
+              <li>Deposits validated with one staff tap — no admin, no storage headaches beyond the bin</li>
+              <li>Foot traffic, event activations and co-branding as a founding collection point</li>
             </ul>
           </div>
           <form class="partner__form" id="partnerForm" novalidate action="javascript:void(0)" onsubmit="event.preventDefault()">
-            <label>Business name
-              <input type="text" name="business" required placeholder="Your shop or business" />
+            <label>Business / venue name
+              <input type="text" name="business" required placeholder="Your venue or business" />
+            </label>
+            <label>Venue type
+              <select name="venueType">
+                <option>Vape shop</option>
+                <option>Bar / nightclub</option>
+                <option>Festival / events</option>
+                <option>Retail / grocery</option>
+                <option>Office / campus</option>
+                <option>Other</option>
+              </select>
             </label>
             <label>Area / suburb <span class="optional">optional</span>
               <input type="text" name="area" placeholder="e.g. Randburg, JHB" />
