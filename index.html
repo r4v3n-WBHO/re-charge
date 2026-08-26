@@ -1190,7 +1190,7 @@
       const renderer = makeRenderer(canvas);
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 50);
-      camera.position.set(0, 0.9, 7);
+      camera.position.set(0, 0.7, 8.6);
       addEnvironment(renderer, scene);
 
       scene.add(new THREE.HemisphereLight(0xffffff, 0x9fc4b8, 0.9));
@@ -1285,7 +1285,7 @@
       axle.position.set(0, -BODY_H / 2 - 0.08, -0.62);
       bin.add(axle);
 
-      bin.position.y = 0.18;
+      bin.position.y = -0.05;
       bin.rotation.y = -0.35;
       scene.add(bin);
 
