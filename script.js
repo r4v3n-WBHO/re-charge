@@ -121,15 +121,8 @@ if (!reduceMotion && window.matchMedia('(hover: hover)').matches) {
 // point FEEDBACK_ENDPOINT at a Formspree/Google Apps Script/API endpoint.
 const FEEDBACK_ENDPOINT = ''; // e.g. 'https://formspree.io/f/xxxxxxx'
 
-const form = document.getElementById('feedbackForm');
-const thanks = document.getElementById('feedbackThanks');
-
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-
-  const data = Object.fromEntries(new FormData(form).entries());
+async function submitEntry(data) {
   data.submittedAt = new Date().toISOString();
-
   try {
     if (FEEDBACK_ENDPOINT) {
       await fetch(FEEDBACK_ENDPOINT, {
@@ -143,8 +136,19 @@ form.addEventListener('submit', async (e) => {
       localStorage.setItem('recharge-feedback', JSON.stringify(stored));
     }
   } catch (err) {
-    console.error('Feedback submission failed:', err);
+    console.error('Submission failed:', err);
   }
+}
+
+const form = document.getElementById('feedbackForm');
+const thanks = document.getElementById('feedbackThanks');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const data = Object.fromEntries(new FormData(form).entries());
+  data.type = 'feedback';
+  await submitEntry(data);
 
   form.hidden = true;
   thanks.hidden = false;
@@ -152,4 +156,26 @@ form.addEventListener('submit', async (e) => {
     gsap.from(thanks, { opacity: 0, scale: 0.92, duration: 0.5, ease: 'back.out(1.6)' });
   }
   thanks.scrollIntoView({ behavior: 'smooth', block: 'center' });
+});
+
+/* ---------- Notify strip (email capture) ---------- */
+const notifyForm = document.getElementById('notifyForm');
+const notifyDone = document.getElementById('notifyDone');
+
+notifyForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const email = notifyForm.email.value.trim();
+  if (!email || !notifyForm.email.checkValidity()) {
+    notifyForm.email.focus();
+    return;
+  }
+
+  await submitEntry({ type: 'interest', email });
+
+  notifyForm.querySelector('.notify__row').hidden = true;
+  notifyDone.hidden = false;
+  if (window.gsap && !reduceMotion) {
+    gsap.from(notifyDone, { opacity: 0, y: 10, duration: 0.5, ease: 'power2.out' });
+  }
 });

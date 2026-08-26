@@ -43,7 +43,10 @@ the `main` branch root.
 
 ## TODO
 
-- [ ] Wire the feedback form to a real endpoint (Formspree / Google Sheet)
+- [ ] Wire the feedback + notify forms to a real endpoint (`FEEDBACK_ENDPOINT`
+      in `script.js` — Formspree free tier or a Google Apps Script → Sheet)
 - [ ] Replace `hello@example.com` contact link in the footer
-- [ ] Add analytics if needed (e.g. Plausible/GoatCounter for a lightweight option)
+- [ ] Add analytics (Plausible/GoatCounter snippet placeholder is in `<head>`)
+- [ ] Make `og:image`/`og:url` absolute URLs once deployed (social platforms
+      require absolute image URLs)
 - [ ] Real domain + favicon/logo assets

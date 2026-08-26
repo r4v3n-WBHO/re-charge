@@ -5,6 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Re-Charge — Power. Reclaimed.</title>
   <meta name="description" content="Re-Charge is an early-stage concept exploring how batteries from discarded disposable vapes could be safely recovered, tested and given a second life." />
+
+  <!-- Social sharing (og:image/og:url should become absolute URLs once deployed) -->
+  <meta property="og:title" content="Re-Charge — Power. Reclaimed." />
+  <meta property="og:description" content="What if your dead vape could get a second life? An early-stage concept exploring recovery and reuse of disposable-vape batteries. Tell us what you think." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Re-Charge — Power. Reclaimed." />
+  <meta name="twitter:description" content="What if your dead vape could get a second life? Help us decide whether this idea should become real." />
+  <meta name="twitter:image" content="og-image.png" />
+
+  <!-- Analytics: when deployed, drop in Plausible/GoatCounter snippet here -->
+
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔋</text></svg>" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -232,6 +245,16 @@
           </div>
 
           <fieldset class="form-row">
+            <legend>Which best describes you?</legend>
+            <div class="choices choices--inline">
+              <label><input type="radio" name="audience" value="I vape" /><span>I vape</span></label>
+              <label><input type="radio" name="audience" value="Vape shop owner/staff" /><span>Vape shop owner / staff</span></label>
+              <label><input type="radio" name="audience" value="Recycling / waste industry" /><span>Recycling &amp; waste industry</span></label>
+              <label><input type="radio" name="audience" value="Just curious" /><span>Just curious</span></label>
+            </div>
+          </fieldset>
+
+          <fieldset class="form-row">
             <legend>What do you think of the idea?</legend>
             <div class="choices">
               <label><input type="radio" name="idea" value="Great idea — I'd use it" /><span>Great idea — I'd use it</span></label>
@@ -278,6 +301,64 @@
       </div>
     </section>
 
+    <!-- ============ FAQ ============ -->
+    <section class="section" id="faq">
+      <div class="container container--narrow">
+        <div class="section__head section__head--center reveal">
+          <span class="eyebrow">Honest Answers</span>
+          <h2>Questions we keep getting asked.</h2>
+        </div>
+        <div class="faq reveal">
+          <details class="faq__item">
+            <summary>Is reusing recovered lithium batteries safe?</summary>
+            <p>
+              Only if it's done properly — and that's exactly what we're investigating.
+              In the concept, every recovered cell would be inspected for damage,
+              capacity-tested and safety-checked before it could ever be reused.
+              Anything that doesn't pass would go to certified battery recycling
+              instead of a bin. If we can't make that process reliably safe, Re-Charge
+              won't happen.
+            </p>
+          </details>
+          <details class="faq__item">
+            <summary>Isn't vaping the real problem?</summary>
+            <p>
+              Re-Charge doesn't promote or sell vaping in any way. Disposable vapes
+              already exist and are thrown away in enormous numbers — we're exploring
+              what to do with waste that's already being created, so fewer lithium
+              batteries end up in landfill.
+            </p>
+          </details>
+          <details class="faq__item">
+            <summary>Can I buy the Re-Charge One power bank?</summary>
+            <p>
+              Not yet — and maybe never. The Re-Charge One is a concept product. Whether
+              it gets built depends on the technical, safety, regulatory and economic
+              feasibility we're researching now, and on whether enough people say they
+              want it. That's what the feedback form is for.
+            </p>
+          </details>
+          <details class="faq__item">
+            <summary>What happens to the parts that can't be reused?</summary>
+            <p>
+              The concept is a circular one: components that aren't suitable for a
+              second life would be routed to certified e-waste and battery recyclers
+              rather than thrown away.
+            </p>
+          </details>
+          <details class="faq__item">
+            <summary>Who is behind Re-Charge?</summary>
+            <p>
+              A small early-stage team exploring whether this idea deserves to exist.
+              We're not a recycling corporation and we're not affiliated with any vape
+              brand — right now we're just asking the question, in public, before
+              building anything.
+            </p>
+          </details>
+        </div>
+      </div>
+    </section>
+
     <!-- ============ CTA ============ -->
     <section class="cta">
       <div class="cta__spark" aria-hidden="true"></div>
@@ -291,6 +372,16 @@
           <a href="#feedback" class="btn btn--primary btn--large magnetic">Share Your Feedback</a>
           <a href="#feedback" class="btn btn--ghost-light btn--large magnetic">I'm Interested in Re-Charge</a>
         </div>
+
+        <form class="notify" id="notifyForm" novalidate>
+          <p class="notify__label">Or just leave your email — we'll let you know if Re-Charge becomes real.</p>
+          <div class="notify__row">
+            <input type="email" name="email" required placeholder="you@example.com" autocomplete="email" aria-label="Email address" />
+            <button type="submit" class="btn btn--primary">Notify Me</button>
+          </div>
+          <p class="notify__done" id="notifyDone" hidden>You're on the list. Thanks for believing in second lives. ⚡</p>
+          <p class="notify__privacy">No spam, no sharing — one email if this becomes real.</p>
+        </form>
       </div>
     </section>
 
@@ -307,6 +398,7 @@
         <a href="#top">Home</a>
         <a href="#concept">The Concept</a>
         <a href="#feedback">Give Feedback</a>
+        <a href="#faq">FAQ</a>
         <a href="mailto:hello@example.com">Contact</a>
       </nav>
       <p class="footer__disclaimer">
@@ -339,12 +431,14 @@
 
     const ACCENT = 0x0e9f7a;
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // coarse pointer ≈ phone/tablet: lower GPU cost there
+    const isTouch = window.matchMedia('(pointer: coarse)').matches;
     const clock = new THREE.Clock();
     const scenes = [];
 
     function makeRenderer(canvas) {
-      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !isTouch });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, isTouch ? 1.25 : 2));
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       return renderer;
     }
@@ -439,7 +533,7 @@
       scene.add(battery);
 
       // orbiting energy particles
-      const pCount = 140;
+      const pCount = isTouch ? 70 : 140;
       const positions = new Float32Array(pCount * 3);
       for (let i = 0; i < pCount; i++) {
         const a = Math.random() * Math.PI * 2;
@@ -574,6 +668,9 @@
       controls.dampingFactor = 0.06;
       controls.autoRotate = !reduceMotion;
       controls.autoRotateSpeed = 1.6;
+      // OrbitControls sets touch-action:none, which hijacks page scrolling on
+      // mobile — restore vertical panning so the canvas doesn't trap the page
+      canvas.style.touchAction = 'pan-y';
 
       const entry = {
         canvas, renderer, scene, camera, visible: true,
