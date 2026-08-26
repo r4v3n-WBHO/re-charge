@@ -34,11 +34,19 @@
     } catch (e) { /* analytics must never break the site */ }
   };
 
-  /* ---- 3D watchdog: if no scene initialises, mark canvases as unavailable ---- */
+  /* ---- 3D watchdog: if no scene initialises, mark canvases as unavailable.
+     A late-arriving scene (slow CDN) clears the flag again. ---- */
   setTimeout(() => {
     if (document.querySelector('canvas') &&
         !document.body.classList.contains('webgl-on')) {
       document.body.classList.add('webgl-off');
+      const recheck = setInterval(() => {
+        if (document.body.classList.contains('webgl-on')) {
+          document.body.classList.remove('webgl-off');
+          clearInterval(recheck);
+        }
+      }, 1000);
+      setTimeout(() => clearInterval(recheck), 30000);
     }
   }, 8000);
 

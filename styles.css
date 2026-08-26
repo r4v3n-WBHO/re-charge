@@ -1641,10 +1641,10 @@ body.webgl-on .product__visual::after,
 body.webgl-on .viewer::after,
 body.webgl-on .partner__visual::after { content: none; }
 
-body.webgl-off .hero__visual::after,
-body.webgl-off .product__visual::after,
-body.webgl-off .viewer::after,
-body.webgl-off .partner__visual::after {
+body.webgl-off:not(.webgl-on) .hero__visual::after,
+body.webgl-off:not(.webgl-on) .product__visual::after,
+body.webgl-off:not(.webgl-on) .viewer::after,
+body.webgl-off:not(.webgl-on) .partner__visual::after {
   content: "🔋 3D preview unavailable on this device";
   font-size: 0.88rem;
   color: var(--text-muted);
