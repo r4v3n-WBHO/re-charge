@@ -6,7 +6,11 @@
   <title>Re-Charge — Power. Reclaimed.</title>
   <meta name="description" content="Re-Charge is an early-stage concept exploring how batteries from discarded disposable vapes could be safely recovered, tested and given a second life." />
 
+  <!-- SEO: swap https://re-charge.example for the real domain at deploy (also in sitemap.xml, robots.txt, JSON-LD) -->
+  <link rel="canonical" href="https://re-charge.example/" />
+
   <!-- Social sharing (og:image/og:url should become absolute URLs once deployed) -->
+  <meta property="og:url" content="https://re-charge.example/" />
   <meta property="og:title" content="Re-Charge — Power. Reclaimed." />
   <meta property="og:description" content="What if your dead vape could get a second life? A concept power bank built almost entirely from waste — reclaimed vape batteries inside, an enclosure 3D-printed from recycled bottles outside. Tell us what you think." />
   <meta property="og:type" content="website" />
@@ -19,6 +23,62 @@
   <!-- Analytics: when deployed, drop in Plausible/GoatCounter snippet here -->
 
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "name": "Re-Charge",
+        "url": "https://re-charge.example/",
+        "logo": "https://re-charge.example/assets/logo-mark.svg",
+        "slogan": "Power. Reclaimed.",
+        "description": "An early-stage concept exploring how lithium-ion batteries from discarded disposable vapes could be safely recovered, tested and given a second life."
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Is reusing recovered lithium batteries safe?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Only if it's done properly — which is what Re-Charge is investigating. Every recovered cell would be inspected, capacity-tested and safety-checked before reuse; cells that don't pass would go to certified battery recycling. If the process can't be made reliably safe, Re-Charge won't happen." }
+          },
+          {
+            "@type": "Question",
+            "name": "Isn't vaping the real problem?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Re-Charge doesn't promote or sell vaping. Disposable vapes are already thrown away in enormous numbers — Re-Charge explores what to do with waste that's already being created, so fewer lithium batteries end up in landfill." }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I buy the Re-Charge One power bank?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Not yet — it's a concept product. Whether it gets built depends on technical, safety, regulatory and economic feasibility, and on whether enough people back it with free pre-orders." }
+          },
+          {
+            "@type": "Question",
+            "name": "What would the power bank actually be made of?",
+            "acceptedAnswer": { "@type": "Answer", "text": "As much waste as possible: lithium-ion cells reclaimed from disposable vapes and individually tested for safe reuse, inside an enclosure 3D-printed from recycled plastic bottles." }
+          },
+          {
+            "@type": "Question",
+            "name": "If something went wrong with a reclaimed battery, who's responsible?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Re-Charge would be. Any sold product would require individual cell testing, independent safety certification, clear labelling that cells are reclaimed, and product-liability cover. Statutory consumer rights are never waived." }
+          },
+          {
+            "@type": "Question",
+            "name": "What happens to the parts that can't be reused?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Components that aren't suitable for a second life would be routed to certified e-waste and battery recyclers rather than thrown away." }
+          },
+          {
+            "@type": "Question",
+            "name": "Who is behind Re-Charge?",
+            "acceptedAnswer": { "@type": "Answer", "text": "A small early-stage team exploring whether the idea deserves to exist — not a recycling corporation, and not affiliated with any vape brand." }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -32,6 +92,8 @@
     <div class="bg__blob bg__blob--1"></div>
     <div class="bg__blob bg__blob--2"></div>
   </div>
+
+  <a class="skip-link" href="#main">Skip to content</a>
 
   <!-- ============ NAV ============ -->
   <header class="nav" id="top">
@@ -62,7 +124,7 @@
     </div>
   </header>
 
-  <main>
+  <main id="main">
 
     <!-- ============ HERO ============ -->
     <section class="hero">
@@ -109,6 +171,27 @@
       <a href="#problem" class="hero__scroll" aria-label="Scroll down">
         <span class="hero__scroll-wheel"></span>
       </a>
+    </section>
+
+    <!-- ============ THREE WAYS IN ============ -->
+    <section class="ways" aria-label="Three ways to be part of Re-Charge">
+      <div class="container ways__inner">
+        <a href="store.html" class="way">
+          <span class="way__icon" aria-hidden="true">🗳️</span>
+          <span class="way__text"><strong>Vote with a free pre-order</strong><small>No payment — pre-orders decide if we build it.</small></span>
+          <span class="way__arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="#feedback" class="way">
+          <span class="way__icon" aria-hidden="true">💬</span>
+          <span class="way__text"><strong>Tell us what you think</strong><small>Two minutes of honest feedback shapes the idea.</small></span>
+          <span class="way__arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="#feedback" class="way">
+          <span class="way__icon" aria-hidden="true">🏪</span>
+          <span class="way__text"><strong>Host a collection box</strong><small>For vape shops &amp; recycling partners.</small></span>
+          <span class="way__arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
     </section>
 
     <!-- ============ MARQUEE ============ -->
@@ -514,6 +597,16 @@
           <p class="notify__done" id="notifyDone" hidden>You're on the list. Thanks for believing in second lives. ⚡</p>
           <p class="notify__privacy">No spam, no sharing — one email if this becomes real.</p>
         </form>
+
+        <div class="share">
+          <span class="share__label">Spread the word — every share is validation too</span>
+          <div class="share__row">
+            <a class="share__btn" id="shareWhatsApp" target="_blank" rel="noopener" href="#">WhatsApp</a>
+            <a class="share__btn" id="shareX" target="_blank" rel="noopener" href="#">X</a>
+            <a class="share__btn" id="shareLinkedIn" target="_blank" rel="noopener" href="#">LinkedIn</a>
+            <button type="button" class="share__btn" id="copyLink">Copy Link</button>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -542,9 +635,28 @@
         using reclaimed lithium-ion cells would be clearly labelled as such and sold
         only after independent safety testing and certification.
       </p>
+      <p class="footer__nocookies">🍃 No cookies. No trackers. Your data stays yours.</p>
       <p class="footer__copyright">© 2026 Re-Charge</p>
     </div>
   </footer>
+
+  <!-- sticky mobile CTA (shows on small screens after the hero, once per visitor until dismissed) -->
+  <div class="mobile-cta" id="mobileCta" hidden>
+    <a href="store.html" class="btn btn--primary">⚡ Back a Build — Free</a>
+    <button type="button" class="mobile-cta__close" id="mobileCtaClose" aria-label="Dismiss">✕</button>
+  </div>
+
+  <!-- once-ever notify slide-in (desktop, after 60% scroll) -->
+  <aside class="slidein" id="slidein" hidden aria-label="Get notified">
+    <button type="button" class="slidein__close" id="slideinClose" aria-label="Dismiss">✕</button>
+    <p class="slidein__title"><strong>Like the idea?</strong></p>
+    <p class="slidein__text">One email if Re-Charge becomes real. No spam, ever.</p>
+    <form id="slideinForm" onsubmit="event.preventDefault()">
+      <input type="email" name="email" required placeholder="you@example.com" aria-label="Email address" />
+      <button type="submit" class="btn btn--primary btn--small">Notify Me</button>
+    </form>
+    <p class="slidein__done" id="slideinDone" hidden>You're on the list ⚡</p>
+  </aside>
 
   <!-- GSAP -->
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>

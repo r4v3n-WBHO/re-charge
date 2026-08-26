@@ -67,7 +67,9 @@ the `main` branch root.
       validation (anti-fraud), accounts + point balances (Supabase would fit)
 - [ ] Replace `hello@example.com` contact link in the footer
 - [ ] Add analytics (Plausible/GoatCounter snippet placeholder is in `<head>`)
-- [ ] Make `og:image`/`og:url` absolute URLs once deployed (social platforms
-      require absolute image URLs)
+- [ ] Swap the placeholder domain `https://re-charge.example` for the real one
+      at deploy — it appears in: canonical links + `og:url` (all pages),
+      `sitemap.xml`, `robots.txt`, and the JSON-LD in `index.html`. Also make
+      `og:image` absolute (social platforms require absolute image URLs)
 - [ ] Real domain
 - [x] Logo + favicon + brand guide (see `BRAND.md`, `assets/`)

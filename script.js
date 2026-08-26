@@ -162,6 +162,83 @@ form.addEventListener('submit', async (e) => {
   thanks.scrollIntoView({ behavior: 'smooth', block: 'center' });
 });
 
+/* ---------- Share buttons ---------- */
+const shareUrl = location.origin + location.pathname;
+const shareText = "What if your dead vape could get a second life? Re-Charge is a concept turning vape waste into power banks — pre-orders decide if it gets built.";
+
+const wa = document.getElementById('shareWhatsApp');
+if (wa) {
+  wa.href = 'https://wa.me/?text=' + encodeURIComponent(shareText + ' ' + shareUrl);
+  document.getElementById('shareX').href =
+    'https://x.com/intent/tweet?text=' + encodeURIComponent(shareText) + '&url=' + encodeURIComponent(shareUrl);
+  document.getElementById('shareLinkedIn').href =
+    'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(shareUrl);
+
+  const copyBtn = document.getElementById('copyLink');
+  copyBtn.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      copyBtn.textContent = 'Copied ✓';
+      setTimeout(() => (copyBtn.textContent = 'Copy Link'), 2000);
+    } catch {
+      copyBtn.textContent = shareUrl; // clipboard blocked: show the URL instead
+    }
+  });
+}
+
+/* ---------- Sticky mobile CTA ---------- */
+const mobileCta = document.getElementById('mobileCta');
+if (mobileCta && !localStorage.getItem('recharge-mobilecta-dismissed')) {
+  const showCta = () => {
+    mobileCta.hidden = window.scrollY < window.innerHeight * 0.9;
+  };
+  window.addEventListener('scroll', showCta, { passive: true });
+
+  document.getElementById('mobileCtaClose').addEventListener('click', () => {
+    mobileCta.hidden = true;
+    localStorage.setItem('recharge-mobilecta-dismissed', '1');
+    window.removeEventListener('scroll', showCta);
+  });
+}
+
+/* ---------- Once-ever notify slide-in (desktop, 60% scroll) ---------- */
+const slidein = document.getElementById('slidein');
+if (
+  slidein &&
+  !localStorage.getItem('recharge-slidein-shown') &&
+  window.matchMedia('(min-width: 641px)').matches
+) {
+  const maybeShow = () => {
+    const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+    if (scrollable > 0 && window.scrollY / scrollable > 0.6) {
+      slidein.hidden = false;
+      requestAnimationFrame(() => slidein.classList.add('is-open'));
+      localStorage.setItem('recharge-slidein-shown', '1'); // once ever
+      window.removeEventListener('scroll', maybeShow);
+    }
+  };
+  window.addEventListener('scroll', maybeShow, { passive: true });
+
+  document.getElementById('slideinClose').addEventListener('click', () => {
+    slidein.classList.remove('is-open');
+    setTimeout(() => (slidein.hidden = true), 300);
+  });
+
+  const slideinForm = document.getElementById('slideinForm');
+  slideinForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = slideinForm.email.value.trim();
+    if (!email || !slideinForm.email.checkValidity()) { slideinForm.email.focus(); return; }
+    await submitEntry({ type: 'interest', source: 'slidein', email });
+    slideinForm.hidden = true;
+    document.getElementById('slideinDone').hidden = false;
+    setTimeout(() => {
+      slidein.classList.remove('is-open');
+      setTimeout(() => (slidein.hidden = true), 300);
+    }, 2500);
+  });
+}
+
 /* ---------- Notify strip (email capture) ---------- */
 const notifyForm = document.getElementById('notifyForm');
 const notifyDone = document.getElementById('notifyDone');
