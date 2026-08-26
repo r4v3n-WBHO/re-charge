@@ -69,4 +69,5 @@ the `main` branch root.
 - [ ] Add analytics (Plausible/GoatCounter snippet placeholder is in `<head>`)
 - [ ] Make `og:image`/`og:url` absolute URLs once deployed (social platforms
       require absolute image URLs)
-- [ ] Real domain + favicon/logo assets
+- [ ] Real domain
+- [x] Logo + favicon + brand guide (see `BRAND.md`, `assets/`)

@@ -18,7 +18,7 @@
 
   <!-- Analytics: when deployed, drop in Plausible/GoatCounter snippet here -->
 
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔋</text></svg>" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -38,9 +38,15 @@
     <div class="container nav__inner">
       <a href="#top" class="nav__logo">
         <span class="nav__logo-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M13 2 4.5 13.5H11L9.5 22 19 10h-6.5L13 2Z" fill="currentColor"/></svg>
+          <svg viewBox="0 0 64 64" fill="none">
+            <path d="M9.45 23.79A24 24 0 0 1 54.55 23.79" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
+            <path d="M54.55 40.21A24 24 0 0 1 9.45 40.21" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
+            <path d="M56.95 30.4 51.25 25 57.85 22.6Z" fill="currentColor"/>
+            <path d="M7.05 33.6 12.75 39 6.15 41.4Z" fill="currentColor"/>
+            <path d="M34.2 14 20.5 32.5H30.9L28.5 50 43.5 30.5H33L34.2 14Z" fill="currentColor"/>
+          </svg>
         </span>
-        RE-CHARGE
+        RE<span class="logo-hyphen">-</span>CHARGE
       </a>
       <nav class="nav__links">
         <a href="#problem">The Problem</a>
@@ -517,7 +523,7 @@
   <footer class="footer">
     <div class="container footer__inner">
       <div class="footer__brand">
-        <span class="footer__logo">RE-CHARGE</span>
+        <span class="footer__logo">RE<span class="logo-hyphen logo-hyphen--bright">-</span>CHARGE</span>
         <span class="footer__tagline">Power. Reclaimed.</span>
       </div>
       <nav class="footer__links">

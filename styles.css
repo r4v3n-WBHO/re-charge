@@ -258,7 +258,10 @@ h1 .line > span { display: inline-block; }
   justify-content: center;
   box-shadow: 0 4px 14px rgba(14, 159, 122, 0.4);
 }
-.nav__logo-icon svg { width: 18px; height: 18px; }
+.nav__logo-icon svg { width: 22px; height: 22px; }
+
+.logo-hyphen { color: var(--accent); }
+.logo-hyphen--bright { color: var(--accent-bright); }
 
 .nav__links {
   display: flex;
