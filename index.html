@@ -7,9 +7,18 @@
   <meta name="description" content="Re-Charge is an early-stage concept exploring how batteries from discarded disposable vapes could be safely recovered, tested and given a second life." />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔋</text></svg>" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+
+  <!-- ambient background -->
+  <div class="bg" aria-hidden="true">
+    <div class="bg__grid"></div>
+    <div class="bg__blob bg__blob--1"></div>
+    <div class="bg__blob bg__blob--2"></div>
+  </div>
 
   <!-- ============ NAV ============ -->
   <header class="nav" id="top">
@@ -24,7 +33,7 @@
         <a href="#problem">The Problem</a>
         <a href="#concept">The Concept</a>
         <a href="#product">Re-Charge One</a>
-        <a href="#feedback" class="btn btn--small btn--primary">Give Feedback</a>
+        <a href="#feedback" class="btn btn--small btn--primary magnetic">Give Feedback</a>
       </nav>
       <button class="nav__toggle" aria-label="Open menu" aria-expanded="false">
         <span></span><span></span><span></span>
@@ -37,54 +46,63 @@
     <!-- ============ HERO ============ -->
     <section class="hero">
       <div class="container hero__inner">
-        <div class="hero__copy reveal">
-          <span class="pill">
+        <div class="hero__copy">
+          <span class="pill hero-fade">
             <span class="pill__dot" aria-hidden="true"></span>
             Early-stage concept
           </span>
-          <h1>What if your dead vape could get a <em>second life?</em></h1>
-          <p class="lead">
+          <h1 id="heroTitle">
+            <span class="line"><span>What if your dead vape</span></span>
+            <span class="line"><span>could get a <em>second life?</em></span></span>
+          </h1>
+          <p class="lead hero-fade">
             Re-Charge is exploring a better way to deal with disposable vape waste —
             recovering usable batteries and giving them a second life instead of
             sending them straight to waste.
           </p>
-          <div class="hero__actions">
-            <a href="#feedback" class="btn btn--primary btn--large">Tell Us What You Think</a>
-            <a href="#concept" class="btn btn--ghost btn--large">How It Works ↓</a>
+          <div class="hero__actions hero-fade">
+            <a href="#feedback" class="btn btn--primary btn--large magnetic">Tell Us What You Think</a>
+            <a href="#concept" class="btn btn--ghost btn--large magnetic">How It Works ↓</a>
           </div>
         </div>
 
-        <div class="hero__visual reveal" aria-label="Concept flow: disposable vape to battery recovery to testing to new life">
-          <div class="flow">
-            <div class="flow__step">
-              <div class="flow__icon">🗑️</div>
-              <span>Disposable Vape</span>
-            </div>
-            <div class="flow__arrow" aria-hidden="true">→</div>
-            <div class="flow__step">
-              <div class="flow__icon">🔋</div>
-              <span>Battery Recovery</span>
-            </div>
-            <div class="flow__arrow" aria-hidden="true">→</div>
-            <div class="flow__step">
-              <div class="flow__icon">🧪</div>
-              <span>Testing</span>
-            </div>
-            <div class="flow__arrow" aria-hidden="true">→</div>
-            <div class="flow__step flow__step--accent">
-              <div class="flow__icon">⚡</div>
-              <span>New Life</span>
-            </div>
-          </div>
+        <div class="hero__visual" id="heroVisual">
+          <div class="hero__glow" aria-hidden="true"></div>
+          <canvas id="heroCanvas" aria-label="3D animation of a recovered lithium battery cell"></canvas>
           <p class="hero__tagline">Power. Reclaimed.</p>
         </div>
       </div>
+
+      <div class="container hero__flow" aria-label="Concept flow: disposable vape to battery recovery to testing to new life">
+        <div class="flow">
+          <div class="flow__step"><div class="flow__icon">🗑️</div><span>Disposable Vape</span></div>
+          <div class="flow__arrow" aria-hidden="true">→</div>
+          <div class="flow__step"><div class="flow__icon">🔋</div><span>Battery Recovery</span></div>
+          <div class="flow__arrow" aria-hidden="true">→</div>
+          <div class="flow__step"><div class="flow__icon">🧪</div><span>Testing</span></div>
+          <div class="flow__arrow" aria-hidden="true">→</div>
+          <div class="flow__step flow__step--accent"><div class="flow__icon">⚡</div><span>New Life</span></div>
+        </div>
+      </div>
+
+      <a href="#problem" class="hero__scroll" aria-label="Scroll down">
+        <span class="hero__scroll-wheel"></span>
+      </a>
     </section>
+
+    <!-- ============ MARQUEE ============ -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track">
+        <span>COLLECT ✦ RECOVER ✦ TEST ✦ RE-CHARGE ✦ COLLECT ✦ RECOVER ✦ TEST ✦ RE-CHARGE ✦ COLLECT ✦ RECOVER ✦ TEST ✦ RE-CHARGE ✦&nbsp;</span>
+        <span>COLLECT ✦ RECOVER ✦ TEST ✦ RE-CHARGE ✦ COLLECT ✦ RECOVER ✦ TEST ✦ RE-CHARGE ✦ COLLECT ✦ RECOVER ✦ TEST ✦ RE-CHARGE ✦&nbsp;</span>
+      </div>
+    </div>
 
     <!-- ============ PROBLEM ============ -->
     <section class="section" id="problem">
       <div class="container">
         <div class="section__head reveal">
+          <span class="eyebrow">The Problem</span>
           <h2>Disposable vapes don't disappear when you're finished with them.</h2>
           <p>
             Disposable vapes contain batteries and electronic components that can
@@ -92,18 +110,18 @@
             these materials can be recovered and safely put to better use.
           </p>
         </div>
-        <div class="cards reveal">
-          <div class="card">
+        <div class="cards">
+          <div class="card tilt reveal-item">
             <div class="card__icon">🔋</div>
             <h3>Lithium Batteries</h3>
             <p>Disposable vapes contain rechargeable lithium-ion batteries.</p>
           </div>
-          <div class="card">
+          <div class="card tilt reveal-item">
             <div class="card__icon">♻️</div>
             <h3>Electronic Waste</h3>
             <p>Throwing them away creates unnecessary electronic waste.</p>
           </div>
-          <div class="card">
+          <div class="card tilt reveal-item">
             <div class="card__icon">🔄</div>
             <h3>A Second Life</h3>
             <p>Re-Charge wants to explore recovering suitable components for new applications.</p>
@@ -116,25 +134,27 @@
     <section class="section section--tint" id="concept">
       <div class="container">
         <div class="section__head reveal">
+          <span class="eyebrow">The Re-Charge Concept</span>
           <h2>From disposable to reusable.</h2>
         </div>
-        <div class="steps reveal">
-          <div class="step">
+        <div class="steps" id="stepsTimeline">
+          <div class="steps__track" aria-hidden="true"><div class="steps__progress" id="stepsProgress"></div></div>
+          <div class="step reveal-item">
             <span class="step__num">01</span>
             <h3>Collect</h3>
             <p>Old disposable vapes are collected through dedicated Re-Charge collection points.</p>
           </div>
-          <div class="step">
+          <div class="step reveal-item">
             <span class="step__num">02</span>
             <h3>Recover</h3>
             <p>The batteries and useful components are separated from the rest of the device.</p>
           </div>
-          <div class="step">
+          <div class="step reveal-item">
             <span class="step__num">03</span>
             <h3>Test</h3>
             <p>Recovered batteries are inspected and tested to determine whether they are suitable for safe reuse.</p>
           </div>
-          <div class="step">
+          <div class="step reveal-item">
             <span class="step__num">04</span>
             <h3>Re-Charge</h3>
             <p>Suitable materials could potentially be given a second life in products such as portable power solutions.</p>
@@ -162,20 +182,10 @@
             <li>Designed for a Second Life</li>
           </ul>
         </div>
-        <div class="product__visual reveal" aria-label="Conceptual mockup of the Re-Charge One power bank">
-          <div class="powerbank">
-            <div class="powerbank__body">
-              <div class="powerbank__brand">RE-CHARGE <span>ONE</span></div>
-              <div class="powerbank__charge">
-                <span class="powerbank__bar"></span>
-                <span class="powerbank__bar"></span>
-                <span class="powerbank__bar"></span>
-                <span class="powerbank__bar powerbank__bar--dim"></span>
-              </div>
-              <div class="powerbank__port">USB-C</div>
-            </div>
-            <span class="powerbank__label">Conceptual mockup</span>
-          </div>
+        <div class="product__visual reveal" aria-label="Interactive 3D conceptual mockup of the Re-Charge One power bank">
+          <div class="product__glow" aria-hidden="true"></div>
+          <canvas id="productCanvas"></canvas>
+          <span class="product__hint">↻ Drag to rotate — conceptual mockup</span>
         </div>
       </div>
     </section>
@@ -183,6 +193,7 @@
     <!-- ============ WHY ============ -->
     <section class="section section--dark">
       <div class="container section__head section__head--center reveal">
+        <span class="eyebrow eyebrow--light">Why We're Building This</span>
         <h2>We're starting with a question.</h2>
         <p class="lead lead--light">
           Could we turn one of the fastest-growing forms of electronic waste into
@@ -200,6 +211,7 @@
     <section class="section section--tint" id="feedback">
       <div class="container container--narrow">
         <div class="section__head section__head--center reveal">
+          <span class="eyebrow">Your Turn</span>
           <h2>Would you use Re-Charge?</h2>
           <p>
             We're still at the idea stage. Your opinion could help determine whether
@@ -256,7 +268,7 @@
             </label>
           </div>
 
-          <button type="submit" class="btn btn--primary btn--large btn--full">Submit Feedback</button>
+          <button type="submit" class="btn btn--primary btn--large btn--full magnetic">Submit Feedback</button>
         </form>
 
         <div class="feedback-thanks" id="feedbackThanks" hidden>
@@ -268,15 +280,16 @@
 
     <!-- ============ CTA ============ -->
     <section class="cta">
+      <div class="cta__spark" aria-hidden="true"></div>
       <div class="container cta__inner reveal">
-        <h2>Help us turn waste into power.</h2>
+        <h2>Help us turn <span class="cta__gradient">waste into power.</span></h2>
         <p>
           Re-Charge is only an idea right now. If enough people believe it should
           exist, we'll explore making it real.
         </p>
         <div class="cta__actions">
-          <a href="#feedback" class="btn btn--primary btn--large">Share Your Feedback</a>
-          <a href="#feedback" class="btn btn--ghost-light btn--large">I'm Interested in Re-Charge</a>
+          <a href="#feedback" class="btn btn--primary btn--large magnetic">Share Your Feedback</a>
+          <a href="#feedback" class="btn btn--ghost-light btn--large magnetic">I'm Interested in Re-Charge</a>
         </div>
       </div>
     </section>
@@ -304,6 +317,299 @@
     </div>
   </footer>
 
-  <script src="script.js"></script>
+  <!-- GSAP -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="script.js" defer></script>
+
+  <!-- Three.js (inline module so the page also works when opened via file://) -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+    import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+    const ACCENT = 0x0e9f7a;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const clock = new THREE.Clock();
+    const scenes = [];
+
+    function makeRenderer(canvas) {
+      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      return renderer;
+    }
+
+    function fitRenderer(renderer, camera, canvas) {
+      const w = canvas.clientWidth, h = canvas.clientHeight;
+      if (!w || !h) return;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+
+    function addEnvironment(renderer, scene) {
+      const pmrem = new THREE.PMREMGenerator(renderer);
+      scene.environment = pmrem.fromScene(new RoomEnvironment(renderer), 0.04).texture;
+    }
+
+    function trackVisibility(entry) {
+      new IntersectionObserver(
+        (entries) => { entry.visible = entries[0].isIntersecting; },
+        { threshold: 0.05 }
+      ).observe(entry.canvas);
+    }
+
+    /* ---------- Hero: recovered battery cell ---------- */
+    function initHero() {
+      const canvas = document.getElementById('heroCanvas');
+      const renderer = makeRenderer(canvas);
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 50);
+      camera.position.set(0, 0.3, 8.5);
+      addEnvironment(renderer, scene);
+
+      scene.add(new THREE.HemisphereLight(0xffffff, 0x9fc4b8, 0.9));
+      const key = new THREE.DirectionalLight(0xffffff, 1.6);
+      key.position.set(4, 6, 5);
+      scene.add(key);
+      const rim = new THREE.PointLight(0x18e0a8, 20, 20);
+      rim.position.set(-4, -1, 3);
+      scene.add(rim);
+
+      // battery label texture (wraps around the sleeve)
+      const label = document.createElement('canvas');
+      label.width = 1024; label.height = 512;
+      const c = label.getContext('2d');
+      const grad = c.createLinearGradient(0, 0, 0, 512);
+      grad.addColorStop(0, '#0fae86');
+      grad.addColorStop(1, '#0a7c5f');
+      c.fillStyle = grad;
+      c.fillRect(0, 0, 1024, 512);
+      c.fillStyle = 'rgba(255,255,255,0.12)';
+      c.fillRect(0, 0, 1024, 26);
+      c.fillRect(0, 486, 1024, 26);
+      c.fillStyle = '#ffffff';
+      c.font = '700 92px "Space Grotesk", sans-serif';
+      c.textAlign = 'center';
+      c.textBaseline = 'middle';
+      c.fillText('RE-CHARGE ⚡ RE-CHARGE ⚡', 512, 236);
+      c.font = '600 40px "Inter", sans-serif';
+      c.fillStyle = 'rgba(255,255,255,0.75)';
+      c.fillText('RECOVERED  LITHIUM-ION  CELL', 512, 344);
+      const labelTex = new THREE.CanvasTexture(label);
+      labelTex.colorSpace = THREE.SRGBColorSpace;
+      labelTex.anisotropy = 8;
+
+      const battery = new THREE.Group();
+      const metal = new THREE.MeshStandardMaterial({ color: 0xd9e2de, metalness: 0.95, roughness: 0.25 });
+
+      const sleeve = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.85, 0.85, 2.7, 64),
+        new THREE.MeshStandardMaterial({ map: labelTex, metalness: 0.35, roughness: 0.3 })
+      );
+      battery.add(sleeve);
+
+      const capTop = new THREE.Mesh(new THREE.CylinderGeometry(0.85, 0.85, 0.3, 64), metal);
+      capTop.position.y = 1.5;
+      const capBottom = new THREE.Mesh(new THREE.CylinderGeometry(0.85, 0.85, 0.16, 64), metal);
+      capBottom.position.y = -1.43;
+      const nub = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.28, 0.16, 48), metal);
+      nub.position.y = 1.72;
+      battery.add(capTop, capBottom, nub);
+
+      // energy "scan" ring that sweeps up the cell
+      const ring = new THREE.Mesh(
+        new THREE.TorusGeometry(0.99, 0.035, 16, 80),
+        new THREE.MeshBasicMaterial({ color: 0x2df0b2, transparent: true, opacity: 0.9 })
+      );
+      ring.rotation.x = Math.PI / 2;
+      battery.add(ring);
+
+      battery.rotation.z = -0.18;
+      scene.add(battery);
+
+      // orbiting energy particles
+      const pCount = 140;
+      const positions = new Float32Array(pCount * 3);
+      for (let i = 0; i < pCount; i++) {
+        const a = Math.random() * Math.PI * 2;
+        const r = 2.1 + Math.random() * 1.3;
+        positions[i * 3] = Math.cos(a) * r;
+        positions[i * 3 + 1] = (Math.random() - 0.5) * 4;
+        positions[i * 3 + 2] = Math.sin(a) * r;
+      }
+      const pGeo = new THREE.BufferGeometry();
+      pGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      const particles = new THREE.Points(pGeo, new THREE.PointsMaterial({
+        color: ACCENT, size: 0.05, transparent: true, opacity: 0.7, sizeAttenuation: true
+      }));
+      scene.add(particles);
+
+      // mouse parallax
+      const target = { x: 0, y: 0 };
+      document.getElementById('heroVisual').addEventListener('pointermove', (e) => {
+        const r = canvas.getBoundingClientRect();
+        target.x = ((e.clientX - r.left) / r.width - 0.5) * 2;
+        target.y = ((e.clientY - r.top) / r.height - 0.5) * 2;
+      });
+
+      const entry = {
+        canvas, renderer, scene, camera, visible: true,
+        update(t) {
+          if (!reduceMotion) {
+            battery.rotation.y = t * 0.45;
+            battery.position.y = Math.sin(t * 1.2) * 0.12;
+            ring.position.y = Math.sin(t * 1.6) * 1.3;
+            ring.material.opacity = 0.45 + 0.45 * Math.abs(Math.cos(t * 1.6));
+            particles.rotation.y = -t * 0.12;
+          }
+          battery.rotation.x += ((target.y * 0.25) - battery.rotation.x) * 0.05;
+          scene.rotation.y += ((target.x * 0.2) - scene.rotation.y) * 0.05;
+        }
+      };
+      trackVisibility(entry);
+      scenes.push(entry);
+    }
+
+    /* ---------- Product: Re-Charge One power bank ---------- */
+    function initProduct() {
+      const canvas = document.getElementById('productCanvas');
+      const renderer = makeRenderer(canvas);
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 50);
+      camera.position.set(0, 0.6, 9.5);
+      addEnvironment(renderer, scene);
+
+      scene.add(new THREE.HemisphereLight(0xffffff, 0x9fc4b8, 0.8));
+      const key = new THREE.DirectionalLight(0xffffff, 1.4);
+      key.position.set(5, 7, 6);
+      scene.add(key);
+      const rim = new THREE.PointLight(0x18e0a8, 24, 24);
+      rim.position.set(-5, 2, -4);
+      scene.add(rim);
+
+      const bank = new THREE.Group();
+
+      const body = new THREE.Mesh(
+        new RoundedBoxGeometry(2.7, 4.7, 0.95, 6, 0.28),
+        new THREE.MeshStandardMaterial({ color: 0x123830, metalness: 0.55, roughness: 0.4 })
+      );
+      bank.add(body);
+
+      // front face label (canvas texture)
+      const label = document.createElement('canvas');
+      label.width = 512; label.height = 1024;
+      const c = label.getContext('2d');
+      c.textAlign = 'center';
+      c.fillStyle = '#ffffff';
+      c.font = '700 64px "Space Grotesk", sans-serif';
+      c.fillText('RE-CHARGE', 256, 170);
+      c.fillStyle = '#2df0b2';
+      c.font = '700 46px "Space Grotesk", sans-serif';
+      c.fillText('O N E', 256, 240);
+      // charge bars
+      const barW = 300, barH = 42, bx = (512 - barW) / 2;
+      for (let i = 0; i < 4; i++) {
+        c.fillStyle = i < 3 ? '#2df0b2' : 'rgba(255,255,255,0.15)';
+        c.beginPath();
+        c.roundRect(bx, 380 + i * 66, barW, barH, 21);
+        c.fill();
+      }
+      c.fillStyle = 'rgba(255,255,255,0.65)';
+      c.font = '600 30px "Inter", sans-serif';
+      c.fillText('RECOVERED CELLS INSIDE', 256, 740);
+      c.strokeStyle = 'rgba(255,255,255,0.4)';
+      c.lineWidth = 3;
+      c.beginPath();
+      c.roundRect(176, 790, 160, 62, 31);
+      c.stroke();
+      c.fillStyle = 'rgba(255,255,255,0.8)';
+      c.font = '700 32px "Inter", sans-serif';
+      c.fillText('USB-C', 256, 832);
+      const labelTex = new THREE.CanvasTexture(label);
+      labelTex.colorSpace = THREE.SRGBColorSpace;
+      labelTex.anisotropy = 8;
+
+      const face = new THREE.Mesh(
+        new THREE.PlaneGeometry(2.3, 4.3),
+        new THREE.MeshBasicMaterial({ map: labelTex, transparent: true })
+      );
+      face.position.z = 0.481;
+      bank.add(face);
+
+      // USB-C port on the bottom edge
+      const port = new THREE.Mesh(
+        new RoundedBoxGeometry(0.62, 0.1, 0.22, 3, 0.05),
+        new THREE.MeshStandardMaterial({ color: 0x050d0b, metalness: 0.6, roughness: 0.5 })
+      );
+      port.position.set(0, -2.36, 0);
+      bank.add(port);
+
+      // glowing power ring on top
+      const powerRing = new THREE.Mesh(
+        new THREE.TorusGeometry(0.22, 0.045, 12, 40),
+        new THREE.MeshBasicMaterial({ color: 0x2df0b2 })
+      );
+      powerRing.rotation.x = Math.PI / 2;
+      powerRing.position.set(0, 2.38, 0);
+      bank.add(powerRing);
+
+      bank.rotation.y = -0.5;
+      scene.add(bank);
+
+      const controls = new OrbitControls(camera, canvas);
+      controls.enableZoom = false;
+      controls.enablePan = false;
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.06;
+      controls.autoRotate = !reduceMotion;
+      controls.autoRotateSpeed = 1.6;
+
+      const entry = {
+        canvas, renderer, scene, camera, visible: true,
+        update(t) {
+          if (!reduceMotion) bank.position.y = Math.sin(t * 1.1) * 0.1;
+          controls.update();
+        }
+      };
+      trackVisibility(entry);
+      scenes.push(entry);
+    }
+
+    try {
+      initHero();
+      initProduct();
+      document.body.classList.add('webgl-on');
+    } catch (err) {
+      console.warn('3D disabled:', err);
+    }
+
+    function onResize() {
+      scenes.forEach((s) => fitRenderer(s.renderer, s.camera, s.canvas));
+    }
+    window.addEventListener('resize', onResize);
+    onResize();
+
+    renderer_loop();
+    function renderer_loop() {
+      requestAnimationFrame(renderer_loop);
+      const t = clock.getElapsedTime();
+      scenes.forEach((s) => {
+        if (!s.visible) return;
+        s.update(t);
+        s.renderer.render(s.scene, s.camera);
+      });
+    }
+  </script>
 </body>
 </html>
