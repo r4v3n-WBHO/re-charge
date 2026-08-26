@@ -61,6 +61,11 @@
           },
           {
             "@type": "Question",
+            "name": "Isn't a brand-new cell cheaper than recovering one?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Today, yes — that's the hardest question the concept faces. New cells cost very little at volume, while recovered cells carry collection, teardown, testing and matching costs per cell. Recovery only makes sense if collection density, semi-automated teardown and testing jigs push the per-cell cost below that benchmark, or if diverted-waste value (EPR credits, levies, partnerships) closes the gap. Finding that number is what the concept phase exists for — and if the maths doesn't work, Re-Charge will publish that too." }
+          },
+          {
+            "@type": "Question",
             "name": "If something went wrong with a reclaimed battery, who's responsible?",
             "acceptedAnswer": { "@type": "Answer", "text": "Re-Charge would be. Any sold product would require individual cell testing, independent safety certification, clear labelling that cells are reclaimed, and product-liability cover. Statutory consumer rights are never waived." }
           },
@@ -251,15 +256,15 @@
           <h3 class="stats__title">The scale of it — starting here at home</h3>
           <div class="stats__grid">
             <div class="stat">
-              <span class="stat__num">~<span class="stat__count" data-count="1000000">0</span></span>
+              <span class="stat__num">~<span class="stat__count" data-count="1000000">1 000 000</span></span>
               <p>South African adults vape<sup><a href="#stat-sources">1</a></sup> — in a market growing ~15% a year, which means ever more rechargeable cells in circulation<sup><a href="#stat-sources">2</a></sup></p>
             </div>
             <div class="stat">
-              <span class="stat__num"><span class="stat__count" data-count="12">0</span><em>%</em></span>
+              <span class="stat__num"><span class="stat__count" data-count="12">12</span><em>%</em></span>
               <p>of South Africa's ~360 000 tonnes of yearly e-waste is formally recycled — the rest heads for landfill<sup><a href="#stat-sources">3</a></sup></p>
             </div>
             <div class="stat">
-              <span class="stat__num"><span class="stat__count" data-count="844">0</span><em>million</em></span>
+              <span class="stat__num"><span class="stat__count" data-count="844">844</span><em>million</em></span>
               <p>vaping devices are discarded worldwide every single year<sup><a href="#stat-sources">4</a></sup></p>
             </div>
           </div>
@@ -315,10 +320,6 @@
             <p>Suitable cells could be rebuilt into products like portable power banks — housed in enclosures 3D-printed from recycled plastic bottles, so the whole product is made from waste.</p>
           </div>
         </div>
-        <p class="disclaimer reveal">
-          Re-Charge is currently exploring the technical, safety, regulatory and
-          economic feasibility of this concept.
-        </p>
       </div>
     </section>
 
@@ -416,8 +417,10 @@
               </tbody>
             </table>
             <p class="rewards__note">
-              Point values are illustrative. Points earned during the concept phase
-              would be honoured as founder credit if Re-Charge launches.
+              Point values are illustrative; points earned during the concept phase
+              would be honoured as founder credit if Re-Charge launches. Points would
+              be capped per person per day — and if you've found a stash of hundreds,
+              we'd love them via a separate bulk drop-off channel, not the QR.
             </p>
             <div class="rewards__actions">
               <a href="scan.html" class="btn btn--primary magnetic">Try the Scan Demo →</a>
@@ -482,9 +485,11 @@
                 slot that keeps hands (and anything burning) out, a sloped internal
                 insert, and a fire-safe reduced-oxygen design. Bins would be emptied
                 on a schedule so they never sit full. And to be direct about
-                liability: in any live programme, the bin and its contents would be
-                covered by Re-Charge's own public-liability insurance — hosting a bin
-                would never shift battery risk onto your business.
+                liability: no bin would ship before we've taken out public-liability
+                cover for the bins and their contents — that policy doesn't exist yet
+                because the programme doesn't, but it's a launch requirement, not an
+                afterthought. Hosting a bin would never shift battery risk onto your
+                business.
               </p>
             </details>
             <details class="faq__item">
@@ -493,6 +498,16 @@
                 We would — scheduled collections, plus on-demand pickups when a bin
                 fills early (a promo weekend, a festival). You never store anything
                 beyond the bin itself, and you never transport it.
+              </p>
+            </details>
+            <details class="faq__item">
+              <summary>How do the collected vapes get moved safely?</summary>
+              <p>
+                Transporting lithium batteries of unknown condition is dangerous-goods
+                territory, and we treat it that way. Collections would run through
+                licensed e-waste handlers whose packaging, drivers and routing comply
+                with South Africa's dangerous-goods requirements for lithium cells —
+                your venue never transports anything, ever.
               </p>
             </details>
             <details class="faq__item">
@@ -522,8 +537,7 @@
             </details>
           </div>
           <p class="partner-faq__note">
-            These describe the programme we're designing — like everything on this
-            site, it ships only if the concept proves out. Founding partners help
+            These describe the programme we're designing. Founding partners help
             shape these answers.
           </p>
         </div>
@@ -708,6 +722,20 @@
             </p>
           </details>
           <details class="faq__item">
+            <summary>Isn't a brand-new cell cheaper than recovering one?</summary>
+            <p>
+              Today, yes — and that's the hardest question this concept faces, so
+              let's not dodge it. A new cell costs very little at volume, while a
+              recovered one carries the cost of collection, teardown, testing and
+              matching, per small cell. Recovery only makes sense if collection
+              density, semi-automated teardown and testing jigs push our per-cell
+              cost below that benchmark — or if the diverted-waste value (EPR
+              credits, levies, recycling partnerships) closes the gap. That number
+              is exactly what the concept phase exists to find. If the maths doesn't
+              work, we'll publish that too.
+            </p>
+          </details>
+          <details class="faq__item">
             <summary>If something went wrong with a reclaimed battery, who's responsible?</summary>
             <p>
               We would be. If Re-Charge ever sells a product, we're responsible for its
@@ -760,9 +788,10 @@
         <div class="share">
           <span class="share__label">Spread the word — every share is validation too</span>
           <div class="share__row">
-            <a class="share__btn" id="shareWhatsApp" target="_blank" rel="noopener" href="#">WhatsApp</a>
-            <a class="share__btn" id="shareX" target="_blank" rel="noopener" href="#">X</a>
-            <a class="share__btn" id="shareLinkedIn" target="_blank" rel="noopener" href="#">LinkedIn</a>
+            <!-- static fallbacks so sharing works even without JS; JS re-points them at the live URL -->
+            <a class="share__btn" id="shareWhatsApp" target="_blank" rel="noopener" href="https://wa.me/?text=What%20if%20your%20dead%20vape%20could%20get%20a%20second%20life%3F%20https%3A%2F%2Fr4v3n-wbho.github.io%2Fre-charge%2F">WhatsApp</a>
+            <a class="share__btn" id="shareX" target="_blank" rel="noopener" href="https://x.com/intent/tweet?text=What%20if%20your%20dead%20vape%20could%20get%20a%20second%20life%3F&url=https%3A%2F%2Fr4v3n-wbho.github.io%2Fre-charge%2F">X</a>
+            <a class="share__btn" id="shareLinkedIn" target="_blank" rel="noopener" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fr4v3n-wbho.github.io%2Fre-charge%2F">LinkedIn</a>
             <button type="button" class="share__btn" id="copyLink">Copy Link</button>
           </div>
         </div>
