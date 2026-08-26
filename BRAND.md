@@ -9,8 +9,10 @@ never a faceless recycling corporation and never a vape company.
 
 ## Logo
 
-**The mark:** a lightning bolt inside a circular loop with two arrowheads —
-energy held inside the recycling cycle. The whole brand story in one glyph.
+**The mark — "Circular Energy":** a battery with a lightning bolt at its
+core, held inside a circular loop with two arrowheads — the battery and bolt
+show power, the arrows show recovery and second life. The whole brand story
+in one glyph. (Chosen from the August 2026 concept board, option 1.)
 
 | File | Use |
 |---|---|
@@ -56,6 +58,17 @@ Gradient: `linear-gradient(135deg, #0e9f7a, #12c493)` for buttons/mark fills.
 - *Waste in. Power out.* — product messaging
 - *Built from what you threw away.* — Re-Charge One messaging
 - *A pre-order is a vote.* — validation/backing messaging
+- *Don't bin your vape. Drop it here.* — printed on collection bins
+- *Recover. Reuse. Re-Charge.* — bin/loop messaging, pairs with the marquee chant
+- *Built for a second life.* — product & bin messaging
+
+## Collection bin (concept spec, Aug 2026 board)
+
+Re-Charge Green wheelie bin, ~30 L HDPE, 560×310×290 mm, lockable lid
+(hasp + padlock), narrow 120×25 mm disposal slot (prevents hand access),
+sloped internal insert, fire-safe reduced-oxygen design, UV/weather
+resistant, 120 mm wheels. Front print: mark + wordmark + "DON'T BIN YOUR
+VAPE. DROP IT HERE." + QR to the scan page + domain.
 
 ## Voice
 
