@@ -5,13 +5,17 @@
   /* ---- nav battery: fills as you scroll, pulses when "fully Re-Charged" ---- */
   const fill = document.querySelector('.nav__charge-fill');
   if (fill) {
-    const charge = document.querySelector('.nav__charge');
+    const meter = document.querySelector('.nav__meter');
+    const label = document.querySelector('.nav__charge-label');
     const update = () => {
       const max = document.documentElement.scrollHeight - window.innerHeight;
       const p = max > 0 ? Math.min(1, window.scrollY / max) : 1;
+      const pct = Math.round(p * 100);
       fill.style.width = (p * 100).toFixed(1) + '%';
-      charge.classList.toggle('is-full', p > 0.99);
-      charge.title = p > 0.99 ? 'Fully Re-Charged ⚡' : Math.round(p * 100) + '% charged';
+      const full = p > 0.99;
+      meter.classList.toggle('is-full', full);
+      label.textContent = full ? '⚡ 100%' : pct + '%';
+      meter.title = full ? 'Fully Re-Charged ⚡' : 'Your reading progress: ' + pct + '%';
     };
     window.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', update);
