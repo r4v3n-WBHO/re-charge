@@ -15,6 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+  <script src="fx.js" defer></script>
 </head>
 <body>
 
@@ -42,6 +43,7 @@
         </span>
         RE<span class="logo-hyphen">-</span>CHARGE
       </a>
+      <span class="nav__charge" aria-hidden="true"><span class="nav__charge-fill"></span></span>
       <nav class="nav__links">
         <a href="index.html#concept">The Concept</a>
         <a href="index.html#rewards">Rewards</a>
@@ -204,9 +206,11 @@
     depositBtn.addEventListener('click', () => {
       if (taps >= MAX_DEMO_TAPS) return;
       taps++;
+      const unlockedBefore = TIERS.filter((t) => rp >= t.rp).length;
       rp += STEP;
       localStorage.setItem('recharge-demo-rp', String(rp));
       render(true);
+      if (TIERS.filter((t) => rp >= t.rp).length > unlockedBefore) window.burstBolts?.();
       if (taps >= MAX_DEMO_TAPS) {
         depositBtn.disabled = true;
         depositBtn.textContent = 'Okay — you get the idea 😄';

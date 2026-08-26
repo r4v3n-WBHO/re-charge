@@ -162,6 +162,7 @@ form.addEventListener('submit', async (e) => {
 
   form.hidden = true;
   thanks.hidden = false;
+  window.burstBolts?.();
   // positive sentiment → nudge toward the strongest signal: a free pre-order
   if (/^(Great idea|Interesting)/.test(data.idea || '')) {
     document.getElementById('feedbackNudge').hidden = false;
@@ -171,6 +172,16 @@ form.addEventListener('submit', async (e) => {
   }
   thanks.scrollIntoView({ behavior: 'smooth', block: 'center' });
 });
+
+/* ---------- Battery-level easter egg (Chrome/Edge; degrades invisibly) ---------- */
+if (navigator.getBattery) {
+  navigator.getBattery().then((b) => {
+    const note = document.getElementById('batteryNote');
+    if (!note || b.level == null) return;
+    note.querySelector('strong').textContent = Math.round(b.level * 100) + '%';
+    note.hidden = false;
+  }).catch(() => {});
+}
 
 /* ---------- Share buttons ---------- */
 const shareUrl = location.origin + location.pathname;
@@ -183,6 +194,18 @@ if (wa) {
     'https://x.com/intent/tweet?text=' + encodeURIComponent(shareText) + '&url=' + encodeURIComponent(shareUrl);
   document.getElementById('shareLinkedIn').href =
     'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(shareUrl);
+
+  // native share sheet where supported (mobile — WhatsApp etc.)
+  if (navigator.share) {
+    const nativeBtn = document.createElement('button');
+    nativeBtn.type = 'button';
+    nativeBtn.className = 'share__btn';
+    nativeBtn.textContent = 'Share…';
+    nativeBtn.addEventListener('click', () =>
+      navigator.share({ title: 'Re-Charge', text: shareText, url: shareUrl }).catch(() => {})
+    );
+    document.querySelector('.share__row').prepend(nativeBtn);
+  }
 
   const copyBtn = document.getElementById('copyLink');
   copyBtn.addEventListener('click', async () => {
@@ -296,6 +319,7 @@ partnerForm.addEventListener('submit', async (e) => {
   }
   partnerForm.hidden = true;
   partnerDone.hidden = false;
+  window.burstBolts?.();
 });
 
 /* ---------- Notify strip (email capture) ---------- */

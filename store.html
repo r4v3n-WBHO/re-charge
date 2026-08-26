@@ -16,6 +16,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <script src="config.js"></script>
+  <script src="fx.js" defer></script>
 </head>
 <body>
 
@@ -44,6 +45,7 @@
         </span>
         RE<span class="logo-hyphen">-</span>CHARGE
       </a>
+      <span class="nav__charge" aria-hidden="true"><span class="nav__charge-fill"></span></span>
       <nav class="nav__links">
         <a href="index.html#concept">The Concept</a>
         <a href="index.html#rewards">Rewards</a>
@@ -114,6 +116,11 @@
                 <div><dt>Reclaimed cells</dt><dd id="sumCells">—</dd></div>
                 <div><dt>Estimated price</dt><dd id="sumPrice">—</dd></div>
               </dl>
+
+              <p class="impact" id="impactLine">
+                ♻️ This build would divert <strong id="impactVapes">—</strong> and
+                <strong id="impactBottles">—</strong> from landfill.
+              </p>
 
               <!-- inline guard: never allow a native GET submit (would leak email into the URL) -->
               <form class="preorder" id="preorderForm" novalidate action="javascript:void(0)" onsubmit="event.preventDefault()">
@@ -290,11 +297,11 @@
 
     const CAPACITIES = [
       { id: '5000',  mAh: 5000,  cells: 2, charges: '≈ 1–2 phone charges', price: 'R399',
-        dims: { w: 2.7, h: 2.9, d: 0.95 }, layers: 1, rows: 2 },
+        dims: { w: 2.7, h: 2.9, d: 0.95 }, layers: 1, rows: 2, bottles: 2 },
       { id: '10000', mAh: 10000, cells: 4, charges: '≈ 2–4 phone charges', price: 'R599',
-        dims: { w: 2.7, h: 4.4, d: 0.95 }, layers: 1, rows: 4 },
+        dims: { w: 2.7, h: 4.4, d: 0.95 }, layers: 1, rows: 4, bottles: 3 },
       { id: '20000', mAh: 20000, cells: 8, charges: '≈ 4–8 phone charges', price: 'R899',
-        dims: { w: 2.7, h: 4.4, d: 1.75 }, layers: 2, rows: 4 },
+        dims: { w: 2.7, h: 4.4, d: 1.75 }, layers: 2, rows: 4, bottles: 4 },
     ];
 
     const state = { colour: COLOURS[0], capacity: CAPACITIES[1], inside: false };
@@ -540,6 +547,12 @@
       document.getElementById('sumCapacity').textContent = state.capacity.mAh.toLocaleString('en-ZA') + ' mAh';
       document.getElementById('sumCells').textContent = state.capacity.cells + ' × reclaimed vape cells';
       document.getElementById('sumPrice').textContent = 'Est. ' + state.capacity.price + ' — pay nothing today';
+      document.getElementById('impactVapes').textContent = state.capacity.cells + ' vapes';
+      document.getElementById('impactBottles').textContent = '~' + state.capacity.bottles + ' plastic bottles';
+      const line = document.getElementById('impactLine');
+      line.classList.remove('is-pop');
+      void line.offsetWidth;
+      line.classList.add('is-pop');
     }
     updateSummary();
 
@@ -617,6 +630,7 @@
       lastPreorderEmail = data.email;
       preorderForm.hidden = true;
       preorderDone.hidden = false;
+      window.burstBolts?.();
     });
 
     /* one-question follow-up after voting — qualitative insight a vote can't give */

@@ -115,6 +115,7 @@
         </span>
         RE<span class="logo-hyphen">-</span>CHARGE
       </a>
+      <span class="nav__charge" aria-hidden="true"><span class="nav__charge-fill"></span></span>
       <nav class="nav__links">
         <a href="#concept">The Concept</a>
         <a href="#product">Re-Charge One</a>
@@ -146,6 +147,10 @@
             Re-Charge is exploring a better way to deal with disposable vape waste —
             recovering usable batteries and giving them a second life instead of
             sending them straight to landfill.
+          </p>
+          <p class="hero__battery-note hero-fade" id="batteryNote" hidden>
+            🔋 Your device is at <strong>—</strong> right now. Every "dead" vape in
+            a bin today still holds real charge — that's the whole point.
           </p>
           <div class="hero__actions hero-fade">
             <a href="store.html" class="btn btn--primary btn--large magnetic">Back a Build — It's Free</a>
@@ -421,6 +426,10 @@
         </div>
 
         <div class="partner reveal" id="partners">
+          <div class="partner__visual" aria-label="3D concept of the Re-Charge collection bin">
+            <canvas id="binCanvas"></canvas>
+            <span class="partner__visual-hint">↻ Concept bin — drag</span>
+          </div>
           <div class="partner__text">
             <h3>📍 Put a Re-Charge bin at your venue</h3>
             <p>
@@ -815,6 +824,7 @@
   <!-- GSAP -->
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="fx.js" defer></script>
   <script src="script.js" defer></script>
 
   <!-- Three.js (inline module so the page also works when opened via file://) -->
@@ -1109,9 +1119,95 @@
       scenes.push(entry);
     }
 
+    /* ---------- Partner section: the concept collection bin ---------- */
+    function initBin() {
+      const canvas = document.getElementById('binCanvas');
+      if (!canvas) return;
+      const renderer = makeRenderer(canvas);
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 50);
+      camera.position.set(0, 0.9, 7);
+      addEnvironment(renderer, scene);
+
+      scene.add(new THREE.HemisphereLight(0xffffff, 0x9fc4b8, 0.9));
+      const key = new THREE.DirectionalLight(0xffffff, 1.3);
+      key.position.set(4, 6, 5);
+      scene.add(key);
+
+      const bin = new THREE.Group();
+      const green = new THREE.MeshStandardMaterial({ color: 0x147a5e, roughness: 0.55, metalness: 0.08 });
+      const darkGreen = new THREE.MeshStandardMaterial({ color: 0x0f5a45, roughness: 0.5, metalness: 0.08 });
+
+      const body = new THREE.Mesh(new RoundedBoxGeometry(2.2, 2.8, 1.8, 4, 0.14), green);
+      bin.add(body);
+      const lid = new THREE.Mesh(new RoundedBoxGeometry(2.4, 0.34, 2.0, 3, 0.1), darkGreen);
+      lid.position.y = 1.56;
+      bin.add(lid);
+      const slot = new THREE.Mesh(
+        new THREE.BoxGeometry(1.2, 0.05, 0.26),
+        new THREE.MeshStandardMaterial({ color: 0x06120e, roughness: 0.7 })
+      );
+      slot.position.set(0, 1.745, 0.35);
+      bin.add(slot);
+
+      // front label
+      const lbl = document.createElement('canvas');
+      lbl.width = 512; lbl.height = 640;
+      const lc = lbl.getContext('2d');
+      lc.textAlign = 'center';
+      lc.fillStyle = '#ffffff';
+      lc.font = '700 58px "Space Grotesk", sans-serif';
+      lc.fillText('RE-CHARGE', 256, 150);
+      lc.font = '600 30px "Inter", sans-serif';
+      lc.fillStyle = 'rgba(255,255,255,0.85)';
+      lc.fillText("DON'T BIN YOUR VAPE.", 256, 400);
+      lc.fillText('DROP IT HERE.', 256, 448);
+      lc.fillStyle = '#2df0b2';
+      lc.font = '700 120px "Space Grotesk", sans-serif';
+      lc.fillText('⚡', 256, 300);
+      const lblTex = new THREE.CanvasTexture(lbl);
+      lblTex.colorSpace = THREE.SRGBColorSpace;
+      const label = new THREE.Mesh(
+        new THREE.PlaneGeometry(1.6, 2.0),
+        new THREE.MeshBasicMaterial({ map: lblTex, transparent: true })
+      );
+      label.position.set(0, 0.1, 0.91);
+      bin.add(label);
+
+      // wheels
+      const wheelMat = new THREE.MeshStandardMaterial({ color: 0x111614, roughness: 0.8 });
+      [-0.75, 0.75].forEach((x) => {
+        const wheel = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.18, 24), wheelMat);
+        wheel.rotation.z = Math.PI / 2;
+        wheel.position.set(x, -1.5, -0.6);
+        bin.add(wheel);
+      });
+
+      bin.position.y = 0.15;
+      bin.rotation.y = -0.4;
+      scene.add(bin);
+
+      const controls = new OrbitControls(camera, canvas);
+      controls.enableZoom = false;
+      controls.enablePan = false;
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.06;
+      controls.autoRotate = !reduceMotion;
+      controls.autoRotateSpeed = 1.2;
+      canvas.style.touchAction = 'pan-y';
+
+      const entry = {
+        canvas, renderer, scene, camera, visible: true,
+        update() { controls.update(); }
+      };
+      trackVisibility(entry);
+      scenes.push(entry);
+    }
+
     try {
       initHero();
       initProduct();
+      initBin();
       document.body.classList.add('webgl-on');
     } catch (err) {
       console.warn('3D disabled:', err);
