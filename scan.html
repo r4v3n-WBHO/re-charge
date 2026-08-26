@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Re-Charge Rewards — Scan Demo</title>
+  <meta name="description" content="A demo of what scanning a Re-Charge collection box will feel like: deposit a dead vape, earn points, work toward rewards. Concept only — no real boxes exist yet." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔋</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <div class="bg" aria-hidden="true">
+    <div class="bg__grid"></div>
+    <div class="bg__blob bg__blob--1"></div>
+    <div class="bg__blob bg__blob--2"></div>
+  </div>
+
+  <header class="nav is-scrolled">
+    <div class="container nav__inner">
+      <a href="index.html" class="nav__logo">
+        <span class="nav__logo-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M13 2 4.5 13.5H11L9.5 22 19 10h-6.5L13 2Z" fill="currentColor"/></svg>
+        </span>
+        RE-CHARGE
+      </a>
+      <nav class="nav__links">
+        <a href="index.html#rewards">Rewards</a>
+        <a href="store.html">Back It</a>
+        <a href="index.html#feedback" class="btn btn--small btn--primary">Give Feedback</a>
+      </nav>
+      <button class="nav__toggle" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="section scan">
+      <div class="container container--narrow">
+
+        <div class="scan__demo-banner" role="note">
+          🧪 <strong>Demo only.</strong> No collection boxes exist yet — this is what
+          scanning one would feel like. Points live only in your browser.
+        </div>
+
+        <div class="scan__card">
+          <div class="scan__box-head">
+            <div class="scan__box-icon" aria-hidden="true">📦</div>
+            <div>
+              <span class="scan__box-label">You scanned collection box</span>
+              <h1 class="scan__box-id">RC-0042</h1>
+              <span class="scan__box-loc">Demo Vape Co. — Johannesburg</span>
+            </div>
+            <span class="scan__box-status">● Online</span>
+          </div>
+
+          <div class="scan__wallet">
+            <span class="scan__wallet-label">Your Re-Charge Points</span>
+            <div class="scan__wallet-balance">
+              <span id="rpBalance">0</span>
+              <em>RP</em>
+            </div>
+            <div class="scan__float" id="rpFloat" aria-hidden="true">+50 RP</div>
+          </div>
+
+          <button type="button" class="btn btn--primary btn--large btn--full" id="depositBtn">
+            🗑️ Simulate Dropping a Vape (+50 RP)
+          </button>
+          <p class="scan__validate-note">
+            In the real system this step is <strong>validated at the box</strong> —
+            a one-time code per deposit or a staff tap at partner shops — so points
+            can't be farmed without actually recycling.
+          </p>
+
+          <div class="scan__tiers" id="tiers">
+            <h2>Reward progress</h2>
+            <!-- tiers rendered by script -->
+          </div>
+
+          <button type="button" class="scan__reset" id="resetBtn">Reset demo</button>
+        </div>
+
+        <div class="scan__ctas">
+          <p>Like how this feels? Help us make it real.</p>
+          <div class="scan__ctas-row">
+            <a href="store.html" class="btn btn--primary magnetic">Back a Build — Free Pre-Order</a>
+            <a href="index.html#feedback" class="btn btn--ghost magnetic">Give Feedback</a>
+          </div>
+        </div>
+
+        <p class="disclaimer">
+          Re-Charge Rewards is a concept. Points values are illustrative, nothing shown
+          here is an offer, and demo points carry no monetary value. Points earned in
+          any future live programme would be subject to published terms.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <span class="footer__logo">RE-CHARGE</span>
+        <span class="footer__tagline">Power. Reclaimed.</span>
+      </div>
+      <nav class="footer__links">
+        <a href="index.html">Home</a>
+        <a href="index.html#rewards">Rewards</a>
+        <a href="store.html">Back It (Pre-Order)</a>
+        <a href="index.html#feedback">Give Feedback</a>
+      </nav>
+      <p class="footer__copyright">© 2026 Re-Charge</p>
+    </div>
+  </footer>
+
+  <script>
+    // nav toggle
+    const navToggle = document.querySelector('.nav__toggle');
+    const navLinks = document.querySelector('.nav__links');
+    navToggle.addEventListener('click', () => {
+      const open = navLinks.classList.toggle('is-open');
+      navToggle.setAttribute('aria-expanded', String(open));
+    });
+
+    /* ---------- demo points wallet (browser-only) ---------- */
+    const TIERS = [
+      { rp: 500,  icon: '💸', label: 'R50 off a Re-Charge One' },
+      { rp: 1000, icon: '🎟️', label: 'Giveaway entry' },
+      { rp: 2000, icon: '👕', label: 'Re-Charge merch' },
+    ];
+    const STEP = 50;
+
+    const balanceEl = document.getElementById('rpBalance');
+    const floatEl = document.getElementById('rpFloat');
+    const tiersEl = document.getElementById('tiers');
+
+    let rp = parseInt(localStorage.getItem('recharge-demo-rp') || '0', 10) || 0;
+
+    function renderTiers() {
+      tiersEl.querySelectorAll('.tier').forEach((t) => t.remove());
+      TIERS.forEach((tier) => {
+        const pct = Math.min(100, (rp / tier.rp) * 100);
+        const unlocked = rp >= tier.rp;
+        const div = document.createElement('div');
+        div.className = 'tier' + (unlocked ? ' is-unlocked' : '');
+        div.innerHTML = `
+          <div class="tier__head">
+            <span class="tier__label">${tier.icon} ${tier.label}</span>
+            <span class="tier__amount">${unlocked ? 'Unlocked ✓' : tier.rp.toLocaleString('en-ZA') + ' RP'}</span>
+          </div>
+          <div class="tier__track"><div class="tier__fill" style="width:${pct}%"></div></div>`;
+        tiersEl.appendChild(div);
+      });
+    }
+
+    function render(animate) {
+      balanceEl.textContent = rp.toLocaleString('en-ZA');
+      renderTiers();
+      if (animate) {
+        floatEl.classList.remove('is-anim');
+        void floatEl.offsetWidth; // restart animation
+        floatEl.classList.add('is-anim');
+        balanceEl.classList.remove('is-bump');
+        void balanceEl.offsetWidth;
+        balanceEl.classList.add('is-bump');
+      }
+    }
+
+    document.getElementById('depositBtn').addEventListener('click', () => {
+      rp += STEP;
+      localStorage.setItem('recharge-demo-rp', String(rp));
+      render(true);
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      rp = 0;
+      localStorage.removeItem('recharge-demo-rp');
+      render(false);
+    });
+
+    render(false);
+  </script>
+</body>
+</html>

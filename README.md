@@ -19,7 +19,13 @@ if the CDN is unreachable the site degrades gracefully (content stays visible,
 - `store.html` — car-style configurator: pick a recycled-bottle enclosure
   colour (live 3D recolour) and capacity (shows the reclaimed cells inside via
   an x-ray view), then pre-order free — no payment taken. Submissions are
-  tagged `type: 'preorder'` with the chosen config.
+  tagged `type: 'preorder'` with the chosen config and a required
+  reclaimed-cells acknowledgment. Includes the "Safety, honestly" commitments
+  section.
+- `scan.html` — Re-Charge Rewards scan demo: simulates the post-QR-scan
+  experience at a collection box (browser-only points wallet, reward-tier
+  progress). Clearly labelled demo; explains deposits are validated in the
+  real system.
 - `styles.css` — light theme, green/teal accent, ambient grid/blob background,
   marquee, fully responsive, `prefers-reduced-motion` support
 - `script.js` — GSAP ScrollTrigger reveals, scrubbed concept timeline, card
@@ -50,7 +56,15 @@ the `main` branch root.
 - [ ] Wire the feedback + notify + pre-order forms to a real endpoint
       (`FEEDBACK_ENDPOINT` in `script.js` AND in `store.html`'s module —
       Formspree free tier or a Google Apps Script → Sheet)
-- [ ] Sanity-check the indicative pre-order prices (R399/R599/R899)
+- [ ] Sanity-check the indicative pre-order prices (R399/R599/R899) and
+      rewards points values (50 RP/vape; 500/1000/2000 RP tiers)
+- [ ] **Legal review before anything is sold or any live rewards programme
+      runs** — reclaimed-battery liability disclaimers cannot waive strict
+      product liability under the Consumer Protection Act (s61); promotional
+      competitions/giveaways must comply with CPA s36; battery products need
+      safety certification (e.g. IEC 62133) and product-liability insurance
+- [ ] Rewards backend when real: unique per-deposit QR codes or shop-staff
+      validation (anti-fraud), accounts + point balances (Supabase would fit)
 - [ ] Replace `hello@example.com` contact link in the footer
 - [ ] Add analytics (Plausible/GoatCounter snippet placeholder is in `<head>`)
 - [ ] Make `og:image`/`og:url` absolute URLs once deployed (social platforms

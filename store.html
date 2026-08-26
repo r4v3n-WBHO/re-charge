@@ -101,6 +101,15 @@
                   Email
                   <input type="email" name="email" required autocomplete="email" placeholder="you@example.com" />
                 </label>
+                <label class="ack">
+                  <input type="checkbox" name="ack" required />
+                  <span>
+                    I understand the Re-Charge One concept uses <strong>reclaimed
+                    lithium-ion batteries</strong> recovered from disposable vapes.
+                    Any product would be individually cell-tested, clearly labelled
+                    and independently safety-certified before sale.
+                  </span>
+                </label>
                 <button type="submit" class="btn btn--primary btn--large btn--full">Cast My Vote — Pre-Order Free</button>
                 <p class="preorder__small">
                   A pre-order is a free, non-binding vote with your name on it. No
@@ -130,10 +139,28 @@
           </div>
         </div>
 
+        <div class="safety">
+          <h2>Safety, honestly.</h2>
+          <p class="safety__intro">
+            Reclaimed lithium-ion batteries carry real risks if handled carelessly —
+            we won't pretend otherwise. Here's what "safe reuse" would actually mean
+            before a single unit is ever sold:
+          </p>
+          <ul class="safety__list">
+            <li><strong>Every cell tested individually.</strong> Capacity, internal resistance and physical inspection — cells that don't pass go to certified battery recycling, not into products.</li>
+            <li><strong>Independent certification before sale.</strong> No product ships without third-party battery-safety testing (e.g. IEC 62133) and the compliance any new power bank requires.</li>
+            <li><strong>Clear labelling, always.</strong> Every buyer will know the cells are reclaimed — it's the whole point, not fine print.</li>
+            <li><strong>Protection built in.</strong> Battery-management circuitry for over-charge, over-discharge, short-circuit and temperature protection in every design.</li>
+            <li><strong>We stay responsible.</strong> Acknowledging that cells are reclaimed doesn't shift safety onto you — statutory consumer rights are never waived, and any sold product would be backed by product-liability cover.</li>
+          </ul>
+        </div>
+
         <p class="disclaimer store__disclaimer">
           Re-Charge One is a concept product and is not yet in production. Renders are
           conceptual. Pre-orders are expressions of interest only — no payment is taken,
-          no contract is formed, and estimated prices may change.
+          no contract is formed, and estimated prices may change. Any future product
+          using reclaimed cells would be clearly labelled and sold only after
+          independent safety testing and certification.
         </p>
       </div>
     </section>
@@ -487,11 +514,13 @@
     preorderForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       if (!preorderForm.email.checkValidity()) { preorderForm.email.focus(); return; }
+      if (!preorderForm.ack.checked) { preorderForm.ack.focus(); return; }
 
       const data = {
         type: 'preorder',
         name: preorderForm.name.value.trim(),
         email: preorderForm.email.value.trim(),
+        acknowledgedReclaimedCells: true,
         colour: state.colour.name,
         capacity: state.capacity.mAh,
         cells: state.capacity.cells,
