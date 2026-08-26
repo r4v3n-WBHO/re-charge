@@ -99,7 +99,7 @@ if (!reduceMotion && window.matchMedia('(hover: hover)').matches) {
       const r = card.getBoundingClientRect();
       const x = (e.clientX - r.left) / r.width - 0.5;
       const y = (e.clientY - r.top) / r.height - 0.5;
-      card.style.transform = `rotateY(${x * 10}deg) rotateX(${-y * 10}deg) translateY(-4px)`;
+      card.style.transform = `rotateY(${x * 8}deg) rotateX(${-y * 8}deg)`;
     });
     card.addEventListener('pointerleave', () => {
       card.style.transform = '';
