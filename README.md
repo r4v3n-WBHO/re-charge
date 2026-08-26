@@ -10,11 +10,16 @@ established company or claim any product is for sale.
 
 ## Stack
 
-Plain static site — no build step, no dependencies.
+Static site, no build step. Three.js and GSAP are loaded from the jsDelivr CDN;
+if the CDN is unreachable the site degrades gracefully (content stays visible,
+3D canvases stay empty).
 
-- `index.html` — single-page layout (hero, problem, concept, product, why, feedback, CTA, footer)
-- `styles.css` — all styling; light theme with green/teal accent, fully responsive
-- `script.js` — mobile nav, scroll-reveal animations, feedback form handling
+- `index.html` — single-page layout + inline Three.js module (3D battery hero,
+  draggable Re-Charge One power bank mockup)
+- `styles.css` — light theme, green/teal accent, ambient grid/blob background,
+  marquee, fully responsive, `prefers-reduced-motion` support
+- `script.js` — GSAP ScrollTrigger reveals, scrubbed concept timeline, card
+  tilt, magnetic buttons, mobile nav, feedback form handling
 
 ## Run locally
 
