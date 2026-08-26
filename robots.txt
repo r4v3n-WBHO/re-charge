@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://r4v3n-wbho.github.io/re-charge/sitemap.xml
+Sitemap: https://re-charge.co.za/sitemap.xml
