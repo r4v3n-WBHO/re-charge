@@ -633,6 +633,49 @@ h1 .line > span { display: inline-block; }
 
 .product__copy > p { color: var(--text-muted); margin-bottom: 1.5rem; max-width: 30rem; }
 
+.product__made {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-bottom: 1.6rem;
+  max-width: 30rem;
+}
+
+.product__made li {
+  display: flex;
+  gap: 0.9rem;
+  align-items: flex-start;
+  padding: 0.9rem 1.1rem;
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 14px;
+  font-size: 0.93rem;
+  color: var(--text-muted);
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.product__made li:hover { transform: translateX(4px); border-left-color: var(--accent-bright); }
+
+.product__made-icon {
+  font-size: 1.4rem;
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: var(--accent-soft);
+}
+
+.product__made strong {
+  display: block;
+  font-family: var(--font-display);
+  color: var(--text);
+  margin-bottom: 0.15rem;
+}
+
 .product__tags {
   list-style: none;
   display: flex;

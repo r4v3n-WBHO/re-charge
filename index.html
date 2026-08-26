@@ -8,7 +8,7 @@
 
   <!-- Social sharing (og:image/og:url should become absolute URLs once deployed) -->
   <meta property="og:title" content="Re-Charge — Power. Reclaimed." />
-  <meta property="og:description" content="What if your dead vape could get a second life? An early-stage concept exploring recovery and reuse of disposable-vape batteries. Tell us what you think." />
+  <meta property="og:description" content="What if your dead vape could get a second life? A concept power bank built almost entirely from waste — reclaimed vape batteries inside, an enclosure 3D-printed from recycled bottles outside. Tell us what you think." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="og-image.png" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -170,7 +170,7 @@
           <div class="step reveal-item">
             <span class="step__num">04</span>
             <h3>Re-Charge</h3>
-            <p>Suitable materials could potentially be given a second life in products such as portable power solutions.</p>
+            <p>Suitable cells could be rebuilt into products like portable power banks — housed in enclosures 3D-printed from recycled plastic bottles, so the whole product is made from waste.</p>
           </div>
         </div>
         <p class="disclaimer reveal">
@@ -187,11 +187,33 @@
           <span class="pill pill--muted">Concept Product — Not Yet Available</span>
           <h2>Could your old vape become your next power bank?</h2>
           <h3 class="product__name">Re-Charge One</h3>
-          <p>A compact portable power bank made using suitably recovered battery cells.</p>
+          <p>
+            A compact portable power bank designed to be built almost entirely
+            from waste — nothing about it starts life as new material.
+          </p>
+          <ul class="product__made">
+            <li>
+              <span class="product__made-icon" aria-hidden="true">🔋</span>
+              <div>
+                <strong>The cells</strong>
+                Lithium-ion batteries reclaimed from disposable vapes, tested
+                and matched for safe reuse.
+              </div>
+            </li>
+            <li>
+              <span class="product__made-icon" aria-hidden="true">🧴</span>
+              <div>
+                <strong>The enclosure</strong>
+                3D-printed from recycled plastic bottles — waste plastic turned
+                into a tough, repairable shell.
+              </div>
+            </li>
+          </ul>
           <ul class="product__tags">
             <li>USB-C</li>
             <li>Portable</li>
-            <li>Recovered Materials</li>
+            <li>Recovered Cells</li>
+            <li>Recycled-Bottle Shell</li>
             <li>Designed for a Second Life</li>
           </ul>
         </div>
@@ -214,8 +236,10 @@
         </p>
         <p class="muted-light">
           We're researching whether discarded vape batteries can be safely recovered,
-          tested and repurposed into useful products. Before we build anything, we
-          want to hear from the people who would actually use it.
+          tested and repurposed — and whether entire products can be built from waste:
+          reclaimed cells inside, enclosures 3D-printed from recycled plastic bottles
+          outside. Before we build anything, we want to hear from the people who would
+          actually use it.
         </p>
       </div>
     </section>
@@ -275,7 +299,7 @@
           </fieldset>
 
           <fieldset class="form-row">
-            <legend>Would you buy a power bank made using safely recovered battery cells?</legend>
+            <legend>Would you buy a power bank built from waste — safely recovered battery cells in a shell 3D-printed from recycled bottles?</legend>
             <div class="choices choices--inline">
               <label><input type="radio" name="buy" value="Yes" /><span>Yes</span></label>
               <label><input type="radio" name="buy" value="Probably" /><span>Probably</span></label>
@@ -336,6 +360,16 @@
               it gets built depends on the technical, safety, regulatory and economic
               feasibility we're researching now, and on whether enough people say they
               want it. That's what the feedback form is for.
+            </p>
+          </details>
+          <details class="faq__item">
+            <summary>What would the power bank actually be made of?</summary>
+            <p>
+              As much waste as possible. The battery cells would be lithium-ion cells
+              reclaimed from disposable vapes and individually tested for safe reuse.
+              The enclosure would be 3D-printed from recycled plastic bottles. The goal
+              is a product where almost nothing starts life as new material — waste in,
+              useful product out.
             </p>
           </details>
           <details class="faq__item">
@@ -594,9 +628,30 @@
 
       const bank = new THREE.Group();
 
+      // speckled texture — reads as recycled plastic rather than virgin material
+      const speckle = document.createElement('canvas');
+      speckle.width = 256; speckle.height = 256;
+      const sc = speckle.getContext('2d');
+      sc.fillStyle = '#143d33';
+      sc.fillRect(0, 0, 256, 256);
+      const flecks = ['#1d5546', '#0d2b24', '#3a6b5c', '#c9d4cf', '#7fae9d'];
+      for (let i = 0; i < 900; i++) {
+        sc.fillStyle = flecks[(Math.random() * flecks.length) | 0];
+        sc.globalAlpha = 0.25 + Math.random() * 0.5;
+        const size = 0.6 + Math.random() * 2.2;
+        sc.beginPath();
+        sc.arc(Math.random() * 256, Math.random() * 256, size, 0, Math.PI * 2);
+        sc.fill();
+      }
+      sc.globalAlpha = 1;
+      const speckleTex = new THREE.CanvasTexture(speckle);
+      speckleTex.colorSpace = THREE.SRGBColorSpace;
+      speckleTex.wrapS = speckleTex.wrapT = THREE.RepeatWrapping;
+      speckleTex.repeat.set(2, 3);
+
       const body = new THREE.Mesh(
         new RoundedBoxGeometry(2.7, 4.7, 0.95, 6, 0.28),
-        new THREE.MeshStandardMaterial({ color: 0x123830, metalness: 0.55, roughness: 0.4 })
+        new THREE.MeshStandardMaterial({ map: speckleTex, metalness: 0.08, roughness: 0.62 })
       );
       bank.add(body);
 
@@ -619,9 +674,11 @@
         c.roundRect(bx, 380 + i * 66, barW, barH, 21);
         c.fill();
       }
-      c.fillStyle = 'rgba(255,255,255,0.65)';
-      c.font = '600 30px "Inter", sans-serif';
-      c.fillText('RECOVERED CELLS INSIDE', 256, 740);
+      c.fillStyle = 'rgba(255,255,255,0.7)';
+      c.font = '600 27px "Inter", sans-serif';
+      c.fillText('RECOVERED CELLS INSIDE', 256, 706);
+      c.fillStyle = 'rgba(45,240,178,0.85)';
+      c.fillText('SHELL: RECYCLED BOTTLES', 256, 748);
       c.strokeStyle = 'rgba(255,255,255,0.4)';
       c.lineWidth = 3;
       c.beginPath();
