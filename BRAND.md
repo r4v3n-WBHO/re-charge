@@ -59,6 +59,12 @@ Gradient: `linear-gradient(135deg, #0e9f7a, #12c493)` for buttons/mark fills.
 
 ## Voice
 
+- **Never blame the vaper.** The antagonist is always the *single-use design*,
+  never the person. A vaper who returns a device is the hero of the story.
+  Frame everything around the technology: an excellent rechargeable cell,
+  discarded not because it's broken but because the product around it is
+  finished. No guilt, no judgment, no commentary on whether people should
+  vape — that's a debate for other people.
 - **Honest first.** We're a concept and we say so. Estimated prices are
   "estimated", renders are "conceptual", safety claims are commitments, not
   boasts. Never greenwash.
