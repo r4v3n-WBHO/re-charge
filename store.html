@@ -444,8 +444,9 @@
     logoTex.colorSpace = THREE.SRGBColorSpace;
     const logo = new THREE.Mesh(
       new THREE.PlaneGeometry(1.7, 0.85),
-      new THREE.MeshBasicMaterial({ map: logoTex, transparent: true })
+      new THREE.MeshBasicMaterial({ map: logoTex, transparent: true, depthWrite: false })
     );
+    logo.renderOrder = 3; // draw after the shell, or its depth punches a hole through it
     bank.add(logo);
 
     function rebuild() {
