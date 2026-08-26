@@ -336,6 +336,7 @@ h1 .line > span { display: inline-block; }
   background: radial-gradient(circle, rgba(45, 240, 178, 0.28), rgba(14, 159, 122, 0.08) 55%, transparent 72%);
   filter: blur(10px);
   animation: glow-breathe 5s ease-in-out infinite;
+  pointer-events: none;
 }
 
 @keyframes glow-breathe {
@@ -834,6 +835,7 @@ h1 .line > span { display: inline-block; }
   border-radius: 50%;
   background: radial-gradient(circle, rgba(14, 159, 122, 0.22), transparent 70%);
   filter: blur(14px);
+  pointer-events: none; /* painted above the canvas — must not eat drag events */
 }
 
 .product__hint {
