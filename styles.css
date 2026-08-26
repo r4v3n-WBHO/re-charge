@@ -290,6 +290,25 @@ h1 .line > span { display: inline-block; }
 .nav__links a:hover { color: var(--accent-strong); }
 .nav__links a.btn { color: #fff; }
 
+/* scrollspy: the section you're reading lights up in the nav */
+.nav__links a:not(.btn) { position: relative; }
+
+.nav__links a:not(.btn)::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transition: transform 0.25s ease;
+}
+
+.nav__links a.is-active { color: var(--accent-strong); }
+.nav__links a.is-active::after { transform: scaleX(1); }
+
 /* nav battery + live % = the visitor's reading progress */
 .nav__meter {
   display: flex;
@@ -1592,6 +1611,42 @@ input:focus, select:focus, textarea:focus {
 }
 
 .slidein__done { font-weight: 600; color: var(--accent-strong); }
+
+/* ---------- 3D loading / unavailable states ---------- */
+
+.hero__visual::after,
+.product__visual::after,
+.viewer::after,
+.partner__visual::after {
+  content: "⚡";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 2.2rem;
+  color: var(--accent);
+  pointer-events: none;
+  animation: loader-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes loader-pulse {
+  50% { opacity: 0.25; transform: scale(0.88); }
+}
+
+body.webgl-on .hero__visual::after,
+body.webgl-on .product__visual::after,
+body.webgl-on .viewer::after,
+body.webgl-on .partner__visual::after { content: none; }
+
+body.webgl-off .hero__visual::after,
+body.webgl-off .product__visual::after,
+body.webgl-off .viewer::after,
+body.webgl-off .partner__visual::after {
+  content: "🔋 3D preview unavailable on this device";
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  animation: none;
+}
 
 /* ---------- Confetti canvas ---------- */
 

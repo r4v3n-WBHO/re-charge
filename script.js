@@ -23,6 +23,23 @@ navLinks.addEventListener('click', (e) => {
   }
 });
 
+/* ---------- Scrollspy: highlight the nav link for the section in view ---------- */
+const spyLinks = [...document.querySelectorAll('.nav__links a[href^="#"]:not(.btn)')];
+if (spyLinks.length) {
+  const byId = new Map(spyLinks.map((a) => [a.getAttribute('href').slice(1), a]));
+  const spy = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      spyLinks.forEach((a) => a.classList.remove('is-active'));
+      byId.get(entry.target.id)?.classList.add('is-active');
+    });
+  }, { rootMargin: '-35% 0px -55% 0px' });
+  byId.forEach((_, id) => {
+    const section = document.getElementById(id);
+    if (section) spy.observe(section);
+  });
+}
+
 /* ---------- Nav background on scroll ---------- */
 const onScroll = () => nav.classList.toggle('is-scrolled', window.scrollY > 24);
 window.addEventListener('scroll', onScroll, { passive: true });
@@ -163,6 +180,7 @@ form.addEventListener('submit', async (e) => {
   form.hidden = true;
   thanks.hidden = false;
   window.burstBolts?.();
+  window.trackEvent?.('feedback-submitted');
   // positive sentiment → nudge toward the strongest signal: a free pre-order
   if (/^(Great idea|Interesting)/.test(data.idea || '')) {
     document.getElementById('feedbackNudge').hidden = false;
@@ -194,6 +212,9 @@ if (wa) {
     'https://x.com/intent/tweet?text=' + encodeURIComponent(shareText) + '&url=' + encodeURIComponent(shareUrl);
   document.getElementById('shareLinkedIn').href =
     'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(shareUrl);
+  wa.addEventListener('click', () => window.trackEvent?.('share-whatsapp'));
+  document.getElementById('shareX').addEventListener('click', () => window.trackEvent?.('share-x'));
+  document.getElementById('shareLinkedIn').addEventListener('click', () => window.trackEvent?.('share-linkedin'));
 
   // native share sheet where supported (mobile — WhatsApp etc.)
   if (navigator.share) {
@@ -201,9 +222,10 @@ if (wa) {
     nativeBtn.type = 'button';
     nativeBtn.className = 'share__btn';
     nativeBtn.textContent = 'Share…';
-    nativeBtn.addEventListener('click', () =>
-      navigator.share({ title: 'Re-Charge', text: shareText, url: shareUrl }).catch(() => {})
-    );
+    nativeBtn.addEventListener('click', () => {
+      window.trackEvent?.('share-native');
+      navigator.share({ title: 'Re-Charge', text: shareText, url: shareUrl }).catch(() => {});
+    });
     document.querySelector('.share__row').prepend(nativeBtn);
   }
 
@@ -263,6 +285,7 @@ if (
     const email = slideinForm.email.value.trim();
     if (!email || !slideinForm.email.checkValidity()) { slideinForm.email.focus(); return; }
     if (!isSpam(slideinForm)) await submitEntry({ type: 'interest', source: 'slidein', email });
+    window.trackEvent?.('notify-slidein');
     slideinForm.hidden = true;
     document.getElementById('slideinDone').hidden = false;
     setTimeout(() => {
@@ -320,6 +343,7 @@ partnerForm.addEventListener('submit', async (e) => {
   partnerForm.hidden = true;
   partnerDone.hidden = false;
   window.burstBolts?.();
+  window.trackEvent?.('partner-registered');
 });
 
 /* ---------- Notify strip (email capture) ---------- */
@@ -336,6 +360,7 @@ notifyForm.addEventListener('submit', async (e) => {
   }
 
   if (!isSpam(notifyForm)) await submitEntry({ type: 'interest', email });
+  window.trackEvent?.('notify-signup');
 
   notifyForm.querySelector('.notify__row').hidden = true;
   notifyDone.hidden = false;

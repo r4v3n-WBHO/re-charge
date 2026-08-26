@@ -160,6 +160,7 @@
                 <div class="preorder__done-icon">⚡</div>
                 <p><strong>Your vote is in!</strong></p>
                 <p id="preorderDoneDetail"></p>
+                <button type="button" id="shareBuild" class="btn btn--ghost">📣 Share Your Build</button>
                 <p class="preorder__small">We'll email you if Re-Charge One goes into production. Nothing to pay, nothing to cancel.</p>
 
                 <form class="followup" id="followupForm" action="javascript:void(0)" onsubmit="event.preventDefault()">
@@ -304,7 +305,20 @@
         dims: { w: 2.7, h: 4.4, d: 1.75 }, layers: 2, rows: 4, bottles: 4 },
     ];
 
-    const state = { colour: COLOURS[0], capacity: CAPACITIES[1], inside: false };
+    // shared build links: ?colour=grape-soda&mah=20000 opens preconfigured
+    const urlParams = new URLSearchParams(location.search);
+    const state = {
+      colour: COLOURS.find((c) => c.id === urlParams.get('colour')) || COLOURS[0],
+      capacity: CAPACITIES.find((c) => c.id === urlParams.get('mah')) || CAPACITIES[1],
+      inside: false,
+    };
+
+    function syncUrl() {
+      const p = new URLSearchParams(location.search);
+      p.set('colour', state.colour.id);
+      p.set('mah', state.capacity.id);
+      history.replaceState(null, '', location.pathname + '?' + p);
+    }
 
     /* ================= three.js scene ================= */
 
@@ -520,13 +534,13 @@
 
     insideToggle.addEventListener('click', () => setInside(!state.inside));
 
-    COLOURS.forEach((c, i) => {
+    COLOURS.forEach((c) => {
       const b = document.createElement('button');
       b.type = 'button';
-      b.className = 'swatch' + (i === 0 ? ' is-active' : '');
+      b.className = 'swatch' + (c === state.colour ? ' is-active' : '');
       b.style.setProperty('--swatch', c.css);
       b.setAttribute('role', 'radio');
-      b.setAttribute('aria-checked', String(i === 0));
+      b.setAttribute('aria-checked', String(c === state.colour));
       b.setAttribute('aria-label', c.name);
       b.title = c.name;
       b.addEventListener('click', () => {
@@ -540,6 +554,7 @@
         b.setAttribute('aria-checked', 'true');
         setInside(false); // show off the shell colour
         updateSummary();
+        syncUrl();
       });
       swatchesEl.appendChild(b);
     });
@@ -566,6 +581,7 @@
         b.classList.add('is-active');
         b.setAttribute('aria-checked', 'true');
         updateSummary();
+        syncUrl();
       });
       capacityEl.appendChild(b);
     });
@@ -660,6 +676,25 @@
       preorderForm.hidden = true;
       preorderDone.hidden = false;
       window.burstBolts?.();
+      window.trackEvent?.('vote-cast');
+    });
+
+    /* share your exact build — every backer becomes an advert */
+    const shareBuildBtn = document.getElementById('shareBuild');
+    shareBuildBtn.addEventListener('click', async () => {
+      const p = new URLSearchParams({ colour: state.colour.id, mah: state.capacity.id, src: 'build-share' });
+      const url = location.origin + location.pathname + '?' + p;
+      const text = `I just backed a ${state.colour.name} ${state.capacity.mAh.toLocaleString('en-ZA')} mAh power bank built from vape waste ⚡ Back yours free:`;
+      window.trackEvent?.('share-build');
+      if (navigator.share) {
+        navigator.share({ title: 'Re-Charge One', text, url }).catch(() => {});
+      } else {
+        try {
+          await navigator.clipboard.writeText(text + ' ' + url);
+          shareBuildBtn.textContent = 'Link copied ✓';
+          setTimeout(() => (shareBuildBtn.textContent = '📣 Share Your Build'), 2500);
+        } catch { /* clipboard blocked — nothing to do */ }
+      }
     });
 
     /* one-question follow-up after voting — qualitative insight a vote can't give */
@@ -680,7 +715,10 @@
 
       followupForm.hidden = true;
       followupDone.hidden = false;
+      window.trackEvent?.('vote-followup');
     });
+
+    document.body.classList.add('webgl-on');
   </script>
   <script data-goatcounter="https://revan-lombard.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>

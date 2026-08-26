@@ -206,6 +206,7 @@
     depositBtn.addEventListener('click', () => {
       if (taps >= MAX_DEMO_TAPS) return;
       taps++;
+      if (taps === 1) window.trackEvent?.('scan-demo-used');
       const unlockedBefore = TIERS.filter((t) => rp >= t.rp).length;
       rp += STEP;
       localStorage.setItem('recharge-demo-rp', String(rp));

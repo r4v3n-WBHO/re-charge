@@ -1242,6 +1242,7 @@
       document.body.classList.add('webgl-on');
     } catch (err) {
       console.warn('3D disabled:', err);
+      document.body.classList.add('webgl-off');
     }
 
     function onResize() {

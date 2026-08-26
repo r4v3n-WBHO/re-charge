@@ -20,7 +20,27 @@
     window.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', update);
     update();
+    // the meter doubles as back-to-top
+    meter.style.cursor = 'pointer';
+    meter.addEventListener('click', () => window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' }));
   }
+
+  /* ---- cookieless conversion events (GoatCounter) ---- */
+  window.trackEvent = function (name) {
+    try {
+      if (window.goatcounter && window.goatcounter.count) {
+        window.goatcounter.count({ path: name, title: name, event: true });
+      }
+    } catch (e) { /* analytics must never break the site */ }
+  };
+
+  /* ---- 3D watchdog: if no scene initialises, mark canvases as unavailable ---- */
+  setTimeout(() => {
+    if (document.querySelector('canvas') &&
+        !document.body.classList.contains('webgl-on')) {
+      document.body.classList.add('webgl-off');
+    }
+  }, 8000);
 
   /* ---- bolt confetti: celebrate votes, unlocks and sign-ups ---- */
   window.burstBolts = function () {
