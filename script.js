@@ -136,20 +136,21 @@ function isSpam(form) {
 
 async function submitEntry(data) {
   data.submittedAt = new Date().toISOString();
+  data._subject = 'Re-Charge: ' + (data.type || 'submission'); // Formspree email subject
   try {
-    if (FEEDBACK_ENDPOINT) {
-      await fetch(FEEDBACK_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify(data),
-      });
-    } else {
-      const stored = JSON.parse(localStorage.getItem('recharge-feedback') || '[]');
-      stored.push(data);
-      localStorage.setItem('recharge-feedback', JSON.stringify(stored));
-    }
+    if (!FEEDBACK_ENDPOINT) throw new Error('no endpoint configured');
+    const res = await fetch(FEEDBACK_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
   } catch (err) {
-    console.error('Submission failed:', err);
+    // network/endpoint failure: keep a local copy so nothing is silently lost
+    console.error('Submission failed, stored locally:', err);
+    const stored = JSON.parse(localStorage.getItem('recharge-feedback') || '[]');
+    stored.push(data);
+    localStorage.setItem('recharge-feedback', JSON.stringify(stored));
   }
 }
 

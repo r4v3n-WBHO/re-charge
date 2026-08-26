@@ -557,6 +557,25 @@
     /* ================= pre-order submission ================= */
     const FEEDBACK_ENDPOINT = (window.RECHARGE_CONFIG || {}).FEEDBACK_ENDPOINT || '';
 
+    async function sendEntry(data) {
+      data.submittedAt = new Date().toISOString();
+      data._subject = 'Re-Charge: ' + (data.type || 'submission');
+      try {
+        if (!FEEDBACK_ENDPOINT) throw new Error('no endpoint configured');
+        const res = await fetch(FEEDBACK_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(data),
+        });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+      } catch (err) {
+        console.error('Submission failed, stored locally:', err);
+        const stored = JSON.parse(localStorage.getItem('recharge-feedback') || '[]');
+        stored.push(data);
+        localStorage.setItem('recharge-feedback', JSON.stringify(stored));
+      }
+    }
+
     const preorderForm = document.getElementById('preorderForm');
     const preorderDone = document.getElementById('preorderDone');
     preorderForm.dataset.wired = '1';
@@ -567,7 +586,7 @@
       if (!preorderForm.ack.checked) { preorderForm.ack.focus(); return; }
       if (preorderForm.website.value) { preorderForm.hidden = true; preorderDone.hidden = false; return; } // honeypot
 
-      const data = {
+      await sendEntry({
         type: 'preorder',
         name: preorderForm.name.value.trim(),
         email: preorderForm.email.value.trim(),
@@ -576,24 +595,7 @@
         capacity: state.capacity.mAh,
         cells: state.capacity.cells,
         estPrice: state.capacity.price,
-        submittedAt: new Date().toISOString(),
-      };
-
-      try {
-        if (FEEDBACK_ENDPOINT) {
-          await fetch(FEEDBACK_ENDPOINT, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-            body: JSON.stringify(data),
-          });
-        } else {
-          const stored = JSON.parse(localStorage.getItem('recharge-feedback') || '[]');
-          stored.push(data);
-          localStorage.setItem('recharge-feedback', JSON.stringify(stored));
-        }
-      } catch (err) {
-        console.error('Pre-order submission failed:', err);
-      }
+      });
 
       document.getElementById('preorderDoneDetail').textContent =
         `${state.capacity.mAh.toLocaleString('en-ZA')} mAh in ${state.colour.name}, ` +
@@ -613,27 +615,11 @@
       const hesitation = followupForm.hesitation.value.trim();
       if (!hesitation) { followupForm.hesitation.focus(); return; }
 
-      const data = {
+      await sendEntry({
         type: 'preorder_followup',
         email: lastPreorderEmail,
         hesitation,
-        submittedAt: new Date().toISOString(),
-      };
-      try {
-        if (FEEDBACK_ENDPOINT) {
-          await fetch(FEEDBACK_ENDPOINT, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-            body: JSON.stringify(data),
-          });
-        } else {
-          const stored = JSON.parse(localStorage.getItem('recharge-feedback') || '[]');
-          stored.push(data);
-          localStorage.setItem('recharge-feedback', JSON.stringify(stored));
-        }
-      } catch (err) {
-        console.error('Follow-up submission failed:', err);
-      }
+      });
 
       followupForm.hidden = true;
       followupDone.hidden = false;

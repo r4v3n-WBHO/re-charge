@@ -53,9 +53,11 @@ the `main` branch root.
 
 ## TODO
 
-- [ ] Wire all forms to a real endpoint: set `FEEDBACK_ENDPOINT` in
-      **`config.js`** (single place now — Formspree free tier or a Google
-      Apps Script → Sheet). Honeypot spam traps are already in every form.
+- [x] Forms wired to Formspree (`config.js` — form mzepnojr). Submissions
+      arrive by email with "Re-Charge: <type>" subjects + in the Formspree
+      dashboard. Free tier = 50 submissions/month; upgrade or move to
+      Supabase if volume grows. On network failure, submissions fall back
+      to the visitor's localStorage.
 - [ ] Footer "Contact" currently points at the feedback form — swap for a
       real `mailto:` once a project email address exists (marked with a TODO
       comment in index.html; also store/scan footers)
