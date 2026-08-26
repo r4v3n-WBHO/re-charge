@@ -1803,7 +1803,7 @@ body.webgl-off .partner__visual::after {
     "visual form"
     "text   form";
   column-gap: 3rem;
-  row-gap: 1.4rem;
+  row-gap: 1.8rem;
   align-items: center;
   background: #fff;
   border: 1px solid var(--border);
@@ -1832,8 +1832,8 @@ body.webgl-off .partner__visual::after {
 
 .partner__visual {
   position: relative;
-  width: 220px;
-  aspect-ratio: 1 / 1.15;
+  width: 150px;
+  aspect-ratio: 1 / 1.1;
   flex-shrink: 0;
   align-self: center;
 }
