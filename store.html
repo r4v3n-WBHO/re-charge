@@ -238,7 +238,7 @@
         Re-Charge is an early-stage concept exploring battery recovery and
         circular-economy solutions. No products are currently available for purchase.
       </p>
-      <p class="footer__nocookies">🍃 No cookies. No trackers. Your data stays yours.</p>
+      <p class="footer__nocookies">🍃 No cookies. No personal tracking — just anonymous, privacy-first page counts.</p>
       <p class="footer__copyright">© 2026 Re-Charge</p>
     </div>
   </footer>
@@ -279,6 +279,11 @@
       { id: 'bottle-frost',    name: 'Bottle Frost',    hex: 0xb9cdc6, css: '#b9cdc6' },
       { id: 'ocean-blue',      name: 'Ocean Blue',      hex: 0x1f5f8a, css: '#1f5f8a' },
       { id: 'sandstone',       name: 'Sandstone',       hex: 0xc2b49a, css: '#c2b49a' },
+      { id: 'terracotta',      name: 'Terracotta',      hex: 0xb25e43, css: '#b25e43' },
+      { id: 'sunbeam',         name: 'Sunbeam Yellow',  hex: 0xd9a62e, css: '#d9a62e' },
+      { id: 'grape-soda',      name: 'Grape Soda',      hex: 0x5e4b8b, css: '#5e4b8b' },
+      { id: 'midnight-navy',   name: 'Midnight Navy',   hex: 0x24344e, css: '#24344e' },
+      { id: 'mint-fizz',       name: 'Mint Fizz',       hex: 0x8fd8bd, css: '#8fd8bd' },
     ];
 
     const CAPACITIES = [
@@ -557,16 +562,23 @@
     /* ================= pre-order submission ================= */
     const FEEDBACK_ENDPOINT = (window.RECHARGE_CONFIG || {}).FEEDBACK_ENDPOINT || '';
 
+    const SRC_CHANNEL = new URLSearchParams(location.search).get('src') || '';
+
     async function sendEntry(data) {
       data.submittedAt = new Date().toISOString();
       data._subject = 'Re-Charge: ' + (data.type || 'submission');
+      if (SRC_CHANNEL) data.channel = SRC_CHANNEL;
       try {
         if (!FEEDBACK_ENDPOINT) throw new Error('no endpoint configured');
-        const res = await fetch(FEEDBACK_ENDPOINT, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify(data),
-        });
+        // Apps Script can't answer CORS preflight — simple request, no headers
+        const isAppsScript = FEEDBACK_ENDPOINT.includes('script.google.com');
+        const res = await fetch(FEEDBACK_ENDPOINT, isAppsScript
+          ? { method: 'POST', body: JSON.stringify(data) }
+          : {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+              body: JSON.stringify(data),
+            });
         if (!res.ok) throw new Error('HTTP ' + res.status);
       } catch (err) {
         console.error('Submission failed, stored locally:', err);
@@ -625,5 +637,7 @@
       followupDone.hidden = false;
     });
   </script>
+  <script data-goatcounter="https://revan-lombard.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>

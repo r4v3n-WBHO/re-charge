@@ -134,16 +134,25 @@ function isSpam(form) {
   return Boolean(form.website && form.website.value);
 }
 
+// share links can carry ?src=reddit etc. — recorded on every submission
+const SRC_CHANNEL = new URLSearchParams(location.search).get('src') || '';
+
 async function submitEntry(data) {
   data.submittedAt = new Date().toISOString();
   data._subject = 'Re-Charge: ' + (data.type || 'submission'); // Formspree email subject
+  if (SRC_CHANNEL) data.channel = SRC_CHANNEL;
   try {
     if (!FEEDBACK_ENDPOINT) throw new Error('no endpoint configured');
-    const res = await fetch(FEEDBACK_ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify(data),
-    });
+    // Apps Script can't answer CORS preflight — send as a "simple request"
+    // (default text/plain body, no custom headers). Formspree gets JSON.
+    const isAppsScript = FEEDBACK_ENDPOINT.includes('script.google.com');
+    const res = await fetch(FEEDBACK_ENDPOINT, isAppsScript
+      ? { method: 'POST', body: JSON.stringify(data) }
+      : {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(data),
+        });
     if (!res.ok) throw new Error('HTTP ' + res.status);
   } catch (err) {
     // network/endpoint failure: keep a local copy so nothing is silently lost

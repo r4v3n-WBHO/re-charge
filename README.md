@@ -53,11 +53,17 @@ the `main` branch root.
 
 ## TODO
 
-- [x] Forms wired to Formspree (`config.js` — form mzepnojr). Submissions
-      arrive by email with "Re-Charge: <type>" subjects + in the Formspree
-      dashboard. Free tier = 50 submissions/month; upgrade or move to
-      Supabase if volume grows. On network failure, submissions fall back
-      to the visitor's localStorage.
+- [x] Forms wired to Formspree (`config.js` — form mzepnojr, 50/month free).
+      On network failure, submissions fall back to the visitor's localStorage.
+- [ ] **Switch to the self-owned Google Apps Script backend** (no third
+      party, no monthly cap worth worrying about): follow the setup steps in
+      `backend/apps-script.gs` (~5 min in script.google.com), then paste the
+      /exec URL into `config.js`. The site auto-detects script.google.com
+      endpoints and sends CORS-safe requests.
+- [x] Analytics: GoatCounter (cookieless) on all pages —
+      https://revan-lombard.goatcounter.com
+- [x] Channel attribution: share links with `?src=reddit` (or any label)
+      record `channel` on every submission from that visit.
 - [ ] Footer "Contact" currently points at the feedback form — swap for a
       real `mailto:` once a project email address exists (marked with a TODO
       comment in index.html; also store/scan footers)
