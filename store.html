@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Configure Your Re-Charge One — Pre-Order</title>
-  <meta name="description" content="Configure your Re-Charge One power bank — choose a recycled-bottle enclosure colour and capacity, see the reclaimed cells inside, and pre-order free. No payment taken." />
+  <meta name="description" content="Back the Re-Charge One concept: configure a power bank built from waste and cast a free pre-order vote. Pre-orders decide whether it gets built — no payment taken." />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔋</text></svg>" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -32,7 +32,7 @@
         <a href="index.html#concept">The Concept</a>
         <a href="index.html#faq">FAQ</a>
         <a href="index.html#feedback">Give Feedback</a>
-        <a href="#configure" class="btn btn--small btn--primary">Pre-Order</a>
+        <a href="#configure" class="btn btn--small btn--primary">Back It</a>
       </nav>
       <button class="nav__toggle" aria-label="Open menu" aria-expanded="false">
         <span></span><span></span><span></span>
@@ -45,11 +45,13 @@
     <section class="section store" id="configure">
       <div class="container">
         <div class="store__head">
-          <span class="pill"><span class="pill__dot" aria-hidden="true"></span> Concept — free pre-order, no payment</span>
-          <h1>Build your Re-Charge One.</h1>
+          <span class="pill"><span class="pill__dot" aria-hidden="true"></span> A pre-order is a vote, not a purchase</span>
+          <h1>Back your Re-Charge One.</h1>
           <p class="lead">
-            Every configuration is designed to be built from waste — reclaimed vape
-            cells inside, an enclosure 3D-printed from recycled bottles outside.
+            We're not selling anything yet — pre-orders are how we decide. Configure
+            the power bank you'd actually want, built from waste: reclaimed vape cells
+            inside, a recycled-bottle shell outside. If enough people back a build,
+            we make it real.
           </p>
         </div>
 
@@ -99,19 +101,29 @@
                   Email
                   <input type="email" name="email" required autocomplete="email" placeholder="you@example.com" />
                 </label>
-                <button type="submit" class="btn btn--primary btn--large btn--full">Pre-Order Free — Pay Nothing Today</button>
+                <button type="submit" class="btn btn--primary btn--large btn--full">Cast My Vote — Pre-Order Free</button>
                 <p class="preorder__small">
-                  A pre-order is a free, non-binding reservation. No payment details are
-                  taken and you can walk away at any time. If Re-Charge becomes real,
-                  you'll be first in line at the estimated price.
+                  A pre-order is a free, non-binding vote with your name on it. No
+                  payment details are taken and you can walk away at any time. If
+                  enough people back a build, Re-Charge becomes real — and you'll be
+                  first in line at the estimated price.
                 </p>
               </form>
 
               <div class="preorder__done" id="preorderDone" hidden>
                 <div class="preorder__done-icon">⚡</div>
-                <p><strong>You're in the queue!</strong></p>
+                <p><strong>Your vote is in!</strong></p>
                 <p id="preorderDoneDetail"></p>
                 <p class="preorder__small">We'll email you if Re-Charge One goes into production. Nothing to pay, nothing to cancel.</p>
+
+                <form class="followup" id="followupForm" onsubmit="event.preventDefault()">
+                  <label>
+                    One last thing — what almost stopped you? <span class="optional">optional</span>
+                    <textarea name="hesitation" rows="3" placeholder="Price? Safety worries? Trust? Nothing at all?"></textarea>
+                  </label>
+                  <button type="submit" class="btn btn--ghost">Send</button>
+                </form>
+                <p class="followup__done" id="followupDone" hidden>Noted — thank you. That's exactly the insight we need. 🙌</p>
               </div>
             </div>
 
@@ -139,14 +151,14 @@
             <p>Pick your recycled-bottle colour and capacity. See exactly how many reclaimed cells power your build.</p>
           </div>
           <div class="card">
-            <div class="card__icon">📝</div>
-            <h3>2. Reserve for free</h3>
-            <p>Leave your email. No payment, no card details, no commitment — it's a place in the queue, not a purchase.</p>
+            <div class="card__icon">🗳️</div>
+            <h3>2. Cast your vote</h3>
+            <p>Leave your email. No payment, no card details, no commitment — a pre-order is a vote, not a purchase.</p>
           </div>
           <div class="card">
             <div class="card__icon">🚀</div>
             <h3>3. We build if you believe</h3>
-            <p>If enough people pre-order, Re-Charge goes from concept to reality — and you'll be the first to know.</p>
+            <p>Pre-orders are how we measure real demand. If enough people back a build, Re-Charge goes from concept to reality — and you'll be the first to know.</p>
           </div>
         </div>
       </div>
@@ -163,7 +175,7 @@
       <nav class="footer__links">
         <a href="index.html">Home</a>
         <a href="index.html#concept">The Concept</a>
-        <a href="store.html">Pre-Order</a>
+        <a href="store.html">Back It (Pre-Order)</a>
         <a href="index.html#feedback">Give Feedback</a>
         <a href="mailto:hello@example.com">Contact</a>
       </nav>
@@ -506,8 +518,45 @@
       document.getElementById('preorderDoneDetail').textContent =
         `${state.capacity.mAh.toLocaleString('en-ZA')} mAh in ${state.colour.name}, ` +
         `powered by ${state.capacity.cells} reclaimed cells.`;
+      lastPreorderEmail = data.email;
       preorderForm.hidden = true;
       preorderDone.hidden = false;
+    });
+
+    /* one-question follow-up after voting — qualitative insight a vote can't give */
+    let lastPreorderEmail = '';
+    const followupForm = document.getElementById('followupForm');
+    const followupDone = document.getElementById('followupDone');
+
+    followupForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const hesitation = followupForm.hesitation.value.trim();
+      if (!hesitation) { followupForm.hesitation.focus(); return; }
+
+      const data = {
+        type: 'preorder_followup',
+        email: lastPreorderEmail,
+        hesitation,
+        submittedAt: new Date().toISOString(),
+      };
+      try {
+        if (FEEDBACK_ENDPOINT) {
+          await fetch(FEEDBACK_ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body: JSON.stringify(data),
+          });
+        } else {
+          const stored = JSON.parse(localStorage.getItem('recharge-feedback') || '[]');
+          stored.push(data);
+          localStorage.setItem('recharge-feedback', JSON.stringify(stored));
+        }
+      } catch (err) {
+        console.error('Follow-up submission failed:', err);
+      }
+
+      followupForm.hidden = true;
+      followupDone.hidden = false;
     });
   </script>
 </body>

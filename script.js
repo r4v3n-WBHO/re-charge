@@ -152,6 +152,10 @@ form.addEventListener('submit', async (e) => {
 
   form.hidden = true;
   thanks.hidden = false;
+  // positive sentiment → nudge toward the strongest signal: a free pre-order
+  if (/^(Great idea|Interesting)/.test(data.idea || '')) {
+    document.getElementById('feedbackNudge').hidden = false;
+  }
   if (window.gsap && !reduceMotion) {
     gsap.from(thanks, { opacity: 0, scale: 0.92, duration: 0.5, ease: 'back.out(1.6)' });
   }
