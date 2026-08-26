@@ -1686,6 +1686,22 @@ input:focus, select:focus, textarea:focus {
   min-width: min(300px, 100%);
 }
 
+/* ---------- Partner FAQ ---------- */
+
+.partner-faq { margin-top: 1.6rem; }
+
+.partner-faq__title {
+  font-size: 1.05rem;
+  margin-bottom: 1rem;
+}
+
+.partner-faq__note {
+  margin-top: 1rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
 /* ---------- Scan demo ---------- */
 
 .scan { padding-top: clamp(2rem, 4vw, 3rem); }
