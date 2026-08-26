@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configure Your Re-Charge One — Pre-Order</title>
+  <meta name="description" content="Configure your Re-Charge One power bank — choose a recycled-bottle enclosure colour and capacity, see the reclaimed cells inside, and pre-order free. No payment taken." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔋</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <div class="bg" aria-hidden="true">
+    <div class="bg__grid"></div>
+    <div class="bg__blob bg__blob--1"></div>
+    <div class="bg__blob bg__blob--2"></div>
+  </div>
+
+  <!-- ============ NAV ============ -->
+  <header class="nav is-scrolled" id="top">
+    <div class="container nav__inner">
+      <a href="index.html" class="nav__logo">
+        <span class="nav__logo-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M13 2 4.5 13.5H11L9.5 22 19 10h-6.5L13 2Z" fill="currentColor"/></svg>
+        </span>
+        RE-CHARGE
+      </a>
+      <nav class="nav__links">
+        <a href="index.html#concept">The Concept</a>
+        <a href="index.html#faq">FAQ</a>
+        <a href="index.html#feedback">Give Feedback</a>
+        <a href="#configure" class="btn btn--small btn--primary">Pre-Order</a>
+      </nav>
+      <button class="nav__toggle" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ CONFIGURATOR ============ -->
+    <section class="section store" id="configure">
+      <div class="container">
+        <div class="store__head">
+          <span class="pill"><span class="pill__dot" aria-hidden="true"></span> Concept — free pre-order, no payment</span>
+          <h1>Build your Re-Charge One.</h1>
+          <p class="lead">
+            Every configuration is designed to be built from waste — reclaimed vape
+            cells inside, an enclosure 3D-printed from recycled bottles outside.
+          </p>
+        </div>
+
+        <div class="configurator">
+          <!-- 3D viewer -->
+          <div class="viewer">
+            <div class="viewer__glow" aria-hidden="true"></div>
+            <canvas id="configCanvas" aria-label="3D preview of your configured Re-Charge One power bank"></canvas>
+            <button type="button" class="viewer__toggle" id="insideToggle" aria-pressed="false">
+              👁 View inside
+            </button>
+            <span class="viewer__hint">↻ Drag to rotate — conceptual render</span>
+          </div>
+
+          <!-- Options panel -->
+          <div class="options">
+
+            <div class="options__group">
+              <h2 class="options__title"><span class="options__step">1</span> Enclosure colour</h2>
+              <p class="options__sub">3D-printed from recycled plastic bottles. Flecks vary — every shell is unique.</p>
+              <div class="swatches" id="swatches" role="radiogroup" aria-label="Enclosure colour"></div>
+              <p class="options__value" id="colourName"></p>
+            </div>
+
+            <div class="options__group">
+              <h2 class="options__title"><span class="options__step">2</span> Capacity</h2>
+              <p class="options__sub">More capacity = more reclaimed cells inside. Figures are design targets — final capacity depends on recovered-cell testing.</p>
+              <div class="capacity" id="capacity" role="radiogroup" aria-label="Capacity"></div>
+            </div>
+
+            <div class="options__group summary">
+              <h2 class="options__title"><span class="options__step">3</span> Your build</h2>
+              <dl class="summary__list">
+                <div><dt>Colour</dt><dd id="sumColour">—</dd></div>
+                <div><dt>Capacity</dt><dd id="sumCapacity">—</dd></div>
+                <div><dt>Reclaimed cells</dt><dd id="sumCells">—</dd></div>
+                <div><dt>Estimated price</dt><dd id="sumPrice">—</dd></div>
+              </dl>
+
+              <!-- inline guard: never allow a native GET submit (would leak email into the URL) -->
+              <form class="preorder" id="preorderForm" novalidate onsubmit="event.preventDefault()">
+                <label>
+                  Name <span class="optional">optional</span>
+                  <input type="text" name="name" autocomplete="name" placeholder="Your name" />
+                </label>
+                <label>
+                  Email
+                  <input type="email" name="email" required autocomplete="email" placeholder="you@example.com" />
+                </label>
+                <button type="submit" class="btn btn--primary btn--large btn--full">Pre-Order Free — Pay Nothing Today</button>
+                <p class="preorder__small">
+                  A pre-order is a free, non-binding reservation. No payment details are
+                  taken and you can walk away at any time. If Re-Charge becomes real,
+                  you'll be first in line at the estimated price.
+                </p>
+              </form>
+
+              <div class="preorder__done" id="preorderDone" hidden>
+                <div class="preorder__done-icon">⚡</div>
+                <p><strong>You're in the queue!</strong></p>
+                <p id="preorderDoneDetail"></p>
+                <p class="preorder__small">We'll email you if Re-Charge One goes into production. Nothing to pay, nothing to cancel.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <p class="disclaimer store__disclaimer">
+          Re-Charge One is a concept product and is not yet in production. Renders are
+          conceptual. Pre-orders are expressions of interest only — no payment is taken,
+          no contract is formed, and estimated prices may change.
+        </p>
+      </div>
+    </section>
+
+    <!-- ============ HOW PRE-ORDERING WORKS ============ -->
+    <section class="section section--tint">
+      <div class="container">
+        <div class="section__head section__head--center" style="margin-bottom:2.4rem">
+          <h2>How pre-ordering works.</h2>
+        </div>
+        <div class="cards">
+          <div class="card">
+            <div class="card__icon">🛠️</div>
+            <h3>1. Configure</h3>
+            <p>Pick your recycled-bottle colour and capacity. See exactly how many reclaimed cells power your build.</p>
+          </div>
+          <div class="card">
+            <div class="card__icon">📝</div>
+            <h3>2. Reserve for free</h3>
+            <p>Leave your email. No payment, no card details, no commitment — it's a place in the queue, not a purchase.</p>
+          </div>
+          <div class="card">
+            <div class="card__icon">🚀</div>
+            <h3>3. We build if you believe</h3>
+            <p>If enough people pre-order, Re-Charge goes from concept to reality — and you'll be the first to know.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <span class="footer__logo">RE-CHARGE</span>
+        <span class="footer__tagline">Power. Reclaimed.</span>
+      </div>
+      <nav class="footer__links">
+        <a href="index.html">Home</a>
+        <a href="index.html#concept">The Concept</a>
+        <a href="store.html">Pre-Order</a>
+        <a href="index.html#feedback">Give Feedback</a>
+        <a href="mailto:hello@example.com">Contact</a>
+      </nav>
+      <p class="footer__disclaimer">
+        Re-Charge is an early-stage concept exploring battery recovery and
+        circular-economy solutions. No products are currently available for purchase.
+      </p>
+      <p class="footer__copyright">© 2026 Re-Charge</p>
+    </div>
+  </footer>
+
+  <script>
+    // nav toggle (self-contained — index's script.js expects index-only elements)
+    const navToggle = document.querySelector('.nav__toggle');
+    const navLinks = document.querySelector('.nav__links');
+    navToggle.addEventListener('click', () => {
+      const open = navLinks.classList.toggle('is-open');
+      navToggle.setAttribute('aria-expanded', String(open));
+    });
+  </script>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+    import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+    /* ================= configuration data ================= */
+
+    const COLOURS = [
+      { id: 'reclaimed-green', name: 'Reclaimed Green', hex: 0x147a5e, css: '#147a5e' },
+      { id: 'charcoal',        name: 'Charcoal',        hex: 0x2e3432, css: '#2e3432' },
+      { id: 'bottle-frost',    name: 'Bottle Frost',    hex: 0xb9cdc6, css: '#b9cdc6' },
+      { id: 'ocean-blue',      name: 'Ocean Blue',      hex: 0x1f5f8a, css: '#1f5f8a' },
+      { id: 'sandstone',       name: 'Sandstone',       hex: 0xc2b49a, css: '#c2b49a' },
+    ];
+
+    const CAPACITIES = [
+      { id: '5000',  mAh: 5000,  cells: 2, charges: '≈ 1–2 phone charges', price: 'R399',
+        dims: { w: 2.7, h: 2.9, d: 0.95 }, layers: 1, rows: 2 },
+      { id: '10000', mAh: 10000, cells: 4, charges: '≈ 2–4 phone charges', price: 'R599',
+        dims: { w: 2.7, h: 4.4, d: 0.95 }, layers: 1, rows: 4 },
+      { id: '20000', mAh: 20000, cells: 8, charges: '≈ 4–8 phone charges', price: 'R899',
+        dims: { w: 2.7, h: 4.4, d: 1.75 }, layers: 2, rows: 4 },
+    ];
+
+    const state = { colour: COLOURS[0], capacity: CAPACITIES[1], inside: false };
+
+    /* ================= three.js scene ================= */
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isTouch = window.matchMedia('(pointer: coarse)').matches;
+    const canvas = document.getElementById('configCanvas');
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !isTouch });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isTouch ? 1.25 : 2));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 50);
+    camera.position.set(0, 0.7, 10);
+
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    scene.environment = pmrem.fromScene(new RoomEnvironment(renderer), 0.04).texture;
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x9fc4b8, 0.8));
+    const key = new THREE.DirectionalLight(0xffffff, 1.4);
+    key.position.set(5, 7, 6);
+    scene.add(key);
+    const rim = new THREE.PointLight(0x18e0a8, 22, 24);
+    rim.position.set(-5, 2, -4);
+    scene.add(rim);
+
+    // neutral light speckle so material.color can tint it per swatch
+    const speckle = document.createElement('canvas');
+    speckle.width = 256; speckle.height = 256;
+    const sc = speckle.getContext('2d');
+    sc.fillStyle = '#d9dedb';
+    sc.fillRect(0, 0, 256, 256);
+    const flecks = ['#ffffff', '#aab4af', '#6d7a75', '#3c4642', '#eef2f0'];
+    for (let i = 0; i < 900; i++) {
+      sc.fillStyle = flecks[(Math.random() * flecks.length) | 0];
+      sc.globalAlpha = 0.25 + Math.random() * 0.5;
+      sc.beginPath();
+      sc.arc(Math.random() * 256, Math.random() * 256, 0.6 + Math.random() * 2.2, 0, Math.PI * 2);
+      sc.fill();
+    }
+    sc.globalAlpha = 1;
+    const speckleTex = new THREE.CanvasTexture(speckle);
+    speckleTex.colorSpace = THREE.SRGBColorSpace;
+    speckleTex.wrapS = speckleTex.wrapT = THREE.RepeatWrapping;
+    speckleTex.repeat.set(2, 3);
+
+    const bank = new THREE.Group();
+    scene.add(bank);
+
+    const shellMat = new THREE.MeshStandardMaterial({
+      map: speckleTex, metalness: 0.08, roughness: 0.62,
+      transparent: true, opacity: 0.97, depthWrite: true,
+    });
+    let shell = null;
+
+    // reclaimed 18650-style cells (pool of 8, lying horizontally)
+    const cellBodyMat = new THREE.MeshStandardMaterial({ color: 0xd9e2de, metalness: 0.9, roughness: 0.3 });
+    const cellBandMat = new THREE.MeshStandardMaterial({ color: 0x0e9f7a, metalness: 0.3, roughness: 0.4 });
+    const cells = [];
+    for (let i = 0; i < 8; i++) {
+      const cell = new THREE.Group();
+      const body = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.34, 2.05, 32), cellBodyMat);
+      const band = new THREE.Mesh(new THREE.CylinderGeometry(0.345, 0.345, 0.55, 32), cellBandMat);
+      const nub = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.1, 16), cellBodyMat);
+      nub.position.y = 1.07;
+      cell.add(body, band, nub);
+      cell.rotation.z = Math.PI / 2; // lie horizontally
+      bank.add(cell);
+      cells.push(cell);
+    }
+
+    // small "controller board" with glowing indicator
+    const board = new THREE.Mesh(
+      new THREE.BoxGeometry(1.9, 0.5, 0.12),
+      new THREE.MeshStandardMaterial({ color: 0x0c3b2f, metalness: 0.2, roughness: 0.5 })
+    );
+    const indicator = new THREE.Mesh(
+      new THREE.TorusGeometry(0.13, 0.035, 10, 32),
+      new THREE.MeshBasicMaterial({ color: 0x2df0b2 })
+    );
+    indicator.rotation.x = Math.PI / 2;
+    bank.add(board, indicator);
+
+    // logo plane on the front face
+    const logoCanvas = document.createElement('canvas');
+    logoCanvas.width = 512; logoCanvas.height = 256;
+    const lc = logoCanvas.getContext('2d');
+    lc.textAlign = 'center';
+    lc.fillStyle = '#ffffff';
+    lc.font = '700 58px "Space Grotesk", sans-serif';
+    lc.fillText('RE-CHARGE', 256, 110);
+    lc.fillStyle = '#2df0b2';
+    lc.font = '700 40px "Space Grotesk", sans-serif';
+    lc.fillText('O N E', 256, 170);
+    const logoTex = new THREE.CanvasTexture(logoCanvas);
+    logoTex.colorSpace = THREE.SRGBColorSpace;
+    const logo = new THREE.Mesh(
+      new THREE.PlaneGeometry(1.7, 0.85),
+      new THREE.MeshBasicMaterial({ map: logoTex, transparent: true })
+    );
+    bank.add(logo);
+
+    function rebuild() {
+      const cap = state.capacity;
+      const { w, h, d } = cap.dims;
+
+      if (shell) { shell.geometry.dispose(); bank.remove(shell); }
+      shell = new THREE.Mesh(new RoundedBoxGeometry(w, h, d, 6, 0.26), shellMat);
+      shell.renderOrder = 2; // draw after cells so they show through when translucent
+      bank.add(shell);
+
+      // stack cells: `rows` high, `layers` deep
+      const rowPitch = 0.78, layerPitch = 0.78;
+      let n = 0;
+      for (let layer = 0; layer < cap.layers; layer++) {
+        for (let row = 0; row < cap.rows; row++) {
+          const cell = cells[n++];
+          cell.visible = true;
+          cell.position.set(
+            0,
+            (row - (cap.rows - 1) / 2) * rowPitch - 0.25,
+            (layer - (cap.layers - 1) / 2) * layerPitch
+          );
+        }
+      }
+      for (; n < cells.length; n++) cells[n].visible = false;
+
+      board.position.set(0, h / 2 - 0.55, 0);
+      indicator.position.set(0, h / 2 + 0.001, 0);
+      logo.position.set(0, h / 2 - 1.0, d / 2 + 0.002);
+      logo.visible = true;
+    }
+
+    shellMat.color.set(state.colour.hex);
+    rebuild();
+
+    const controls = new OrbitControls(camera, canvas);
+    controls.enableZoom = false;
+    controls.enablePan = false;
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.06;
+    controls.autoRotate = !reduceMotion;
+    controls.autoRotateSpeed = 1.4;
+    canvas.style.touchAction = 'pan-y'; // OrbitControls sets none; keep page scrollable
+
+    let opacityTarget = 0.97;
+    const clock = new THREE.Clock();
+    let visible = true;
+    new IntersectionObserver((e) => { visible = e[0].isIntersecting; }, { threshold: 0.05 }).observe(canvas);
+
+    function fit() {
+      const cw = canvas.clientWidth, ch = canvas.clientHeight;
+      if (!cw || !ch) return;
+      renderer.setSize(cw, ch, false);
+      camera.aspect = cw / ch;
+      camera.updateProjectionMatrix();
+    }
+    window.addEventListener('resize', fit);
+    fit();
+
+    (function loop() {
+      requestAnimationFrame(loop);
+      if (!visible) return;
+      const t = clock.getElapsedTime();
+      shellMat.opacity += (opacityTarget - shellMat.opacity) * 0.08;
+      shellMat.depthWrite = shellMat.opacity > 0.6;
+      logo.material.opacity = shellMat.opacity;
+      if (!reduceMotion) bank.position.y = Math.sin(t * 1.1) * 0.08;
+      controls.update();
+      renderer.render(scene, camera);
+    })();
+
+    /* ================= UI wiring ================= */
+
+    const swatchesEl = document.getElementById('swatches');
+    const capacityEl = document.getElementById('capacity');
+    const colourNameEl = document.getElementById('colourName');
+    const insideToggle = document.getElementById('insideToggle');
+
+    function setInside(on) {
+      state.inside = on;
+      opacityTarget = on ? 0.22 : 0.97;
+      insideToggle.setAttribute('aria-pressed', String(on));
+      insideToggle.textContent = on ? '👁 View shell' : '👁 View inside';
+    }
+
+    insideToggle.addEventListener('click', () => setInside(!state.inside));
+
+    COLOURS.forEach((c, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'swatch' + (i === 0 ? ' is-active' : '');
+      b.style.setProperty('--swatch', c.css);
+      b.setAttribute('role', 'radio');
+      b.setAttribute('aria-checked', String(i === 0));
+      b.setAttribute('aria-label', c.name);
+      b.title = c.name;
+      b.addEventListener('click', () => {
+        state.colour = c;
+        shellMat.color.set(c.hex);
+        swatchesEl.querySelectorAll('.swatch').forEach((s) => {
+          s.classList.remove('is-active');
+          s.setAttribute('aria-checked', 'false');
+        });
+        b.classList.add('is-active');
+        b.setAttribute('aria-checked', 'true');
+        setInside(false); // show off the shell colour
+        updateSummary();
+      });
+      swatchesEl.appendChild(b);
+    });
+
+    CAPACITIES.forEach((cap) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'capacity__option' + (cap === state.capacity ? ' is-active' : '');
+      b.setAttribute('role', 'radio');
+      b.setAttribute('aria-checked', String(cap === state.capacity));
+      b.innerHTML = `
+        <strong>${cap.mAh.toLocaleString('en-ZA')} mAh</strong>
+        <span>${cap.cells} reclaimed cells</span>
+        <span>${cap.charges}</span>
+        <em>Est. ${cap.price}</em>`;
+      b.addEventListener('click', () => {
+        state.capacity = cap;
+        rebuild();
+        setInside(true); // reveal the cells for the chosen capacity
+        capacityEl.querySelectorAll('.capacity__option').forEach((o) => {
+          o.classList.remove('is-active');
+          o.setAttribute('aria-checked', 'false');
+        });
+        b.classList.add('is-active');
+        b.setAttribute('aria-checked', 'true');
+        updateSummary();
+      });
+      capacityEl.appendChild(b);
+    });
+
+    function updateSummary() {
+      colourNameEl.textContent = state.colour.name;
+      document.getElementById('sumColour').textContent = state.colour.name;
+      document.getElementById('sumCapacity').textContent = state.capacity.mAh.toLocaleString('en-ZA') + ' mAh';
+      document.getElementById('sumCells').textContent = state.capacity.cells + ' × reclaimed vape cells';
+      document.getElementById('sumPrice').textContent = 'Est. ' + state.capacity.price + ' — pay nothing today';
+    }
+    updateSummary();
+
+    /* ================= pre-order submission ================= */
+    // keep in sync with FEEDBACK_ENDPOINT in script.js
+    const FEEDBACK_ENDPOINT = '';
+
+    const preorderForm = document.getElementById('preorderForm');
+    const preorderDone = document.getElementById('preorderDone');
+    preorderForm.dataset.wired = '1';
+
+    preorderForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!preorderForm.email.checkValidity()) { preorderForm.email.focus(); return; }
+
+      const data = {
+        type: 'preorder',
+        name: preorderForm.name.value.trim(),
+        email: preorderForm.email.value.trim(),
+        colour: state.colour.name,
+        capacity: state.capacity.mAh,
+        cells: state.capacity.cells,
+        estPrice: state.capacity.price,
+        submittedAt: new Date().toISOString(),
+      };
+
+      try {
+        if (FEEDBACK_ENDPOINT) {
+          await fetch(FEEDBACK_ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body: JSON.stringify(data),
+          });
+        } else {
+          const stored = JSON.parse(localStorage.getItem('recharge-feedback') || '[]');
+          stored.push(data);
+          localStorage.setItem('recharge-feedback', JSON.stringify(stored));
+        }
+      } catch (err) {
+        console.error('Pre-order submission failed:', err);
+      }
+
+      document.getElementById('preorderDoneDetail').textContent =
+        `${state.capacity.mAh.toLocaleString('en-ZA')} mAh in ${state.colour.name}, ` +
+        `powered by ${state.capacity.cells} reclaimed cells.`;
+      preorderForm.hidden = true;
+      preorderDone.hidden = false;
+    });
+  </script>
+</body>
+</html>

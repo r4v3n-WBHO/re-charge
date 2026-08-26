@@ -16,6 +16,10 @@ if the CDN is unreachable the site degrades gracefully (content stays visible,
 
 - `index.html` — single-page layout + inline Three.js module (3D battery hero,
   draggable Re-Charge One power bank mockup)
+- `store.html` — car-style configurator: pick a recycled-bottle enclosure
+  colour (live 3D recolour) and capacity (shows the reclaimed cells inside via
+  an x-ray view), then pre-order free — no payment taken. Submissions are
+  tagged `type: 'preorder'` with the chosen config.
 - `styles.css` — light theme, green/teal accent, ambient grid/blob background,
   marquee, fully responsive, `prefers-reduced-motion` support
 - `script.js` — GSAP ScrollTrigger reveals, scrubbed concept timeline, card
@@ -43,8 +47,10 @@ the `main` branch root.
 
 ## TODO
 
-- [ ] Wire the feedback + notify forms to a real endpoint (`FEEDBACK_ENDPOINT`
-      in `script.js` — Formspree free tier or a Google Apps Script → Sheet)
+- [ ] Wire the feedback + notify + pre-order forms to a real endpoint
+      (`FEEDBACK_ENDPOINT` in `script.js` AND in `store.html`'s module —
+      Formspree free tier or a Google Apps Script → Sheet)
+- [ ] Sanity-check the indicative pre-order prices (R399/R599/R899)
 - [ ] Replace `hello@example.com` contact link in the footer
 - [ ] Add analytics (Plausible/GoatCounter snippet placeholder is in `<head>`)
 - [ ] Make `og:image`/`og:url` absolute URLs once deployed (social platforms

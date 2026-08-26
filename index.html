@@ -46,6 +46,7 @@
         <a href="#problem">The Problem</a>
         <a href="#concept">The Concept</a>
         <a href="#product">Re-Charge One</a>
+        <a href="store.html">Pre-Order</a>
         <a href="#feedback" class="btn btn--small btn--primary magnetic">Give Feedback</a>
       </nav>
       <button class="nav__toggle" aria-label="Open menu" aria-expanded="false">
@@ -216,6 +217,10 @@
             <li>Recycled-Bottle Shell</li>
             <li>Designed for a Second Life</li>
           </ul>
+          <div class="product__cta">
+            <a href="store.html" class="btn btn--primary btn--large magnetic">Configure Yours &amp; Pre-Order Free →</a>
+            <span class="product__cta-note">No payment — just a place in the queue.</span>
+          </div>
         </div>
         <div class="product__visual reveal" aria-label="Interactive 3D conceptual mockup of the Re-Charge One power bank">
           <div class="product__glow" aria-hidden="true"></div>
@@ -256,7 +261,8 @@
           </p>
         </div>
 
-        <form class="feedback-form reveal" id="feedbackForm" novalidate>
+        <!-- inline guard: never allow a native GET submit (would leak answers into the URL) -->
+        <form class="feedback-form reveal" id="feedbackForm" novalidate onsubmit="event.preventDefault()">
           <div class="form-row form-row--split">
             <label>
               Name <span class="optional">optional</span>
@@ -407,7 +413,7 @@
           <a href="#feedback" class="btn btn--ghost-light btn--large magnetic">I'm Interested in Re-Charge</a>
         </div>
 
-        <form class="notify" id="notifyForm" novalidate>
+        <form class="notify" id="notifyForm" novalidate onsubmit="event.preventDefault()">
           <p class="notify__label">Or just leave your email — we'll let you know if Re-Charge becomes real.</p>
           <div class="notify__row">
             <input type="email" name="email" required placeholder="you@example.com" autocomplete="email" aria-label="Email address" />
@@ -431,6 +437,7 @@
       <nav class="footer__links">
         <a href="#top">Home</a>
         <a href="#concept">The Concept</a>
+        <a href="store.html">Pre-Order</a>
         <a href="#feedback">Give Feedback</a>
         <a href="#faq">FAQ</a>
         <a href="mailto:hello@example.com">Contact</a>
