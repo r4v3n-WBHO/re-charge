@@ -80,7 +80,10 @@ the `main` branch root.
       unproxied machine if wanted.
 - [ ] Sanity-check the indicative pre-order prices (R599/R899/R1 499),
       rewards points values (50 RP/vape; 500/1000/2000 RP tiers) and the
-      bin-sponsorship price (R2 500/bin/first year, bins.html#sponsor)
+      bin-sponsorship price (once-off R999, bins.html#sponsor). Sponsorship
+      wording deliberately says collections run "as long as the programme
+      runs", NOT "lifetime" — an unconditional lifetime-service promise is
+      an unbounded CPA liability; name-on-bin is lifetime, service is not
 - [ ] **Sponsor monthly impact reports** when bins are live: per-bin deposit
       counts come straight from the rewards Sheet's Deposits tab (filter by
       binId + month). Automate later with an Apps Script time trigger that
