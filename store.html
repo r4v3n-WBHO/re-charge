@@ -297,12 +297,12 @@
     ];
 
     const CAPACITIES = [
-      { id: '5000',  mAh: 5000,  cells: 2, charges: '≈ 1–2 phone charges', price: 'R399',
-        dims: { w: 2.7, h: 2.9, d: 0.95 }, layers: 1, rows: 2, bottles: 2 },
-      { id: '10000', mAh: 10000, cells: 4, charges: '≈ 2–4 phone charges', price: 'R599',
+      { id: '10000', mAh: 10000, cells: 4,  charges: '≈ 2–4 phone charges', price: 'R599',
         dims: { w: 2.7, h: 4.4, d: 0.95 }, layers: 1, rows: 4, bottles: 3 },
-      { id: '20000', mAh: 20000, cells: 8, charges: '≈ 4–8 phone charges', price: 'R899',
+      { id: '20000', mAh: 20000, cells: 8,  charges: '≈ 4–8 phone charges', price: 'R899',
         dims: { w: 2.7, h: 4.4, d: 1.75 }, layers: 2, rows: 4, bottles: 4 },
+      { id: '40000', mAh: 40000, cells: 16, charges: '≈ 8–16 phone or 2–3 laptop charges', price: 'R1 499',
+        dims: { w: 2.7, h: 4.4, d: 3.35 }, layers: 4, rows: 4, bottles: 6 },
     ];
 
     // reclaimed cells vary in tested capacity, so every pack is quoted as a
@@ -376,11 +376,11 @@
     });
     let shell = null;
 
-    // reclaimed 18650-style cells (pool of 8, lying horizontally)
+    // reclaimed 18650-style cells (pool of 16, lying horizontally)
     const cellBodyMat = new THREE.MeshStandardMaterial({ color: 0xd9e2de, metalness: 0.9, roughness: 0.3 });
     const cellBandMat = new THREE.MeshStandardMaterial({ color: 0x0e9f7a, metalness: 0.3, roughness: 0.4 });
     const cells = [];
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 16; i++) {
       const cell = new THREE.Group();
       const body = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.34, 2.05, 32), cellBodyMat);
       const band = new THREE.Mesh(new THREE.CylinderGeometry(0.345, 0.345, 0.55, 32), cellBandMat);
