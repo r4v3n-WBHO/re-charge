@@ -2,7 +2,8 @@
 (function () {
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ---- nav battery: fills as you scroll, pulses when "fully Re-Charged" ---- */
+  /* ---- nav battery: starts full and drains as you read — like a
+     disposable vape. Hitting 0% is the brand moment: time to Re-Charge. ---- */
   const fill = document.querySelector('.nav__charge-fill');
   if (fill) {
     const meter = document.querySelector('.nav__meter');
@@ -10,12 +11,14 @@
     const update = () => {
       const max = document.documentElement.scrollHeight - window.innerHeight;
       const p = max > 0 ? Math.min(1, window.scrollY / max) : 1;
-      const pct = Math.round(p * 100);
-      fill.style.width = (p * 100).toFixed(1) + '%';
-      const full = p > 0.99;
-      meter.classList.toggle('is-full', full);
-      label.textContent = full ? '⚡ 100%' : pct + '%';
-      meter.title = full ? 'Fully Re-Charged ⚡' : 'Your reading progress: ' + pct + '%';
+      const left = Math.round((1 - p) * 100);
+      fill.style.width = ((1 - p) * 100).toFixed(1) + '%';
+      const drained = left < 1;
+      meter.classList.toggle('is-full', drained);
+      label.textContent = drained ? '♻️ 0%' : left + '%';
+      meter.title = drained
+        ? "Drained — just like a 'dead' vape. Tap to Re-Charge ↑"
+        : 'Battery drains as you read: ' + left + '% left';
     };
     window.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', update);

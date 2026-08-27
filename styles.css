@@ -391,7 +391,7 @@ h1 .line > span { display: inline-block; }
 
 .hero {
   position: relative;
-  padding: clamp(3rem, 7vw, 5.5rem) 0 clamp(3rem, 6vw, 4.5rem);
+  padding: clamp(1.5rem, 4.5vw, 4rem) 0 clamp(2rem, 4.5vw, 3.25rem);
 }
 
 .hero__inner {
@@ -495,7 +495,7 @@ h1 .line > span { display: inline-block; }
 
 /* ---------- Sections ---------- */
 
-.section { padding: clamp(4rem, 8.5vw, 6.5rem) 0; position: relative; }
+.section { padding: clamp(2.75rem, 6vw, 4.5rem) 0; position: relative; }
 .section--tint { background: var(--bg-tint); }
 
 .section--dark {
@@ -505,7 +505,7 @@ h1 .line > span { display: inline-block; }
   color: var(--text-light);
 }
 
-.section__head { max-width: 46rem; margin-bottom: 2.8rem; }
+.section__head { max-width: 46rem; margin-bottom: 2.1rem; }
 .section__head h2 { margin-bottom: 1rem; }
 .section__head p { color: var(--text-muted); font-size: 1.05rem; }
 
