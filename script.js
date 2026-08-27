@@ -181,6 +181,19 @@ async function submitEntry(data) {
 const form = document.getElementById('feedbackForm');
 const thanks = document.getElementById('feedbackThanks');
 
+// vape-specific questions only apply to people who vape; keep the form
+// short for everyone else and clear stale answers when they're hidden
+const vaperQs = document.getElementById('vaperQs');
+if (vaperQs) {
+  form.querySelectorAll('input[name="audience"]').forEach((r) => {
+    r.addEventListener('change', () => {
+      const show = r.value === 'I vape' && r.checked;
+      vaperQs.hidden = !show;
+      if (!show) vaperQs.querySelectorAll('input:checked').forEach((c) => { c.checked = false; });
+    });
+  });
+}
+
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
 

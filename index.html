@@ -678,6 +678,8 @@
             </div>
           </fieldset>
 
+          <!-- vape-specific questions: only shown when the visitor says they vape -->
+          <div id="vaperQs" hidden>
           <fieldset class="form-row">
             <legend>Would you return your disposable vapes to a Re-Charge collection point?</legend>
             <div class="choices choices--inline">
@@ -697,11 +699,12 @@
               <label><input type="radio" name="rewards" value="No — I still wouldn't" /><span>No — I still wouldn't</span></label>
             </div>
           </fieldset>
+          </div>
 
           <div class="form-row">
             <label>
-              What would make you trust a product like this?
-              <textarea name="trust" rows="5" placeholder="Safety certification? Transparency about testing? Something else?"></textarea>
+              What would make you trust a product like this? <span class="optional">optional</span>
+              <textarea name="trust" rows="3" placeholder="Safety certification? Transparency about testing? Something else?"></textarea>
             </label>
           </div>
 
