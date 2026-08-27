@@ -22,10 +22,16 @@ if the CDN is unreachable the site degrades gracefully (content stays visible,
   tagged `type: 'preorder'` with the chosen config and a required
   reclaimed-cells acknowledgment. Includes the "Safety, honestly" commitments
   section.
-- `scan.html` — Re-Charge Rewards scan demo: simulates the post-QR-scan
-  experience at a collection box (browser-only points wallet, reward-tier
-  progress). Clearly labelled demo; explains deposits are validated in the
-  real system.
+- `scan.html` — Re-Charge Rewards scan page. Two modes, switched by
+  `REWARDS_ENDPOINT` in `config.js`:
+  - **Demo** (endpoint empty): browser-only points wallet, clearly labelled.
+  - **Live** (endpoint set): real server-side ledger via
+    `backend/rewards-apps-script.gs` (Google Apps Script + Sheet). Email +
+    6-digit-code login, points saved per email, deposits credited when a
+    bin QR (`scan.html?bin=RC-0001`) is scanned — capped at 1/bin/day and
+    3/day per user. Generate printable bin QRs with
+    `scripts\new-bin-qr.ps1 -BinId RC-0001`; register bins in the Sheet's
+    Bins tab. Setup steps are in the header of the .gs file.
 - `styles.css` — light theme, green/teal accent, ambient grid/blob background,
   marquee, fully responsive, `prefers-reduced-motion` support
 - `script.js` — GSAP ScrollTrigger reveals, scrubbed concept timeline, card
@@ -79,8 +85,11 @@ the `main` branch root.
       product liability under the Consumer Protection Act (s61); promotional
       competitions/giveaways must comply with CPA s36; battery products need
       safety certification (e.g. IEC 62133) and product-liability insurance
-- [ ] Rewards backend when real: unique per-deposit QR codes or shop-staff
-      validation (anti-fraud), accounts + point balances (Supabase would fit)
+- [x] Rewards backend: `backend/rewards-apps-script.gs` (Apps Script + Sheet
+      ledger, email-code login, daily deposit caps). Deploy it and set
+      `REWARDS_ENDPOINT` in `config.js` to go live. Pilot trust model is
+      "trust the scan with daily caps" — upgrade path when rewards get
+      valuable: unique per-deposit codes or staff validation (anti-fraud)
 - [ ] **Bin locations map** (when real bins exist): Leaflet + OpenStreetMap
       (free, no API key, no tracking — fits the privacy stance; Google Maps
       would need an API key + billing account). Pins from a simple JSON file

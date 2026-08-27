@@ -15,7 +15,25 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+  <script src="config.js"></script>
   <script src="fx.js" defer></script>
+  <style>
+    /* live-mode login card */
+    .scan__login { display: grid; gap: 0.7rem; margin-bottom: 1.1rem; }
+    .scan__login-row { display: flex; gap: 0.55rem; }
+    .scan__login-row input {
+      flex: 1; min-width: 0; padding: 0.7rem 0.9rem; font: inherit;
+      border: 1px solid rgba(20, 60, 48, 0.25); border-radius: 10px;
+      background: rgba(255, 255, 255, 0.85);
+    }
+    .scan__login-msg { font-size: 0.85rem; opacity: 0.85; min-height: 1.2em; margin: 0; }
+    .scan__signedin {
+      display: flex; justify-content: space-between; align-items: baseline;
+      gap: 0.6rem; font-size: 0.85rem; opacity: 0.85; margin-bottom: 0.9rem;
+    }
+    .scan__signedin button { background: none; border: 0; font: inherit; cursor: pointer; text-decoration: underline; opacity: 0.8; }
+    [hidden] { display: none !important; }
+  </style>
 </head>
 <body>
 
@@ -66,20 +84,42 @@
           you points. <a href="index.html" class="inline-link">What's Re-Charge? →</a>
         </p>
 
-        <div class="scan__demo-banner" role="note">
+        <div class="scan__demo-banner" role="note" id="demoBanner">
           🧪 <strong>Demo only.</strong> No collection bins exist yet — this is what
           scanning one would feel like. Points live only in your browser.
+        </div>
+
+        <div class="scan__demo-banner" role="note" id="liveBanner" hidden>
+          ⚡ <strong>Pilot programme.</strong> Points are real and saved to your
+          email. Deposit limits apply while we trial the first bins.
         </div>
 
         <div class="scan__card">
           <div class="scan__box-head">
             <div class="scan__box-icon" aria-hidden="true">📦</div>
             <div>
-              <span class="scan__box-label">You scanned collection bin</span>
-              <h1 class="scan__box-id">RC-0042</h1>
-              <span class="scan__box-loc">Demo Vape Co. — Johannesburg</span>
+              <span class="scan__box-label" id="binLabel">You scanned collection bin</span>
+              <h1 class="scan__box-id" id="binId">RC-0042</h1>
+              <span class="scan__box-loc" id="binLoc">Demo Vape Co. — Johannesburg</span>
             </div>
-            <span class="scan__box-status">● Online</span>
+            <span class="scan__box-status" id="binStatus">● Online</span>
+          </div>
+
+          <div class="scan__login" id="loginCard" hidden>
+            <p class="scan__login-msg" id="loginMsg">Sign in with your email to earn and keep points.</p>
+            <div class="scan__login-row" id="emailRow">
+              <input type="email" id="loginEmail" placeholder="you@example.com" autocomplete="email" />
+              <button type="button" class="btn btn--primary" id="sendCodeBtn">Send code</button>
+            </div>
+            <div class="scan__login-row" id="codeRow" hidden>
+              <input type="text" id="loginCode" inputmode="numeric" maxlength="6" placeholder="6-digit code" autocomplete="one-time-code" />
+              <button type="button" class="btn btn--primary" id="verifyBtn">Verify</button>
+            </div>
+          </div>
+
+          <div class="scan__signedin" id="signedIn" hidden>
+            <span>Signed in as <strong id="signedInEmail"></strong></span>
+            <button type="button" id="signOutBtn">Sign out</button>
           </div>
 
           <div class="scan__wallet">
@@ -94,7 +134,7 @@
           <button type="button" class="btn btn--primary btn--large btn--full" id="depositBtn">
             🗑️ Simulate Dropping a Vape (+50 RP)
           </button>
-          <p class="scan__validate-note">
+          <p class="scan__validate-note" id="validateNote">
             In the real system this step is <strong>validated at the bin</strong> —
             a one-time code per deposit or a staff tap at partner venues — so points
             can't be farmed without actually recycling.
@@ -154,7 +194,14 @@
       navToggle.setAttribute('aria-expanded', String(open));
     });
 
-    /* ---------- demo points wallet (browser-only) ---------- */
+    /* ---------- points wallet ----------
+       Demo mode (browser-only points) until config.js REWARDS_ENDPOINT is
+       set; then this page talks to the Apps Script ledger and points are
+       real, tied to a verified email. */
+    const CFG = window.RECHARGE_CONFIG || {};
+    const LIVE = !!CFG.REWARDS_ENDPOINT;
+    const BIN = (new URLSearchParams(location.search).get('bin') || '').toUpperCase();
+
     const TIERS = [
       { rp: 500,  icon: '💸', label: 'R50 off a Re-Charge One' },
       { rp: 1000, icon: '🎟️', label: 'Giveaway entry' },
@@ -166,7 +213,7 @@
     const floatEl = document.getElementById('rpFloat');
     const tiersEl = document.getElementById('tiers');
 
-    let rp = parseInt(localStorage.getItem('recharge-demo-rp') || '0', 10) || 0;
+    let rp = LIVE ? 0 : parseInt(localStorage.getItem('recharge-demo-rp') || '0', 10) || 0;
 
     function renderTiers() {
       tiersEl.querySelectorAll('.tier').forEach((t) => t.remove());
@@ -198,35 +245,199 @@
       }
     }
 
-    // cap the demo so mashing the button doesn't cheapen the points idea
-    const MAX_DEMO_TAPS = 10;
-    let taps = 0;
     const depositBtn = document.getElementById('depositBtn');
+    const resetBtn = document.getElementById('resetBtn');
 
-    depositBtn.addEventListener('click', () => {
-      if (taps >= MAX_DEMO_TAPS) return;
-      taps++;
-      if (taps === 1) window.trackEvent?.('scan-demo-used');
-      const unlockedBefore = TIERS.filter((t) => rp >= t.rp).length;
-      rp += STEP;
-      localStorage.setItem('recharge-demo-rp', String(rp));
-      render(true);
-      if (TIERS.filter((t) => rp >= t.rp).length > unlockedBefore) window.burstBolts?.();
-      if (taps >= MAX_DEMO_TAPS) {
+    /* ---------- demo mode ---------- */
+    function initDemo() {
+      // cap the demo so mashing the button doesn't cheapen the points idea
+      const MAX_DEMO_TAPS = 10;
+      let taps = 0;
+
+      depositBtn.addEventListener('click', () => {
+        if (taps >= MAX_DEMO_TAPS) return;
+        taps++;
+        if (taps === 1) window.trackEvent?.('scan-demo-used');
+        const unlockedBefore = TIERS.filter((t) => rp >= t.rp).length;
+        rp += STEP;
+        localStorage.setItem('recharge-demo-rp', String(rp));
+        render(true);
+        if (TIERS.filter((t) => rp >= t.rp).length > unlockedBefore) window.burstBolts?.();
+        if (taps >= MAX_DEMO_TAPS) {
+          depositBtn.disabled = true;
+          depositBtn.textContent = 'Okay — you get the idea 😄';
+        }
+      });
+
+      resetBtn.addEventListener('click', () => {
+        rp = 0;
+        taps = 0;
+        localStorage.removeItem('recharge-demo-rp');
+        depositBtn.disabled = false;
+        depositBtn.textContent = '🗑️ Simulate Dropping a Vape (+50 RP)';
+        render(false);
+      });
+    }
+
+    /* ---------- live mode ---------- */
+    async function api(payload) {
+      // text/plain keeps this a "simple" CORS request — Apps Script web
+      // apps can't answer preflight OPTIONS
+      const r = await fetch(CFG.REWARDS_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload),
+      });
+      return r.json();
+    }
+
+    const el = (id) => document.getElementById(id);
+    const ERRORS = {
+      'invalid-email': 'That email doesn’t look right — try again.',
+      'too-soon': 'Code already sent — check your inbox (and spam).',
+      'invalid-code': 'Wrong code. Check the email and try again.',
+      'expired': 'That code expired — send a new one.',
+      'too-many-attempts': 'Too many tries — send a new code.',
+      'not-logged-in': 'Session expired — sign in again.',
+      'unknown-bin': 'This bin isn’t registered. Points not credited.',
+      'bin-daily-limit': 'Already counted for this bin today — come back tomorrow!',
+      'daily-limit': 'Daily deposit limit reached — see you tomorrow!',
+    };
+    const errText = (e) => ERRORS[e] || 'Something went wrong — try again.';
+
+    function initLive() {
+      el('demoBanner').hidden = true;
+      el('liveBanner').hidden = false;
+      resetBtn.hidden = true;
+      el('validateNote').innerHTML =
+        'Pilot rules: deposits are capped per bin per day while we trial the ' +
+        'first bins. Points are saved to your email — same balance on any device.';
+      depositBtn.textContent = '🗑️ I dropped a vape (+' + STEP + ' RP)';
+
+      if (BIN) {
+        el('binId').textContent = BIN;
+        el('binLoc').textContent = 'Sign in to log your deposit at this bin.';
+        el('binStatus').textContent = '';
+      } else {
+        el('binLabel').textContent = 'No bin scanned';
+        el('binId').textContent = '—';
+        el('binLoc').textContent = 'Scan the QR code on a collection bin to deposit.';
+        el('binStatus').textContent = '';
         depositBtn.disabled = true;
-        depositBtn.textContent = 'Okay — you get the idea 😄';
+        depositBtn.textContent = 'Scan a bin QR to deposit';
       }
-    });
 
-    document.getElementById('resetBtn').addEventListener('click', () => {
-      rp = 0;
-      taps = 0;
-      localStorage.removeItem('recharge-demo-rp');
-      depositBtn.disabled = false;
-      depositBtn.textContent = '🗑️ Simulate Dropping a Vape (+50 RP)';
-      render(false);
-    });
+      const token = () => localStorage.getItem('recharge-rp-token') || '';
+      const showLogin = (msg) => {
+        el('loginCard').hidden = false;
+        el('signedIn').hidden = true;
+        depositBtn.hidden = true;
+        if (msg) el('loginMsg').textContent = msg;
+      };
+      const showWallet = (s) => {
+        el('loginCard').hidden = true;
+        el('signedIn').hidden = false;
+        el('signedInEmail').textContent = s.email;
+        depositBtn.hidden = false;
+        rp = s.points;
+        render(false);
+        if (s.bin) {
+          el('binLoc').textContent = s.bin.name + ' — ' + s.bin.location;
+          el('binStatus').textContent = '● Online';
+          if (s.depositedToday) {
+            depositBtn.disabled = true;
+            depositBtn.textContent = '✓ Counted for today — thank you!';
+          }
+        } else if (BIN) {
+          el('binLoc').textContent = 'Unknown bin — points can’t be credited here.';
+          el('binStatus').textContent = '● Unregistered';
+          depositBtn.disabled = true;
+        }
+      };
 
+      (async () => {
+        if (!token()) return showLogin();
+        try {
+          const s = await api({ action: 'status', token: token(), bin: BIN });
+          if (s.ok) showWallet(s);
+          else { localStorage.removeItem('recharge-rp-token'); showLogin(); }
+        } catch { showLogin('Can’t reach the rewards server — check your connection.'); }
+      })();
+
+      el('sendCodeBtn').addEventListener('click', async () => {
+        const email = el('loginEmail').value.trim();
+        el('sendCodeBtn').disabled = true;
+        try {
+          const r = await api({ action: 'request-otp', email });
+          if (r.ok || r.error === 'too-soon') {
+            el('codeRow').hidden = false;
+            el('loginMsg').textContent = 'Code sent to ' + email + ' — check your inbox (and spam).';
+            el('loginCode').focus();
+            setTimeout(() => { el('sendCodeBtn').disabled = false; }, 60000);
+          } else {
+            el('loginMsg').textContent = errText(r.error);
+            el('sendCodeBtn').disabled = false;
+          }
+        } catch {
+          el('loginMsg').textContent = 'Can’t reach the rewards server — try again.';
+          el('sendCodeBtn').disabled = false;
+        }
+      });
+
+      el('verifyBtn').addEventListener('click', async () => {
+        const email = el('loginEmail').value.trim();
+        const code = el('loginCode').value.trim();
+        el('verifyBtn').disabled = true;
+        try {
+          const r = await api({ action: 'verify-otp', email, code });
+          if (r.ok) {
+            localStorage.setItem('recharge-rp-token', r.token);
+            window.trackEvent?.('rewards-login');
+            const s = await api({ action: 'status', token: r.token, bin: BIN });
+            if (s.ok) showWallet(s);
+          } else {
+            el('loginMsg').textContent = errText(r.error);
+          }
+        } catch {
+          el('loginMsg').textContent = 'Can’t reach the rewards server — try again.';
+        }
+        el('verifyBtn').disabled = false;
+      });
+
+      el('signOutBtn').addEventListener('click', () => {
+        localStorage.removeItem('recharge-rp-token');
+        location.reload();
+      });
+
+      depositBtn.addEventListener('click', async () => {
+        if (!BIN) return;
+        depositBtn.disabled = true;
+        try {
+          const r = await api({ action: 'deposit', token: token(), bin: BIN });
+          if (r.ok) {
+            window.trackEvent?.('deposit');
+            const unlockedBefore = TIERS.filter((t) => rp >= t.rp).length;
+            rp = r.points;
+            render(true);
+            if (TIERS.filter((t) => rp >= t.rp).length > unlockedBefore) window.burstBolts?.();
+            depositBtn.textContent = '✓ Counted for today — thank you!';
+          } else {
+            if (typeof r.points === 'number') { rp = r.points; render(false); }
+            depositBtn.textContent = errText(r.error);
+            if (r.error === 'not-logged-in') {
+              localStorage.removeItem('recharge-rp-token');
+              showLogin('Session expired — sign in again.');
+            }
+          }
+        } catch {
+          depositBtn.textContent = 'Can’t reach the server — tap to retry';
+          depositBtn.disabled = false;
+        }
+      });
+    }
+
+    if (LIVE) initLive();
+    else initDemo();
     render(false);
   </script>
   <script data-goatcounter="https://revan-lombard.goatcounter.com/count"
