@@ -537,52 +537,58 @@
           <span class="eyebrow">The Road Ahead</span>
           <h2>Where this is going.</h2>
         </div>
-        <svg class="roadmap-road" viewBox="0 0 1000 170" preserveAspectRatio="none" aria-hidden="true">
-          <!-- asphalt -->
-          <path class="road-base" d="M 0 132 C 50 130, 70 124, 100 120 C 160 112, 240 58, 300 55 C 360 52, 440 116, 500 120 C 560 124, 640 58, 700 55 C 760 52, 840 116, 900 120 C 940 122, 970 124, 1000 126" />
-          <!-- centre line -->
-          <path class="road-dash" d="M 0 132 C 50 130, 70 124, 100 120 C 160 112, 240 58, 300 55 C 360 52, 440 116, 500 120 C 560 124, 640 58, 700 55 C 760 52, 840 116, 900 120 C 940 122, 970 124, 1000 126" />
-          <!-- travelled so far (draws in on scroll, ends at the Now stop) -->
-          <path class="road-travel" id="roadTravel" d="M 0 132 C 50 130, 70 124, 100 120" />
-          <!-- the road ahead -->
-          <path class="road-ants" d="M 100 120 C 160 112, 240 58, 300 55 C 360 52, 440 116, 500 120 C 560 124, 640 58, 700 55 C 760 52, 840 116, 900 120" />
-          <!-- stops -->
-          <circle class="road-here-pulse" cx="100" cy="120" r="9" />
-          <circle class="road-stop road-here" cx="100" cy="120" r="9" />
-          <circle class="road-stop" cx="300" cy="55" r="7" />
-          <circle class="road-stop" cx="500" cy="120" r="7" />
-          <circle class="road-stop" cx="700" cy="55" r="7" />
-          <circle class="road-stop" cx="900" cy="120" r="7" />
-          <text class="road-label" x="100" y="95" text-anchor="middle">📍 You are here</text>
-          <text class="road-truck" x="900" y="98" text-anchor="middle">🛻</text>
-        </svg>
-        <ol class="roadmap">
-          <li class="roadmap__item roadmap__item--now reveal-item">
+        <div class="roadmap" role="list">
+          <svg class="roadmap-road" viewBox="0 0 1000 170" preserveAspectRatio="none" aria-hidden="true">
+            <!-- asphalt -->
+            <path class="road-base" d="M 0 132 C 50 130, 70 124, 100 120 C 160 112, 240 58, 300 55 C 360 52, 440 116, 500 120 C 560 124, 640 58, 700 55 C 760 52, 840 116, 900 120 C 940 122, 970 124, 1000 126" />
+            <!-- centre line -->
+            <path class="road-dash" d="M 0 132 C 50 130, 70 124, 100 120 C 160 112, 240 58, 300 55 C 360 52, 440 116, 500 120 C 560 124, 640 58, 700 55 C 760 52, 840 116, 900 120 C 940 122, 970 124, 1000 126" />
+            <!-- travelled so far (draws in on scroll, ends at the Now stop) -->
+            <path class="road-travel" id="roadTravel" d="M 0 132 C 50 130, 70 124, 100 120" />
+            <!-- the road ahead -->
+            <path class="road-ants" d="M 100 120 C 160 112, 240 58, 300 55 C 360 52, 440 116, 500 120 C 560 124, 640 58, 700 55 C 760 52, 840 116, 900 120" />
+            <!-- stems tethering each stop to its milestone card -->
+            <path class="road-stem" d="M 100 129 V 170" />
+            <path class="road-stem" d="M 300 46 V 0" />
+            <path class="road-stem" d="M 500 129 V 170" />
+            <path class="road-stem" d="M 700 46 V 0" />
+            <path class="road-stem" d="M 900 129 V 170" />
+            <!-- stops -->
+            <circle class="road-here-pulse" cx="100" cy="120" r="9" />
+            <circle class="road-stop road-here" cx="100" cy="120" r="9" />
+            <circle class="road-stop" cx="300" cy="55" r="7" />
+            <circle class="road-stop" cx="500" cy="120" r="7" />
+            <circle class="road-stop" cx="700" cy="55" r="7" />
+            <circle class="road-stop" cx="900" cy="120" r="7" />
+            <text class="road-label" x="100" y="95" text-anchor="middle">📍 You are here</text>
+            <text class="road-truck" x="880" y="100" text-anchor="middle">🛻</text>
+          </svg>
+          <div class="roadmap__item roadmap__item--now roadmap__item--c1 roadmap__item--below reveal-item" role="listitem">
             <span class="roadmap__phase">Now</span>
             <h3>🗳️ Validate the idea</h3>
             <p>You're looking at this step. Feedback + free pre-orders tell us whether South Africa wants this to exist.</p>
-          </li>
-          <li class="roadmap__item reveal-item">
+          </div>
+          <div class="roadmap__item roadmap__item--c2 roadmap__item--above reveal-item" role="listitem">
             <span class="roadmap__phase">Next</span>
             <h3>📦 First collection bins</h3>
             <p>Pilot bins at partner venues in Johannesburg, with real Re-Charge Points for every vape returned.</p>
-          </li>
-          <li class="roadmap__item reveal-item">
+          </div>
+          <div class="roadmap__item roadmap__item--c3 roadmap__item--below reveal-item" role="listitem">
             <span class="roadmap__phase">Goal 1</span>
             <h3>🔋 10 000 batteries reclaimed</h3>
             <p>Every cell tested, graded and reborn in the first run of Re-Charge One power banks.</p>
-          </li>
-          <li class="roadmap__item reveal-item">
+          </div>
+          <div class="roadmap__item roadmap__item--c4 roadmap__item--above reveal-item" role="listitem">
             <span class="roadmap__phase">Goal 2</span>
             <h3>♻️ 1 million cells diverted</h3>
             <p>A certified product line and collection network that makes binning a vape battery the weird option.</p>
-          </li>
-          <li class="roadmap__item roadmap__item--moon reveal-item">
+          </div>
+          <div class="roadmap__item roadmap__item--moon roadmap__item--c5 roadmap__item--below reveal-item" role="listitem">
             <span class="roadmap__phase">Moonshot</span>
             <h3>🛻 An EV kei truck on reclaimed cells</h3>
             <p>The very-long-term dream: a small electric workhorse truck whose entire pack is built from batteries South Africa threw away.</p>
-          </li>
-        </ol>
+          </div>
+        </div>
       </div>
     </section>
 

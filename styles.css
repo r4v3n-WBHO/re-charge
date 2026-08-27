@@ -2654,15 +2654,29 @@ body.webgl-off:not(.webgl-on) .partner__visual::after {
 
 /* ---------- roadmap ---------- */
 
+/* journey layout: cards alternate above/below the road, tethered by stems */
 .roadmap {
-  list-style: none;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 1.2rem;
+  grid-template-rows: auto 150px auto;
+  column-gap: 1.2rem;
 }
+.roadmap__item--c1 { grid-column: 1; }
+.roadmap__item--c2 { grid-column: 2; }
+.roadmap__item--c3 { grid-column: 3; }
+.roadmap__item--c4 { grid-column: 4; }
+.roadmap__item--c5 { grid-column: 5; }
+.roadmap__item--above { grid-row: 1; align-self: end; }
+.roadmap__item--below { grid-row: 3; align-self: start; }
 
 /* the road itself: winding asphalt with the travelled stretch in green */
-.roadmap-road { width: 100%; height: 150px; display: block; margin-bottom: 0.4rem; overflow: visible; }
+.roadmap-road { grid-column: 1 / -1; grid-row: 2; width: 100%; height: 100%; display: block; overflow: visible; }
+.roadmap-road .road-stem {
+  fill: none;
+  stroke: rgba(14, 159, 122, 0.45);
+  stroke-width: 2;
+  stroke-dasharray: 4 6;
+}
 .roadmap-road .road-base { fill: none; stroke: #23312b; stroke-width: 13; stroke-linecap: round; }
 .roadmap-road .road-dash { fill: none; stroke: rgba(255, 255, 255, 0.7); stroke-width: 1.6; stroke-dasharray: 10 12; }
 .roadmap-road .road-travel { fill: none; stroke: var(--accent); stroke-width: 13; stroke-linecap: round; }
@@ -2729,10 +2743,32 @@ body.webgl-off:not(.webgl-on) .partner__visual::after {
 .roadmap__item--moon p { color: rgba(255, 255, 255, 0.75); }
 .roadmap__item--moon .roadmap__phase { background: rgba(45, 240, 178, 0.15); color: var(--accent-bright); }
 
+/* narrow screens: a vertical roadside timeline instead of the winding road */
 @media (max-width: 960px) {
-  .roadmap { grid-template-columns: 1fr 1fr; }
+  .roadmap { display: block; position: relative; padding-left: 2rem; }
   .roadmap-road { display: none; }
-}
-@media (max-width: 640px) {
-  .roadmap { grid-template-columns: 1fr; }
+  .roadmap::before {
+    content: "";
+    position: absolute;
+    left: 0.55rem;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 7px;
+    border-radius: 7px;
+    background: repeating-linear-gradient(
+      to bottom, #23312b 0 14px, rgba(255, 255, 255, 0.65) 14px 16px, #23312b 16px 30px);
+  }
+  .roadmap__item { position: relative; margin-bottom: 1rem; }
+  .roadmap__item::before {
+    content: "";
+    position: absolute;
+    left: -1.83rem;
+    top: 1.35rem;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: #fff;
+    border: 3px solid var(--accent-strong);
+  }
+  .roadmap__item--now::before { background: var(--accent); }
 }
