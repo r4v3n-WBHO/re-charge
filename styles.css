@@ -2777,6 +2777,7 @@ body.webgl-off:not(.webgl-on) .partner__visual::after {
 .footer__za {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.55rem;
   font-size: 0.85rem;
   color: var(--text-muted);
