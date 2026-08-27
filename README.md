@@ -84,6 +84,12 @@ the `main` branch root.
       wording deliberately says collections run "as long as the programme
       runs", NOT "lifetime" — an unconditional lifetime-service promise is
       an unbounded CPA liability; name-on-bin is lifetime, service is not
+- [ ] **Bin placement policy** (protects collection economics): bins only go
+      onto serviced routes inside the active service area (pilot: JHB East);
+      out-of-area sponsors join an area waitlist that unlocks when enough bins
+      are backed there; collections are scheduled by fill level, not calendar.
+      Never promise a lone far-away bin — a full route pays for itself in
+      reclaimed cells, a lone distant bin never does.
 - [ ] **Sponsor monthly impact reports** when bins are live: per-bin deposit
       counts come straight from the rewards Sheet's Deposits tab (filter by
       binId + month). Automate later with an Apps Script time trigger that
