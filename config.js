@@ -7,4 +7,9 @@ window.RECHARGE_CONFIG = {
   // Google Apps Script web app; URL ends in /exec). Leave empty to keep
   // scan.html in demo mode — set it and the scan page goes live.
   REWARDS_ENDPOINT: '',
+
+  // Social proof shown in the homepage hero. Update by hand from the
+  // Formspree inbox; the strip stays hidden until builds reaches 10 so
+  // small numbers never undermine the pitch.
+  PUBLIC_COUNTS: { builds: 0, bins: 0 },
 };

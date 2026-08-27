@@ -447,3 +447,15 @@ notifyForm.addEventListener('submit', async (e) => {
     setTimeout(() => { pop.classList.remove('is-visible'); setTimeout(() => pop.remove(), 400); }, 3500);
   });
 })();
+
+
+/* ---------- social proof: shown only once the numbers are worth showing ---------- */
+(function () {
+  const el = document.getElementById('heroProof');
+  const c = (window.RECHARGE_CONFIG || {}).PUBLIC_COUNTS;
+  if (!el || !c || !(c.builds >= 10)) return;
+  el.textContent = '⚡ ' + c.builds.toLocaleString('en-ZA') + ' builds backed' +
+    (c.bins > 0 ? ' · ' + c.bins.toLocaleString('en-ZA') + ' bins claimed' : '') +
+    ' — join them';
+  el.hidden = false;
+})();

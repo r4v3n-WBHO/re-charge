@@ -494,28 +494,43 @@
     bank.add(logo);
 
     // battery-level screen on the front face
-    function makeScreenTexture() {
+    function createBatteryScreen(THREE_NS) {
       const s = document.createElement('canvas');
       s.width = 256; s.height = 128;
       const g = s.getContext('2d');
-      g.fillStyle = '#04100c';
-      g.beginPath(); g.roundRect(0, 0, 256, 128, 18); g.fill();
-      g.strokeStyle = 'rgba(45,240,178,0.35)'; g.lineWidth = 4;
-      g.beginPath(); g.roundRect(3, 3, 250, 122, 16); g.stroke();
-      g.fillStyle = '#2df0b2'; g.textAlign = 'center';
-      g.font = '700 54px "Space Grotesk", sans-serif';
-      g.fillText('73%', 128, 60);
-      for (let i = 0; i < 5; i++) {
-        g.fillStyle = i < 4 ? '#2df0b2' : 'rgba(255,255,255,0.18)';
-        g.beginPath(); g.roundRect(38 + i * 38, 80, 30, 24, 5); g.fill();
+      const tex = new THREE_NS.CanvasTexture(s);
+      tex.colorSpace = THREE_NS.SRGBColorSpace;
+      let last = -1;
+      function draw(pct) {
+        g.clearRect(0, 0, 256, 128);
+        g.fillStyle = '#04100c';
+        g.beginPath(); g.roundRect(0, 0, 256, 128, 18); g.fill();
+        g.strokeStyle = 'rgba(45,240,178,0.35)'; g.lineWidth = 4;
+        g.beginPath(); g.roundRect(3, 3, 250, 122, 16); g.stroke();
+        g.fillStyle = '#2df0b2'; g.textAlign = 'center';
+        g.font = '700 54px "Space Grotesk", sans-serif';
+        g.fillText(pct >= 99 ? '\u26a1100%' : pct + '%', 128, 60);
+        const lit = Math.max(1, Math.ceil(pct / 20));
+        for (let i = 0; i < 5; i++) {
+          g.fillStyle = i < lit ? '#2df0b2' : 'rgba(255,255,255,0.18)';
+          g.beginPath(); g.roundRect(38 + i * 38, 80, 30, 24, 5); g.fill();
+        }
+        tex.needsUpdate = true;
       }
-      const tex = new THREE.CanvasTexture(s);
-      tex.colorSpace = THREE.SRGBColorSpace;
-      return tex;
+      draw(73);
+      return {
+        texture: tex,
+        // slow charge: 42% -> 99% over ~50s, hold, repeat (skipped for reduced motion)
+        update(t) {
+          const pct = Math.min(99, 42 + Math.floor(((t % 56) / 50) * 57));
+          if (pct !== last) { last = pct; draw(pct); }
+        },
+      };
     }
+    const battScreen = createBatteryScreen(THREE);
     const screen = new THREE.Mesh(
       new THREE.PlaneGeometry(1.15, 0.58),
-      new THREE.MeshBasicMaterial({ map: makeScreenTexture(), transparent: true, depthWrite: false })
+      new THREE.MeshBasicMaterial({ map: battScreen.texture, transparent: true, depthWrite: false })
     );
     screen.renderOrder = 3;
     bank.add(screen);
@@ -589,6 +604,7 @@
       shellMat.depthWrite = shellMat.opacity > 0.6;
       logo.material.opacity = shellMat.opacity;
       screen.material.opacity = shellMat.opacity;
+      if (!reduceMotion) battScreen.update(t);
       if (!reduceMotion) bank.position.y = Math.sin(t * 1.1) * 0.08;
       controls.update();
       renderer.render(scene, camera);
