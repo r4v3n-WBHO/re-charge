@@ -451,7 +451,6 @@ h1 .line > span { display: inline-block; }
   white-space: nowrap;
 }
 
-.hero__flow { margin-top: clamp(2.5rem, 5vw, 4rem); }
 
 .hero__scroll {
   position: absolute;
@@ -462,89 +461,6 @@ h1 .line > span { display: inline-block; }
   border: 2px solid var(--border);
   border-radius: 999px;
   display: none;
-}
-
-/* ---------- Flow visual ---------- */
-
-.flow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(0.4rem, 2vw, 1.2rem);
-  flex-wrap: wrap;
-  padding: 1.4rem 1rem;
-  background: rgba(255, 255, 255, 0.65);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  backdrop-filter: blur(8px);
-  box-shadow: var(--shadow);
-}
-
-.flow__step {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.45rem;
-  font-size: 0.76rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  width: 96px;
-  text-align: center;
-}
-
-.flow__icon {
-  width: 56px; height: 56px;
-  display: grid;
-  place-items: center;
-  font-size: 1.55rem;
-  border-radius: 18px;
-  background: var(--bg-tint);
-  border: 1px solid var(--border);
-  transition: transform 0.2s;
-  animation: flow-active 6s ease-in-out infinite;
-}
-
-/* the process runs: each stage lights up in turn, forever */
-.flow > .flow__step:nth-child(1) .flow__icon { animation-delay: 0s; }
-.flow > .flow__step:nth-child(3) .flow__icon { animation-delay: 1.5s; }
-.flow > .flow__step:nth-child(5) .flow__icon { animation-delay: 3s; }
-.flow > .flow__step:nth-child(7) .flow__icon { animation-delay: 4.5s; }
-
-@keyframes flow-active {
-  0%, 22%, 100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 rgba(14, 159, 122, 0);
-  }
-  9% {
-    transform: scale(1.14);
-    background: var(--accent-soft);
-    border-color: var(--accent);
-    box-shadow: 0 0 18px rgba(14, 159, 122, 0.45);
-  }
-}
-
-.flow__step--accent .flow__icon {
-  background: var(--accent-soft);
-  border-color: var(--accent);
-  box-shadow: 0 0 18px rgba(14, 159, 122, 0.35);
-}
-.flow__step--accent { color: var(--accent-strong); }
-
-.flow__arrow {
-  color: var(--accent);
-  font-weight: 700;
-  font-size: 1.1rem;
-  animation: flow-arrow 6s ease-in-out infinite;
-}
-
-/* arrows "pass the charge" to the next stage, in sync with the icons */
-.flow > .flow__arrow:nth-child(2) { animation-delay: 0.95s; }
-.flow > .flow__arrow:nth-child(4) { animation-delay: 2.45s; }
-.flow > .flow__arrow:nth-child(6) { animation-delay: 3.95s; }
-
-@keyframes flow-arrow {
-  0%, 14%, 100% { transform: translateX(0); opacity: 0.45; }
-  6% { transform: translateX(6px); opacity: 1; color: var(--accent-strong); }
 }
 
 /* ---------- Marquee ---------- */
@@ -1403,8 +1319,6 @@ input:focus, select:focus, textarea:focus {
 .anim-timeout .reveal,
 .anim-timeout .reveal-item,
 .anim-timeout #heroTitle .line > span,
-.anim-timeout .hero__flow .flow__step,
-.anim-timeout .hero__flow .flow__arrow,
 .anim-timeout #heroVisual {
   opacity: 1 !important;
   transform: none !important;
@@ -2507,7 +2421,7 @@ body.webgl-off:not(.webgl-on) .partner__visual::after {
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .hero-fade, .reveal, .reveal-item { opacity: 1 !important; transform: none !important; }
-  .marquee__track, .bg__blob, .flow__arrow, .flow__icon, .cta__spark, .hero__glow,
+  .marquee__track, .bg__blob, .cta__spark, .hero__glow,
   .pill__dot, .nav__charge-fill { animation: none; }
 }
 
@@ -2599,8 +2513,6 @@ body.webgl-off:not(.webgl-on) .partner__visual::after {
 
   .steps { grid-template-columns: 1fr; }
   .form-row--split { grid-template-columns: 1fr; }
-  .flow__arrow { display: none; }
-  .flow { gap: 1rem; }
 
   /* uniform CTAs: primary action buttons go full-width on small screens */
   .hero__actions .btn,
@@ -2731,7 +2643,6 @@ body.webgl-off:not(.webgl-on) .partner__visual::after {
   .hero__copy .pill { margin-bottom: 0.8rem; }
   .hero__copy h1 { font-size: 1.75rem; margin-bottom: 0.8rem; }
   .hero__copy .lead { font-size: 0.98rem; margin-bottom: 1.2rem; }
-  .hero__flow { margin-top: 1.6rem; }
 }
 
 /* ---------- roadmap ---------- */
@@ -2817,14 +2728,4 @@ body.webgl-off:not(.webgl-on) .partner__visual::after {
 }
 @media (max-width: 640px) {
   .roadmap { grid-template-columns: 1fr; }
-}
-
-/* micro-captions under the hero flow icons */
-.flow__step small {
-  display: block;
-  font-size: 0.74rem;
-  color: var(--text-muted);
-  margin-top: 0.15rem;
-  max-width: 9.5rem;
-  line-height: 1.35;
 }

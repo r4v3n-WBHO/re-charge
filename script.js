@@ -60,10 +60,7 @@ if (window.gsap && !reduceMotion) {
     .fromTo('.hero-fade',
       { opacity: 0, y: 18 },
       { opacity: 1, y: 0, duration: 0.5, stagger: 0.08 }, 0.25)
-    .from('#heroVisual', { opacity: 0, scale: 0.88, duration: 0.8, ease: 'power2.out' }, 0.2)
-    .from('.hero__flow .flow__step, .hero__flow .flow__arrow', {
-      opacity: 0, y: 20, duration: 0.4, stagger: 0.05,
-    }, 0.5);
+    .from('#heroVisual', { opacity: 0, scale: 0.88, duration: 0.8, ease: 'power2.out' }, 0.2);
 
   // Section reveals
   document.querySelectorAll('.reveal').forEach((el) => {
