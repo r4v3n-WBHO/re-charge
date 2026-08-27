@@ -104,7 +104,7 @@
 
             <div class="options__group">
               <h2 class="options__title"><span class="options__step">2</span> Capacity</h2>
-              <p class="options__sub">More capacity = more reclaimed cells inside. Figures are design targets — final capacity depends on recovered-cell testing.</p>
+              <p class="options__sub">More capacity = more reclaimed cells inside. Because every cell is individually tested, capacities are guaranteed minimums — your pack ships with at least its rated mAh, usually more.</p>
               <div class="capacity" id="capacity" role="radiogroup" aria-label="Capacity"></div>
             </div>
 
@@ -304,6 +304,10 @@
       { id: '20000', mAh: 20000, cells: 8, charges: '≈ 4–8 phone charges', price: 'R899',
         dims: { w: 2.7, h: 4.4, d: 1.75 }, layers: 2, rows: 4, bottles: 4 },
     ];
+
+    // reclaimed cells vary in tested capacity, so every pack is quoted as a
+    // guaranteed minimum ("5 000+ mAh") rather than an exact figure
+    const capLabel = (cap) => cap.mAh.toLocaleString('en-ZA') + '+ mAh';
 
     // shared build links: ?colour=grape-soda&mah=20000 opens preconfigured
     const urlParams = new URLSearchParams(location.search);
@@ -567,7 +571,7 @@
       b.setAttribute('role', 'radio');
       b.setAttribute('aria-checked', String(cap === state.capacity));
       b.innerHTML = `
-        <strong>${cap.mAh.toLocaleString('en-ZA')} mAh</strong>
+        <strong>${capLabel(cap)}</strong>
         <span>${cap.cells} reclaimed cells</span>
         <span>${cap.charges}</span>
         <em>Est. ${cap.price}</em>`;
@@ -590,7 +594,7 @@
     function updateSummary() {
       colourNameEl.textContent = state.colour.name;
       document.getElementById('sumColour').textContent = state.colour.name;
-      document.getElementById('sumCapacity').textContent = state.capacity.mAh.toLocaleString('en-ZA') + ' mAh';
+      document.getElementById('sumCapacity').textContent = capLabel(state.capacity);
       document.getElementById('sumCells').textContent = state.capacity.cells + ' × reclaimed vape cells';
       document.getElementById('sumPrice').textContent = 'Est. ' + state.capacity.price + ' — pay nothing today';
       document.getElementById('impactVapes').textContent = state.capacity.cells + ' vapes';
@@ -665,13 +669,13 @@
         email: preorderForm.email.value.trim(),
         acknowledgedReclaimedCells: true,
         colour: state.colour.name,
-        capacity: state.capacity.mAh,
+        capacity: state.capacity.mAh + '+',
         cells: state.capacity.cells,
         estPrice: state.capacity.price,
       });
 
       document.getElementById('preorderDoneDetail').textContent =
-        `${state.capacity.mAh.toLocaleString('en-ZA')} mAh in ${state.colour.name}, ` +
+        `${capLabel(state.capacity)} in ${state.colour.name}, ` +
         `powered by ${state.capacity.cells} reclaimed cells.`;
       lastPreorderEmail = data.email;
       preorderForm.hidden = true;
@@ -685,7 +689,7 @@
     shareBuildBtn.addEventListener('click', async () => {
       const p = new URLSearchParams({ colour: state.colour.id, mah: state.capacity.id, src: 'build-share' });
       const url = location.origin + location.pathname + '?' + p;
-      const text = `I just backed a ${state.colour.name} ${state.capacity.mAh.toLocaleString('en-ZA')} mAh power bank built from vape waste ⚡ Back yours free:`;
+      const text = `I just backed a ${state.colour.name} ${capLabel(state.capacity)} power bank built from vape waste ⚡ Back yours free:`;
       window.trackEvent?.('share-build');
       if (navigator.share) {
         navigator.share({ title: 'Re-Charge One', text, url }).catch(() => {});
