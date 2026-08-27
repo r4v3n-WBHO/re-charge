@@ -2773,16 +2773,17 @@ body.webgl-off:not(.webgl-on) .partner__visual::after {
   .roadmap__item--now::before { background: var(--accent); }
 }
 
-/* South African provenance line in the footer */
-.footer__za {
+/* single small-print line: provenance + privacy + copyright */
+.footer__small {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 0.55rem;
+  gap: 0.35rem 1.6rem;
   font-size: 0.85rem;
   color: var(--text-muted);
-  margin-bottom: 0.4rem;
 }
+.footer__small span { display: inline-flex; align-items: center; gap: 0.5rem; }
 .za-flag {
   width: 21px;
   height: 14px;
