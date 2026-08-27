@@ -280,22 +280,22 @@
         <div class="steps" id="stepsTimeline">
           <div class="steps__track" aria-hidden="true"><div class="steps__progress" id="stepsProgress"></div></div>
           <div class="step reveal-item">
-            <span class="step__num">01</span>
+            <span class="step__num">01 <span class="step__emoji" aria-hidden="true">🗑️</span></span>
             <h3>Collect</h3>
             <p>Old disposable vapes are collected through dedicated Re-Charge collection points.</p>
           </div>
           <div class="step reveal-item">
-            <span class="step__num">02</span>
+            <span class="step__num">02 <span class="step__emoji" aria-hidden="true">🔋</span></span>
             <h3>Recover</h3>
             <p>The batteries and useful components are separated from the rest of the device.</p>
           </div>
           <div class="step reveal-item">
-            <span class="step__num">03</span>
+            <span class="step__num">03 <span class="step__emoji" aria-hidden="true">🧪</span></span>
             <h3>Test</h3>
             <p>Recovered batteries are inspected and tested to determine whether they are suitable for safe reuse.</p>
           </div>
           <div class="step reveal-item">
-            <span class="step__num">04</span>
+            <span class="step__num">04 <span class="step__emoji" aria-hidden="true">⚡</span></span>
             <h3>Re-Charge</h3>
             <p>Suitable cells could be rebuilt into products like portable power banks — housed in enclosures 3D-printed from recycled plastic bottles, so the whole product is made from waste.</p>
           </div>
@@ -1272,14 +1272,15 @@
       // mobile — restore vertical panning so the canvas doesn't trap the page
       canvas.style.touchAction = 'pan-y';
 
-      // interior/exterior toggle — same interaction as the store configurator
-      let opacityTarget = 0.97;
+      // lands half-transparent so shell AND cells read at a glance;
+      // the toggle then flips between full inside and full shell views
+      let opacityTarget = 0.55;
       const insideToggle = document.getElementById('productInsideToggle');
       insideToggle.addEventListener('click', () => {
-        const on = opacityTarget > 0.6;
-        opacityTarget = on ? 0.22 : 0.97;
-        insideToggle.setAttribute('aria-pressed', String(on));
-        insideToggle.textContent = on ? '👁 View shell' : '👁 View inside';
+        const goInside = opacityTarget > 0.4;
+        opacityTarget = goInside ? 0.22 : 0.97;
+        insideToggle.setAttribute('aria-pressed', String(goInside));
+        insideToggle.textContent = goInside ? '👁 View shell' : '👁 View inside';
       });
 
       const entry = {

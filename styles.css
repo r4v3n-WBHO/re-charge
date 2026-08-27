@@ -727,6 +727,13 @@ h1 .line > span { display: inline-block; }
   border-radius: 9px;
 }
 
+.step__emoji {
+  font-size: 0.95rem;
+  letter-spacing: 0;
+  margin-left: 0.15rem;
+  vertical-align: -1px;
+}
+
 .step h3 { margin-bottom: 0.5rem; }
 .step p { color: var(--text-muted); font-size: 0.94rem; }
 
