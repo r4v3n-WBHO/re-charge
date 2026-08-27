@@ -75,7 +75,7 @@ if (window.gsap && !reduceMotion) {
   });
 
   // Staggered items (cards, steps)
-  document.querySelectorAll('.cards, .steps').forEach((group) => {
+  document.querySelectorAll('.cards, .steps, .roadmap').forEach((group) => {
     const items = group.querySelectorAll('.reveal-item');
     gsap.set(items, { y: 44 });
     gsap.to(items, {
@@ -368,3 +368,64 @@ notifyForm.addEventListener('submit', async (e) => {
     gsap.from(notifyDone, { opacity: 0, y: 10, duration: 0.5, ease: 'power2.out' });
   }
 });
+
+/* ---------- email capture: +100 RP signup popup ---------- */
+// Shows once per visitor (20s in or 45% scrolled). Signing up records an
+// 'email-signup' entry — those emails get 100 RP credited in the Rewards
+// ledger at launch, and they're the launch-announcement list.
+(function () {
+  const KEY = 'recharge-signup';
+  if (localStorage.getItem(KEY)) return;
+
+  const pop = document.createElement('aside');
+  pop.className = 'signup-pop';
+  pop.setAttribute('aria-label', 'Get launch updates');
+  pop.innerHTML = `
+    <button type="button" class="signup-pop__close" aria-label="Close">✕</button>
+    <div class="signup-pop__body">
+      <span class="signup-pop__badge">⚡ +100 RP</span>
+      <h3>Claim 100 points before launch</h3>
+      <p>Leave your email and we'll credit <strong>100 Re-Charge Points</strong> to
+        your Rewards balance at launch — plus first dibs when builds go live.
+        No spam, unsubscribe anytime.</p>
+      <form class="signup-pop__form" novalidate>
+        <input type="email" name="email" placeholder="you@example.com" autocomplete="email" required />
+        <button type="submit" class="btn btn--primary">Claim my RP</button>
+      </form>
+      <p class="signup-pop__done" hidden>🎉 You're in — 100 RP reserved. See you at launch!</p>
+    </div>`;
+  document.body.appendChild(pop);
+
+  let shown = false;
+  function show() {
+    if (shown) return;
+    shown = true;
+    clearTimeout(timer);
+    removeEventListener('scroll', onScroll);
+    pop.classList.add('is-visible');
+    window.trackEvent?.('signup-pop-shown');
+  }
+  const timer = setTimeout(show, 20000);
+  function onScroll() {
+    if (scrollY + innerHeight > document.documentElement.scrollHeight * 0.45) show();
+  }
+  addEventListener('scroll', onScroll, { passive: true });
+
+  pop.querySelector('.signup-pop__close').addEventListener('click', () => {
+    localStorage.setItem(KEY, 'dismissed');
+    pop.classList.remove('is-visible');
+    setTimeout(() => pop.remove(), 400);
+  });
+
+  pop.querySelector('.signup-pop__form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const input = e.target.email;
+    if (!input.value.trim() || !input.checkValidity()) { input.focus(); return; }
+    await submitEntry({ type: 'email-signup', email: input.value.trim(), rpPromised: 100 });
+    window.trackEvent?.('signup-pop-claimed');
+    localStorage.setItem(KEY, 'done');
+    e.target.hidden = true;
+    pop.querySelector('.signup-pop__done').hidden = false;
+    setTimeout(() => { pop.classList.remove('is-visible'); setTimeout(() => pop.remove(), 400); }, 3500);
+  });
+})();

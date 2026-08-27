@@ -296,13 +296,14 @@
       { id: 'mint-fizz',       name: 'Mint Fizz',       hex: 0x8fd8bd, css: '#8fd8bd' },
     ];
 
+    // cell counts assume ~550 mAh per tested reclaimed vape cell
     const CAPACITIES = [
-      { id: '10000', mAh: 10000, cells: 4,  charges: '≈ 2–4 phone charges', price: 'R599',
-        dims: { w: 2.7, h: 4.4, d: 0.95 }, layers: 1, rows: 4, bottles: 3 },
-      { id: '20000', mAh: 20000, cells: 8,  charges: '≈ 4–8 phone charges', price: 'R899',
-        dims: { w: 2.7, h: 4.4, d: 1.75 }, layers: 2, rows: 4, bottles: 4 },
-      { id: '40000', mAh: 40000, cells: 16, charges: '≈ 8–16 phone or 2–3 laptop charges', price: 'R1 499',
-        dims: { w: 2.7, h: 4.4, d: 3.35 }, layers: 4, rows: 4, bottles: 6 },
+      { id: '10000', mAh: 10000, cells: 19, charges: '≈ 2–4 phone charges', price: 'R599',
+        dims: { w: 2.7, h: 4.4, d: 0.95 }, layers: 2, bottles: 3 },
+      { id: '20000', mAh: 20000, cells: 37, charges: '≈ 4–8 phone charges', price: 'R899',
+        dims: { w: 2.7, h: 4.4, d: 1.75 }, layers: 3, bottles: 4 },
+      { id: '40000', mAh: 40000, cells: 73, charges: '≈ 8–16 phone or 2–3 laptop charges', price: 'R1 499',
+        dims: { w: 2.7, h: 4.4, d: 3.35 }, layers: 5, bottles: 6 },
     ];
 
     // reclaimed cells vary in tested capacity, so every pack is quoted as a
@@ -376,16 +377,19 @@
     });
     let shell = null;
 
-    // reclaimed 18650-style cells (pool of 16, lying horizontally)
+    // slim 13mm vape-style cells (pool of 80, lying horizontally, two per row)
     const cellBodyMat = new THREE.MeshStandardMaterial({ color: 0xd9e2de, metalness: 0.9, roughness: 0.3 });
     const cellBandMat = new THREE.MeshStandardMaterial({ color: 0x0e9f7a, metalness: 0.3, roughness: 0.4 });
+    const cellBodyGeom = new THREE.CylinderGeometry(0.185, 0.185, 1.0, 20);
+    const cellBandGeom = new THREE.CylinderGeometry(0.19, 0.19, 0.28, 20);
+    const cellNubGeom = new THREE.CylinderGeometry(0.07, 0.07, 0.08, 12);
     const cells = [];
-    for (let i = 0; i < 16; i++) {
+    for (let i = 0; i < 80; i++) {
       const cell = new THREE.Group();
-      const body = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.34, 2.05, 32), cellBodyMat);
-      const band = new THREE.Mesh(new THREE.CylinderGeometry(0.345, 0.345, 0.55, 32), cellBandMat);
-      const nub = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.1, 16), cellBodyMat);
-      nub.position.y = 1.07;
+      const body = new THREE.Mesh(cellBodyGeom, cellBodyMat);
+      const band = new THREE.Mesh(cellBandGeom, cellBandMat);
+      const nub = new THREE.Mesh(cellNubGeom, cellBodyMat);
+      nub.position.y = 0.54;
       cell.add(body, band, nub);
       cell.rotation.z = Math.PI / 2; // lie horizontally
       bank.add(cell);
@@ -403,6 +407,12 @@
     );
     indicator.rotation.x = Math.PI / 2;
     bank.add(board, indicator);
+
+    // ports on the top edge: USB-C (rounded slot) + USB-A (rectangular)
+    const portMat = new THREE.MeshStandardMaterial({ color: 0x050d0b, metalness: 0.6, roughness: 0.5 });
+    const portC = new THREE.Mesh(new RoundedBoxGeometry(0.55, 0.1, 0.2, 3, 0.045), portMat);
+    const portA = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.1, 0.26), portMat);
+    bank.add(portC, portA);
 
     // draws the Circular Energy mark (battery + bolt in the loop) on a 2D canvas
     function drawMark(c, cx, cy, size, color) {
@@ -453,6 +463,33 @@
     logo.renderOrder = 3; // draw after the shell, or its depth punches a hole through it
     bank.add(logo);
 
+    // battery-level screen on the front face
+    function makeScreenTexture() {
+      const s = document.createElement('canvas');
+      s.width = 256; s.height = 128;
+      const g = s.getContext('2d');
+      g.fillStyle = '#04100c';
+      g.beginPath(); g.roundRect(0, 0, 256, 128, 18); g.fill();
+      g.strokeStyle = 'rgba(45,240,178,0.35)'; g.lineWidth = 4;
+      g.beginPath(); g.roundRect(3, 3, 250, 122, 16); g.stroke();
+      g.fillStyle = '#2df0b2'; g.textAlign = 'center';
+      g.font = '700 54px "Space Grotesk", sans-serif';
+      g.fillText('73%', 128, 60);
+      for (let i = 0; i < 5; i++) {
+        g.fillStyle = i < 4 ? '#2df0b2' : 'rgba(255,255,255,0.18)';
+        g.beginPath(); g.roundRect(38 + i * 38, 80, 30, 24, 5); g.fill();
+      }
+      const tex = new THREE.CanvasTexture(s);
+      tex.colorSpace = THREE.SRGBColorSpace;
+      return tex;
+    }
+    const screen = new THREE.Mesh(
+      new THREE.PlaneGeometry(1.15, 0.58),
+      new THREE.MeshBasicMaterial({ map: makeScreenTexture(), transparent: true, depthWrite: false })
+    );
+    screen.renderOrder = 3;
+    bank.add(screen);
+
     function rebuild() {
       const cap = state.capacity;
       const { w, h, d } = cap.dims;
@@ -462,26 +499,29 @@
       shell.renderOrder = 2; // draw after cells so they show through when translucent
       bank.add(shell);
 
-      // stack cells: `rows` high, `layers` deep
-      const rowPitch = 0.78, layerPitch = 0.78;
-      let n = 0;
-      for (let layer = 0; layer < cap.layers; layer++) {
-        for (let row = 0; row < cap.rows; row++) {
-          const cell = cells[n++];
-          cell.visible = true;
-          cell.position.set(
-            0,
-            (row - (cap.rows - 1) / 2) * rowPitch - 0.25,
-            (layer - (cap.layers - 1) / 2) * layerPitch
-          );
-        }
+      // pack cells: 8 rows × 2 columns per layer, `layers` deep
+      const rowPitch = 0.42, layerPitch = 0.42, PER_LAYER = 16;
+      for (let n = 0; n < cells.length; n++) {
+        const cell = cells[n];
+        if (n >= cap.cells) { cell.visible = false; continue; }
+        const layer = Math.floor(n / PER_LAYER);
+        const idx = n % PER_LAYER;
+        const row = Math.floor(idx / 2), col = idx % 2;
+        cell.visible = true;
+        cell.position.set(
+          (col - 0.5) * 1.16,
+          (row - 3.5) * rowPitch - 0.25,
+          (layer - (cap.layers - 1) / 2) * layerPitch
+        );
       }
-      for (; n < cells.length; n++) cells[n].visible = false;
 
       board.position.set(0, h / 2 - 0.55, 0);
       indicator.position.set(0, h / 2 + 0.001, 0);
+      portC.position.set(-0.75, h / 2 - 0.01, 0);
+      portA.position.set(0.75, h / 2 - 0.01, 0);
       logo.position.set(0, h / 2 - 1.0, d / 2 + 0.002);
       logo.visible = true;
+      screen.position.set(0, h / 2 - 1.85, d / 2 + 0.003);
     }
 
     shellMat.color.set(state.colour.hex);
@@ -518,6 +558,7 @@
       shellMat.opacity += (opacityTarget - shellMat.opacity) * 0.08;
       shellMat.depthWrite = shellMat.opacity > 0.6;
       logo.material.opacity = shellMat.opacity;
+      screen.material.opacity = shellMat.opacity;
       if (!reduceMotion) bank.position.y = Math.sin(t * 1.1) * 0.08;
       controls.update();
       renderer.render(scene, camera);
