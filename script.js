@@ -216,16 +216,6 @@ form.addEventListener('submit', async (e) => {
   thanks.scrollIntoView({ behavior: 'smooth', block: 'center' });
 });
 
-/* ---------- Battery-level easter egg (Chrome/Edge; degrades invisibly) ---------- */
-if (navigator.getBattery) {
-  navigator.getBattery().then((b) => {
-    const note = document.getElementById('batteryNote');
-    if (!note || b.level == null) return;
-    note.querySelector('strong').textContent = Math.round(b.level * 100) + '%';
-    note.hidden = false;
-  }).catch(() => {});
-}
-
 /* ---------- Share buttons ---------- */
 const shareUrl = location.origin + location.pathname;
 const shareText = "What if your dead vape could get a second life? Re-Charge is a concept turning vape waste into power banks — pre-orders decide if it gets built.";
