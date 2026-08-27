@@ -2772,3 +2772,20 @@ body.webgl-off:not(.webgl-on) .partner__visual::after {
   }
   .roadmap__item--now::before { background: var(--accent); }
 }
+
+/* South African provenance line in the footer */
+.footer__za {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 0.4rem;
+}
+.za-flag {
+  width: 21px;
+  height: 14px;
+  flex: none;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
+}
