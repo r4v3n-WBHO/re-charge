@@ -143,14 +143,15 @@
     <section class="section section--tint" id="sponsor">
       <div class="container container--narrow">
         <div class="section__head">
-          <span class="eyebrow">Sponsor a Bin</span>
+          <span class="eyebrow">Back a Bin</span>
           <h2>Put your name on the solution.</h2>
           <p>
-            Sponsor a collection bin and it goes out into the world carrying your
-            name — <em>"Proudly sponsored by John Smith"</em> or your business's
-            branding. You fund the bin; we place it, service it, and every month
-            we send you a report of exactly how many vapes <strong>your bin</strong>
-            kept out of landfill.
+            You can <a href="store.html" class="inline-link">back a build</a> —
+            or you can back a bin. Fund a collection bin and it goes out into the
+            world carrying your name — <em>"Proudly sponsored by John Smith"</em>
+            or your business's branding. You back the bin; we place it, service
+            it, and every month we send you a report of exactly how many vapes
+            <strong>your bin</strong> kept out of landfill.
           </p>
         </div>
 
@@ -175,7 +176,7 @@
             <input type="email" name="email" required placeholder="you@example.com" />
           </label>
           <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
-          <button type="submit" class="btn btn--primary">Register Sponsorship Interest — Free</button>
+          <button type="submit" class="btn btn--primary">Back a Bin — Register Interest (Free)</button>
           <p class="partner__small">No payment now — this measures interest and reserves your spot if sponsorships launch.</p>
         </form>
         <p class="partner__done" id="sponsorDone" hidden>
@@ -312,7 +313,7 @@
           (live
             ? `${b.venue}${b.hours ? '<br>' + b.hours : ''}<br>` +
               `<a href="https://www.google.com/maps/dir/?api=1&destination=${b.lat},${b.lng}" target="_blank" rel="noopener">Directions →</a>`
-            : `${b.venue}<br>${b.area}<br><a href="#sponsor">Sponsor this bin →</a>`)
+            : `${b.venue}<br>${b.area}<br><a href="#sponsor">Back this bin →</a>`)
         );
         group.push(marker);
       });
