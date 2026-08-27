@@ -24,9 +24,11 @@ navLinks.addEventListener('click', (e) => {
 });
 
 /* ---------- Scrollspy: highlight the nav link for the section in view ---------- */
-const spyLinks = [...document.querySelectorAll('.nav__links a[href^="#"]:not(.btn)')];
+// nav hrefs are canonical across pages ("index.html#concept"), so match on the fragment
+const spyLinks = [...document.querySelectorAll('.nav__links a[href*="#"]:not(.btn)')]
+  .filter((a) => a.getAttribute('href').split('#')[0] in { '': 1, 'index.html': 1 });
 if (spyLinks.length) {
-  const byId = new Map(spyLinks.map((a) => [a.getAttribute('href').slice(1), a]));
+  const byId = new Map(spyLinks.map((a) => [a.getAttribute('href').split('#')[1], a]));
   const spy = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (!entry.isIntersecting) return;
