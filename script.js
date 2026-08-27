@@ -98,6 +98,18 @@ if (window.gsap && !reduceMotion) {
     });
   }
 
+  // Roadmap: the travelled stretch of road draws in up to "You are here"
+  const roadTravel = document.getElementById('roadTravel');
+  if (roadTravel) {
+    const len = roadTravel.getTotalLength();
+    roadTravel.style.strokeDasharray = len;
+    roadTravel.style.strokeDashoffset = len;
+    gsap.to(roadTravel, {
+      strokeDashoffset: 0, ease: 'none',
+      scrollTrigger: { trigger: '#roadmap', start: 'top 80%', end: 'top 40%', scrub: 0.5 },
+    });
+  }
+
   // Gentle parallax on ambient blobs
   gsap.to('.bg__blob--1', {
     yPercent: 30, ease: 'none',
@@ -375,7 +387,10 @@ notifyForm.addEventListener('submit', async (e) => {
 // ledger at launch, and they're the launch-announcement list.
 (function () {
   const KEY = 'recharge-signup';
-  if (localStorage.getItem(KEY)) return;
+  const state = localStorage.getItem(KEY);
+  if (state === 'done' || state === 'dismissed') return;
+  // shown but not answered: snooze for 3 days rather than nag every visit
+  if (state && Date.now() - Number(state) < 3 * 24 * 60 * 60 * 1000) return;
 
   const pop = document.createElement('aside');
   pop.className = 'signup-pop';
@@ -403,6 +418,7 @@ notifyForm.addEventListener('submit', async (e) => {
     clearTimeout(timer);
     removeEventListener('scroll', onScroll);
     pop.classList.add('is-visible');
+    localStorage.setItem(KEY, String(Date.now())); // snooze marker
     window.trackEvent?.('signup-pop-shown');
   }
   const timer = setTimeout(show, 20000);

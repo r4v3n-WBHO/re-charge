@@ -296,14 +296,16 @@
       { id: 'mint-fizz',       name: 'Mint Fizz',       hex: 0x8fd8bd, css: '#8fd8bd' },
     ];
 
-    // cell counts assume ~550 mAh per tested reclaimed vape cell
+    // ~550 mAh per tested reclaimed cell; uniform packs of 5 columns ×
+    // 2 stacked cells × N layers, so 20/40/80 = 11/22/44 Ah — always
+    // above the advertised minimum
     const CAPACITIES = [
-      { id: '10000', mAh: 10000, cells: 19, charges: '≈ 2–4 phone charges', price: 'R599',
+      { id: '10000', mAh: 10000, cells: 20, charges: '≈ 2–4 phone charges', price: 'R599',
         dims: { w: 2.7, h: 4.4, d: 0.95 }, layers: 2, bottles: 3 },
-      { id: '20000', mAh: 20000, cells: 37, charges: '≈ 4–8 phone charges', price: 'R899',
-        dims: { w: 2.7, h: 4.4, d: 1.75 }, layers: 3, bottles: 4 },
-      { id: '40000', mAh: 40000, cells: 73, charges: '≈ 8–16 phone or 2–3 laptop charges', price: 'R1 499',
-        dims: { w: 2.7, h: 4.4, d: 3.35 }, layers: 5, bottles: 6 },
+      { id: '20000', mAh: 20000, cells: 40, charges: '≈ 4–8 phone charges', price: 'R899',
+        dims: { w: 2.7, h: 4.4, d: 1.75 }, layers: 4, bottles: 4 },
+      { id: '40000', mAh: 40000, cells: 80, charges: '≈ 8–16 phone or 2–3 laptop charges', price: 'R1 499',
+        dims: { w: 2.7, h: 4.4, d: 3.35 }, layers: 8, bottles: 6 },
     ];
 
     // reclaimed cells vary in tested capacity, so every pack is quoted as a
@@ -377,11 +379,11 @@
     });
     let shell = null;
 
-    // slim 13mm vape-style cells (pool of 80, lying horizontally, two per row)
+    // slim 13mm vape-style cells (pool of 80, standing upright like a real pack)
     const cellBodyMat = new THREE.MeshStandardMaterial({ color: 0xd9e2de, metalness: 0.9, roughness: 0.3 });
     const cellBandMat = new THREE.MeshStandardMaterial({ color: 0x0e9f7a, metalness: 0.3, roughness: 0.4 });
-    const cellBodyGeom = new THREE.CylinderGeometry(0.185, 0.185, 1.0, 20);
-    const cellBandGeom = new THREE.CylinderGeometry(0.19, 0.19, 0.28, 20);
+    const cellBodyGeom = new THREE.CylinderGeometry(0.185, 0.185, 1.75, 20);
+    const cellBandGeom = new THREE.CylinderGeometry(0.19, 0.19, 0.45, 20);
     const cellNubGeom = new THREE.CylinderGeometry(0.07, 0.07, 0.08, 12);
     const cells = [];
     for (let i = 0; i < 80; i++) {
@@ -389,9 +391,8 @@
       const body = new THREE.Mesh(cellBodyGeom, cellBodyMat);
       const band = new THREE.Mesh(cellBandGeom, cellBandMat);
       const nub = new THREE.Mesh(cellNubGeom, cellBodyMat);
-      nub.position.y = 0.54;
+      nub.position.y = 0.915;
       cell.add(body, band, nub);
-      cell.rotation.z = Math.PI / 2; // lie horizontally
       bank.add(cell);
       cells.push(cell);
     }
@@ -499,18 +500,18 @@
       shell.renderOrder = 2; // draw after cells so they show through when translucent
       bank.add(shell);
 
-      // pack cells: 8 rows × 2 columns per layer, `layers` deep
-      const rowPitch = 0.42, layerPitch = 0.42, PER_LAYER = 16;
+      // uniform pack: 5 columns × 2 stacked upright cells per layer
+      const colPitch = 0.46, layerPitch = 0.41, PER_LAYER = 10;
       for (let n = 0; n < cells.length; n++) {
         const cell = cells[n];
         if (n >= cap.cells) { cell.visible = false; continue; }
         const layer = Math.floor(n / PER_LAYER);
         const idx = n % PER_LAYER;
-        const row = Math.floor(idx / 2), col = idx % 2;
+        const col = idx % 5, stack = Math.floor(idx / 5);
         cell.visible = true;
         cell.position.set(
-          (col - 0.5) * 1.16,
-          (row - 3.5) * rowPitch - 0.25,
+          (col - 2) * colPitch,
+          (stack - 0.5) * 1.86 - 0.15,
           (layer - (cap.layers - 1) / 2) * layerPitch
         );
       }

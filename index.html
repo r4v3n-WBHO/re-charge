@@ -553,6 +553,25 @@
           <span class="eyebrow">The Road Ahead</span>
           <h2>Where this is going.</h2>
         </div>
+        <svg class="roadmap-road" viewBox="0 0 1000 170" preserveAspectRatio="none" aria-hidden="true">
+          <!-- asphalt -->
+          <path class="road-base" d="M 0 132 C 50 130, 70 124, 100 120 C 160 112, 240 58, 300 55 C 360 52, 440 116, 500 120 C 560 124, 640 58, 700 55 C 760 52, 840 116, 900 120 C 940 122, 970 124, 1000 126" />
+          <!-- centre line -->
+          <path class="road-dash" d="M 0 132 C 50 130, 70 124, 100 120 C 160 112, 240 58, 300 55 C 360 52, 440 116, 500 120 C 560 124, 640 58, 700 55 C 760 52, 840 116, 900 120 C 940 122, 970 124, 1000 126" />
+          <!-- travelled so far (draws in on scroll, ends at the Now stop) -->
+          <path class="road-travel" id="roadTravel" d="M 0 132 C 50 130, 70 124, 100 120" />
+          <!-- the road ahead -->
+          <path class="road-ants" d="M 100 120 C 160 112, 240 58, 300 55 C 360 52, 440 116, 500 120 C 560 124, 640 58, 700 55 C 760 52, 840 116, 900 120" />
+          <!-- stops -->
+          <circle class="road-here-pulse" cx="100" cy="120" r="9" />
+          <circle class="road-stop road-here" cx="100" cy="120" r="9" />
+          <circle class="road-stop" cx="300" cy="55" r="7" />
+          <circle class="road-stop" cx="500" cy="120" r="7" />
+          <circle class="road-stop" cx="700" cy="55" r="7" />
+          <circle class="road-stop" cx="900" cy="120" r="7" />
+          <text class="road-label" x="100" y="95" text-anchor="middle">📍 You are here</text>
+          <text class="road-truck" x="900" y="98" text-anchor="middle">🛻</text>
+        </svg>
         <ol class="roadmap">
           <li class="roadmap__item roadmap__item--now reveal-item">
             <span class="roadmap__phase">Now</span>
@@ -1159,23 +1178,26 @@
       body.renderOrder = 2; // draw after cells so they show through when translucent
       bank.add(body);
 
-      // slim reclaimed vape cells inside — same build as the store configurator
+      // slim reclaimed vape cells, standing upright — same pack as the
+      // store configurator's 10 000+ build (5 columns × 2 stacked × 2 layers)
       const cellBodyMat = new THREE.MeshStandardMaterial({ color: 0xd9e2de, metalness: 0.9, roughness: 0.3 });
       const cellBandMat = new THREE.MeshStandardMaterial({ color: 0x0e9f7a, metalness: 0.3, roughness: 0.4 });
-      const cellBodyGeom = new THREE.CylinderGeometry(0.185, 0.185, 2.05, 20);
-      const cellBandGeom = new THREE.CylinderGeometry(0.19, 0.19, 0.5, 20);
+      const cellBodyGeom = new THREE.CylinderGeometry(0.185, 0.185, 1.75, 20);
+      const cellBandGeom = new THREE.CylinderGeometry(0.19, 0.19, 0.45, 20);
       const cellNubGeom = new THREE.CylinderGeometry(0.07, 0.07, 0.08, 12);
-      for (let i = 0; i < 16; i++) {
+      for (let i = 0; i < 20; i++) {
         const cell = new THREE.Group();
         const cbody = new THREE.Mesh(cellBodyGeom, cellBodyMat);
         const band = new THREE.Mesh(cellBandGeom, cellBandMat);
         const nub = new THREE.Mesh(cellNubGeom, cellBodyMat);
-        nub.position.y = 1.06;
+        nub.position.y = 0.915;
         cell.add(cbody, band, nub);
-        cell.rotation.z = Math.PI / 2;
-        const row = i % 8, layer = Math.floor(i / 8);
-        cell.position.y = (row - 3.5) * 0.42 - 0.2;
-        cell.position.z = (layer - 0.5) * 0.42;
+        const col = i % 5, stack = Math.floor(i / 5) % 2, layer = Math.floor(i / 10);
+        cell.position.set(
+          (col - 2) * 0.46,
+          (stack - 0.5) * 1.86 - 0.1,
+          (layer - 0.5) * 0.41
+        );
         bank.add(cell);
       }
       const boardMesh = new THREE.Mesh(
