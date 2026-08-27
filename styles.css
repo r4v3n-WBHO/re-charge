@@ -2818,3 +2818,13 @@ body.webgl-off:not(.webgl-on) .partner__visual::after {
 @media (max-width: 640px) {
   .roadmap { grid-template-columns: 1fr; }
 }
+
+/* micro-captions under the hero flow icons */
+.flow__step small {
+  display: block;
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  margin-top: 0.15rem;
+  max-width: 9.5rem;
+  line-height: 1.35;
+}
