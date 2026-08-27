@@ -122,12 +122,22 @@
           </p>
         </div>
 
+        <div class="configurator">
+          <div class="viewer">
+            <div class="viewer__glow" aria-hidden="true"></div>
+            <canvas id="binPreview" aria-label="3D preview of your sponsored collection bin"></canvas>
+            <span class="viewer__hint">&#8635; Drag to rotate &mdash; your name updates live</span>
+          </div>
+          <div class="options">
         <form class="partner__form" id="sponsorForm" novalidate action="javascript:void(0)" onsubmit="event.preventDefault()">
           <label>Your name or business
             <input type="text" name="sponsor" required placeholder="John Smith / XYZ Business" />
           </label>
           <label>Name to print on the bin <span class="optional">optional</span>
-            <input type="text" name="printName" placeholder="e.g. Proudly sponsored by XYZ" />
+            <input type="text" name="printName" placeholder="e.g. XYZ Business" />
+          </label>
+          <label>Logo <span class="optional">optional &mdash; shows in the preview</span>
+            <input type="file" name="logo" id="logoInput" accept="image/png,image/jpeg,image/webp,image/svg+xml" />
           </label>
           <label>Preferred area <span class="optional">optional</span>
             <input type="text" name="area" placeholder="e.g. Sandton — or 'wherever it helps most'" />
@@ -137,11 +147,13 @@
           </label>
           <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
           <button type="submit" class="btn btn--primary btn--large">Back a Bin — Register Interest (Free)</button>
-          <p class="partner__small">We'll only contact you about your bin. No spam.</p>
+          <p class="partner__small">We'll only contact you about your bin. No spam. Logos are preview-only for now — we'll request the print-ready file by email.</p>
         </form>
         <p class="partner__done" id="sponsorDone" hidden>
           Thank you — you're on the sponsor list. We'll be in touch as the first bins roll out. 🤝♻️
         </p>
+          </div>
+        </div>
 
         <div class="scan__ctas" style="margin-top:2.5rem">
           <p>Want the power bank instead — or as well?</p>
@@ -206,6 +218,7 @@
             printName: sponsorForm.printName.value.trim(),
             area: sponsorForm.area.value.trim(),
             email: sponsorForm.email.value.trim(),
+            logoProvided: !!(document.getElementById('logoInput')?.files?.length),
             submittedAt: new Date().toISOString(),
             _subject: 'Re-Charge: sponsor-interest',
           };
@@ -227,6 +240,216 @@
       });
     });
   </script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+
+    const canvas = document.getElementById('binPreview');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Circular Energy mark (same as the other pages)
+    function drawMark(c, cx, cy, size, color) {
+      const k = size / 64, ox = cx - 32 * k, oy = cy - 32 * k;
+      const rad = (d) => (d * Math.PI) / 180;
+      const rr = (x, y, w, h, r) => {
+        c.beginPath();
+        if (c.roundRect) c.roundRect(x * k + ox, y * k + oy, w * k, h * k, r * k);
+        else c.rect(x * k + ox, y * k + oy, w * k, h * k);
+      };
+      const poly = (pts) => {
+        c.beginPath();
+        pts.forEach(([x, y], i) => c[i ? 'lineTo' : 'moveTo'](x * k + ox, y * k + oy));
+        c.closePath(); c.fill();
+      };
+      c.save();
+      c.strokeStyle = color; c.fillStyle = color; c.lineCap = 'round';
+      c.lineWidth = 5 * k;
+      c.beginPath(); c.arc(32 * k + ox, 32 * k + oy, 24 * k, rad(200), rad(340)); c.stroke();
+      c.beginPath(); c.arc(32 * k + ox, 32 * k + oy, 24 * k, rad(20), rad(160)); c.stroke();
+      poly([[56.95, 30.4], [51.25, 25], [57.85, 22.6]]);
+      poly([[7.05, 33.6], [12.75, 39], [6.15, 41.4]]);
+      rr(28.5, 13, 7, 4.5, 1.5); c.fill();
+      c.lineWidth = 3.2 * k;
+      rr(23, 17, 18, 30, 4); c.stroke();
+      poly([[33.5, 21], [26.5, 33.5], [31.2, 33.5], [30, 43], [37.8, 29.5], [32.8, 29.5]]);
+      c.restore();
+    }
+
+    try {
+      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 50);
+      camera.position.set(0, 0.7, 8.6);
+      scene.add(new THREE.HemisphereLight(0xffffff, 0x9fc4b8, 1.0));
+      const keyLight = new THREE.DirectionalLight(0xffffff, 1.6);
+      keyLight.position.set(4, 6, 5);
+      scene.add(keyLight);
+
+      const bin = new THREE.Group();
+      const green = new THREE.MeshStandardMaterial({ color: 0x1b7a54, roughness: 0.5, metalness: 0.08 });
+      const lidGreen = new THREE.MeshStandardMaterial({ color: 0x14603f, roughness: 0.45, metalness: 0.08 });
+      const dark = new THREE.MeshStandardMaterial({ color: 0x0a1a12, roughness: 0.75 });
+
+      const R_TOP = 1.32, R_BOT = 0.98, BODY_H = 2.7;
+      const body = new THREE.Mesh(new THREE.CylinderGeometry(R_TOP, R_BOT, BODY_H, 4, 1), green);
+      body.rotation.y = Math.PI / 4;
+      bin.add(body);
+      const lid = new THREE.Mesh(new RoundedBoxGeometry(2.05, 0.16, 2.0, 3, 0.06), lidGreen);
+      lid.position.y = BODY_H / 2 + 0.08;
+      bin.add(lid);
+      const ridge = new THREE.Mesh(new RoundedBoxGeometry(2.05, 0.26, 0.6, 3, 0.08), lidGreen);
+      ridge.position.set(0, BODY_H / 2 + 0.27, -0.65);
+      bin.add(ridge);
+      const handleBar = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 1.7, 12), lidGreen);
+      handleBar.rotation.z = Math.PI / 2;
+      handleBar.position.set(0, BODY_H / 2 + 0.44, -0.85);
+      bin.add(handleBar);
+      const slot = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.06, 0.2), dark);
+      slot.position.set(0, BODY_H / 2 + 0.17, 0.55);
+      bin.add(slot);
+      const wheelMat = new THREE.MeshStandardMaterial({ color: 0x111614, roughness: 0.8 });
+      [-0.62, 0.62].forEach((x) => {
+        const wheel = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.34, 0.16, 24), wheelMat);
+        wheel.rotation.z = Math.PI / 2;
+        wheel.position.set(x, -BODY_H / 2 - 0.08, -0.62);
+        bin.add(wheel);
+      });
+
+      // front label, redrawn live with the sponsor's name (and logo)
+      const lbl = document.createElement('canvas');
+      lbl.width = 512; lbl.height = 700;
+      const lc = lbl.getContext('2d');
+      const lblTex = new THREE.CanvasTexture(lbl);
+      lblTex.colorSpace = THREE.SRGBColorSpace;
+      let logoImg = null;
+
+      function drawLabel(name) {
+        lc.clearRect(0, 0, 512, 700);
+        lc.textAlign = 'center';
+        lc.fillStyle = '#ffffff';
+        lc.font = '700 46px "Space Grotesk", sans-serif';
+        lc.fillText('RE-CHARGE', 256, 66);
+        drawMark(lc, 256, 150, 105, '#ffffff');
+        lc.font = '600 24px "Inter", sans-serif';
+        lc.fillStyle = 'rgba(255,255,255,0.9)';
+        lc.fillText("DON'T BIN YOUR VAPE. DROP IT HERE.", 256, 258);
+        // stylised QR
+        const q = 12, cell = 8, qs = q * cell, qx = 256 - qs / 2, qy = 292;
+        lc.fillStyle = '#ffffff';
+        lc.fillRect(qx - 7, qy - 7, qs + 14, qs + 14);
+        lc.fillStyle = '#0a1a12';
+        for (let i = 0; i < q; i++) for (let j = 0; j < q; j++) {
+          if ((i * 7 + j * 5 + ((i * j) % 4)) % 3 === 0) lc.fillRect(qx + i * cell, qy + j * cell, cell, cell);
+        }
+        [[0, 0], [q - 3, 0], [0, q - 3]].forEach(([fi, fj]) => {
+          lc.fillRect(qx + fi * cell, qy + fj * cell, 3 * cell, 3 * cell);
+          lc.fillStyle = '#ffffff';
+          lc.fillRect(qx + fi * cell + cell * 0.75, qy + fj * cell + cell * 0.75, cell * 1.5, cell * 1.5);
+          lc.fillStyle = '#0a1a12';
+        });
+        // sponsor plate — the printed sticker with their name/logo
+        lc.fillStyle = '#ffffff';
+        lc.beginPath();
+        if (lc.roundRect) lc.roundRect(46, 430, 420, 200, 18); else lc.rect(46, 430, 420, 200);
+        lc.fill();
+        let textY = 520;
+        if (logoImg) {
+          const maxW = 300, maxH = 86;
+          const sc = Math.min(maxW / logoImg.width, maxH / logoImg.height);
+          const w = logoImg.width * sc, h = logoImg.height * sc;
+          lc.drawImage(logoImg, 256 - w / 2, 444, w, h);
+          textY = 566;
+        }
+        lc.fillStyle = '#0a1a12';
+        lc.font = '700 17px "Inter", sans-serif';
+        lc.fillText('PROUDLY SPONSORED BY', 256, textY);
+        const clean = (name || 'You').replace(/^\s*proudly\s+sponsored\s+by\s*/i, '').trim() || 'You';
+        let px = 34;
+        lc.font = '700 ' + px + 'px "Space Grotesk", sans-serif';
+        while (lc.measureText(clean).width > 380 && px > 16) {
+          px -= 2;
+          lc.font = '700 ' + px + 'px "Space Grotesk", sans-serif';
+        }
+        lc.fillText(clean, 256, textY + 42);
+        lc.fillStyle = 'rgba(255,255,255,0.85)';
+        lc.font = '600 24px "Inter", sans-serif';
+        lc.fillText('re-charge.co.za', 256, 672);
+        lblTex.needsUpdate = true;
+      }
+      drawLabel('');
+
+      const label = new THREE.Mesh(
+        new THREE.PlaneGeometry(1.3, 1.78),
+        new THREE.MeshBasicMaterial({ map: lblTex, transparent: true, depthWrite: false })
+      );
+      const faceTilt = Math.atan(((R_TOP - R_BOT) * 0.7071) / BODY_H);
+      label.rotation.x = -faceTilt;
+      label.position.set(0, -0.05, ((R_TOP + R_BOT) / 2) * 0.7071 + 0.02);
+      label.renderOrder = 3;
+      bin.add(label);
+
+      bin.rotation.y = -0.35;
+      scene.add(bin);
+
+      // live wiring: name fields + logo upload
+      const form = document.getElementById('sponsorForm');
+      const currentName = () => form.printName.value.trim() || form.sponsor.value.trim();
+      ['sponsor', 'printName'].forEach((n) => {
+        form[n].addEventListener('input', () => drawLabel(currentName()));
+      });
+      document.getElementById('logoInput').addEventListener('change', (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) { logoImg = null; drawLabel(currentName()); return; }
+        const url = URL.createObjectURL(file);
+        const img = new Image();
+        img.onload = () => { logoImg = img; drawLabel(currentName()); URL.revokeObjectURL(url); };
+        img.onerror = () => URL.revokeObjectURL(url);
+        img.src = url;
+      });
+
+      const controls = new OrbitControls(camera, canvas);
+      controls.enableZoom = false;
+      controls.enablePan = false;
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.06;
+      controls.autoRotate = !reduceMotion;
+      controls.autoRotateSpeed = 1.2;
+      canvas.style.touchAction = 'pan-y';
+
+      function fit() {
+        const w = canvas.clientWidth, h = canvas.clientHeight;
+        if (!w || !h) return;
+        renderer.setSize(w, h, false);
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+      }
+      window.addEventListener('resize', fit);
+      fit();
+
+      const clock = new THREE.Clock();
+      (function loop() {
+        requestAnimationFrame(loop);
+        if (!reduceMotion) bin.position.y = Math.sin(clock.getElapsedTime() * 1.1) * 0.07;
+        controls.update();
+        renderer.render(scene, camera);
+      })();
+    } catch (e) {
+      // no WebGL / CDN blocked: the form works fine without the preview
+      canvas.closest('.viewer')?.remove();
+    }
+  </script>
+
   <script data-goatcounter="https://revan-lombard.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
 </body>

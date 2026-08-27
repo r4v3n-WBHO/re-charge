@@ -2782,7 +2782,7 @@ body.webgl-off:not(.webgl-on) .partner__visual::after {
   justify-content: center;
   gap: 0.35rem 1.6rem;
   font-size: 0.85rem;
-  color: var(--text-muted);
+  color: var(--text-light-muted); /* dark footer needs the light muted tone */
 }
 .footer__small span { display: inline-flex; align-items: center; gap: 0.5rem; }
 .za-flag {
@@ -2814,3 +2814,17 @@ body.webgl-off:not(.webgl-on) .partner__visual::after {
   .backabin { padding: 1.3rem; }
   .backabin .btn { width: 100%; text-align: center; }
 }
+
+/* tertiary hero path for cold visitors */
+.hero__how {
+  display: inline-block;
+  margin-top: 1.1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--border);
+  padding-bottom: 2px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.hero__how:hover { color: var(--accent-strong); border-color: var(--accent); }
