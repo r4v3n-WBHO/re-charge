@@ -78,8 +78,13 @@ the `main` branch root.
       through the WBHO proxy can't be trusted to match origin bytes, and a
       wrong hash would block GSAP for all visitors. Add them from an
       unproxied machine if wanted.
-- [ ] Sanity-check the indicative pre-order prices (R399/R599/R899) and
-      rewards points values (50 RP/vape; 500/1000/2000 RP tiers)
+- [ ] Sanity-check the indicative pre-order prices (R599/R899/R1 499),
+      rewards points values (50 RP/vape; 500/1000/2000 RP tiers) and the
+      bin-sponsorship price (R2 500/bin/first year, bins.html#sponsor)
+- [ ] **Sponsor monthly impact reports** when bins are live: per-bin deposit
+      counts come straight from the rewards Sheet's Deposits tab (filter by
+      binId + month). Automate later with an Apps Script time trigger that
+      emails each sponsor their bin's count on the 1st.
 - [ ] **Legal review before anything is sold or any live rewards programme
       runs** — reclaimed-battery liability disclaimers cannot waive strict
       product liability under the Consumer Protection Act (s61); promotional
