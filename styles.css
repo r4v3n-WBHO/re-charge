@@ -2504,6 +2504,7 @@ body.webgl-off:not(.webgl-on) .partner__visual::after {
   .nav__links.is-open a:nth-child(4) { transition-delay: 0.2s; }
   .nav__links.is-open a:nth-child(5) { transition-delay: 0.25s; }
   .nav__links.is-open a:nth-child(6) { transition-delay: 0.3s; }
+  .nav__links.is-open a:nth-child(7) { transition-delay: 0.35s; }
   .nav__links a.btn { text-align: center; margin-top: 0.55rem; }
 
   .nav__toggle { display: flex; }
@@ -2790,4 +2791,26 @@ body.webgl-off:not(.webgl-on) .partner__visual::after {
   flex: none;
   border-radius: 2px;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
+}
+
+/* Back a Bin teaser strip (sibling offer under the partner block) */
+.backabin {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+  padding: 1.5rem 1.8rem;
+  background: #fff;
+  border: 1px solid rgba(14, 159, 122, 0.35);
+  border-radius: var(--radius);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.backabin h3 { margin-bottom: 0.4rem; }
+.backabin p { color: var(--text-muted); font-size: 0.95rem; max-width: 38rem; }
+.backabin .btn { white-space: nowrap; }
+@media (max-width: 640px) {
+  .backabin { padding: 1.3rem; }
+  .backabin .btn { width: 100%; text-align: center; }
 }
