@@ -141,49 +141,19 @@
       </div>
     </section>
 
-    <!-- ============ SPONSOR A BIN ============ -->
+    <!-- Back a Bin teaser (full offer lives on back-a-bin.html) -->
     <section class="section section--tint" id="sponsor">
       <div class="container container--narrow">
-        <div class="section__head">
-          <span class="eyebrow">Back a Bin</span>
-          <h2>Put your name on the solution.</h2>
-          <p>
-            You can <a href="store.html" class="inline-link">back a build</a> —
-            or you can back a bin. Fund a collection bin and it goes out into the
-            world carrying your name — <em>"Proudly sponsored by John Smith"</em>
-            or your business's branding. You back the bin; we place it, service
-            it, and every month we send you a report of exactly how many vapes
-            <strong>your bin</strong> kept out of landfill.
-          </p>
+        <div class="backabin">
+          <div>
+            <h3>🤝 Put your name on one of these bins</h3>
+            <p>
+              A once-off <strong>R999</strong> and a bin goes out into the world
+              carrying your name — plus a monthly report of every vape it saves.
+            </p>
+          </div>
+          <a href="back-a-bin.html" class="btn btn--primary magnetic">Back a Bin →</a>
         </div>
-
-        <ul class="partner__points">
-          <li>Your name or brand printed on the bin — and shown on this map next to its pin</li>
-          <li>A monthly impact report: vapes collected, batteries reclaimed, landfill avoided</li>
-          <li>Pick a location that matters to you, or let us place it where it works hardest</li>
-          <li>Indicative cost: a once-off <strong>R999</strong> — your name on the bin for its lifetime, with collections included for as long as the programme runs. Final pricing set with the pilot</li>
-        </ul>
-
-        <form class="partner__form" id="sponsorForm" novalidate action="javascript:void(0)" onsubmit="event.preventDefault()">
-          <label>Your name or business
-            <input type="text" name="sponsor" required placeholder="John Smith / XYZ Business" />
-          </label>
-          <label>Name to print on the bin <span class="optional">optional</span>
-            <input type="text" name="printName" placeholder="e.g. Proudly sponsored by XYZ" />
-          </label>
-          <label>Preferred area <span class="optional">optional</span>
-            <input type="text" name="area" placeholder="e.g. Sandton — or 'wherever it helps most'" />
-          </label>
-          <label>Email
-            <input type="email" name="email" required placeholder="you@example.com" />
-          </label>
-          <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
-          <button type="submit" class="btn btn--primary">Back a Bin — Register Interest (Free)</button>
-          <p class="partner__small">No payment now — this measures interest and reserves your spot if sponsorships launch.</p>
-        </form>
-        <p class="partner__done" id="sponsorDone" hidden>
-          Thank you — you're on the sponsor list. We'll be in touch as the first bins roll out. 🤝♻️
-        </p>
       </div>
     </section>
   </main>
@@ -248,41 +218,6 @@
         list.appendChild(div);
       });
 
-      // ---- sponsor interest form ----
-      const sponsorForm = document.getElementById('sponsorForm');
-      sponsorForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        if (!sponsorForm.sponsor.value.trim() || !sponsorForm.email.checkValidity()) {
-          (sponsorForm.sponsor.value.trim() ? sponsorForm.email : sponsorForm.sponsor).focus();
-          return;
-        }
-        if (!sponsorForm.website.value) {
-          const data = {
-            type: 'sponsor-interest',
-            sponsor: sponsorForm.sponsor.value.trim(),
-            printName: sponsorForm.printName.value.trim(),
-            area: sponsorForm.area.value.trim(),
-            email: sponsorForm.email.value.trim(),
-            submittedAt: new Date().toISOString(),
-            _subject: 'Re-Charge: sponsor-interest',
-          };
-          const ep = (window.RECHARGE_CONFIG || {}).FEEDBACK_ENDPOINT;
-          try {
-            if (!ep) throw new Error('no endpoint');
-            await fetch(ep, ep.includes('script.google.com')
-              ? { method: 'POST', body: JSON.stringify(data) }
-              : { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(data) });
-          } catch {
-            const stored = JSON.parse(localStorage.getItem('recharge-feedback') || '[]');
-            stored.push(data);
-            localStorage.setItem('recharge-feedback', JSON.stringify(stored));
-          }
-        }
-        sponsorForm.hidden = true;
-        document.getElementById('sponsorDone').hidden = false;
-        window.trackEvent?.('sponsor-interest');
-      });
-
       // ---- map (degrades gracefully if Leaflet/tiles can't load) ----
       if (typeof L === 'undefined' || !bins.length) return;
       document.getElementById('mapFallback').hidden = true;
@@ -316,7 +251,7 @@
           (live
             ? `${b.venue}${b.hours ? '<br>' + b.hours : ''}<br>` +
               `<a href="https://www.google.com/maps/dir/?api=1&destination=${b.lat},${b.lng}" target="_blank" rel="noopener">Directions →</a>`
-            : `${b.venue}<br>${b.area}<br><a href="#sponsor">Back this bin →</a>`)
+            : `${b.venue}<br>${b.area}<br><a href="back-a-bin.html">Back this bin →</a>`)
         );
         group.push(marker);
       });
