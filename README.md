@@ -18,7 +18,8 @@ if the CDN is unreachable the site degrades gracefully (content stays visible,
   draggable Re-Charge One power bank mockup)
 - `store.html` — car-style configurator: pick a recycled-bottle enclosure
   colour (live 3D recolour) and capacity (shows the reclaimed cells inside via
-  an x-ray view), then pre-order free — no payment taken. Submissions are
+  an x-ray view), then "Back the Build" — a free demand vote, no payment
+  taken (user-facing copy avoids "pre-order"). Submissions are still
   tagged `type: 'preorder'` with the chosen config and a required
   reclaimed-cells acknowledgment. Includes the "Safety, honestly" commitments
   section.

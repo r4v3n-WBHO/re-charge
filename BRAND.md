@@ -57,7 +57,10 @@ Gradient: `linear-gradient(135deg, #0e9f7a, #12c493)` for buttons/mark fills.
 - *Don't bin it. Re-Charge it.* — collection/rewards messaging
 - *Waste in. Power out.* — product messaging
 - *Built from what you threw away.* — Re-Charge One messaging
-- *A pre-order is a vote.* — validation/backing messaging
+- *Backing is a vote.* — validation/backing messaging. The demand mechanic is
+  named **Back the Build** (free, no payment, no obligation — "tell us you'd
+  buy one; if enough people back it, we build it"); avoid "pre-order" in
+  user-facing copy, it implies a conventional paid order.
 - *Don't bin your vape. Drop it here.* — printed on collection bins
 - *Recover. Reuse. Re-Charge.* — bin/loop messaging, pairs with the marquee chant
 - *Built for a second life.* — product & bin messaging

@@ -205,7 +205,7 @@ form.addEventListener('submit', async (e) => {
   thanks.hidden = false;
   window.burstBolts?.();
   window.trackEvent?.('feedback-submitted');
-  // positive sentiment → nudge toward the strongest signal: a free pre-order
+  // positive sentiment → nudge toward the strongest signal: backing the build
   if (/^(Great idea|Interesting)/.test(data.idea || '')) {
     document.getElementById('feedbackNudge').hidden = false;
   }
@@ -217,7 +217,7 @@ form.addEventListener('submit', async (e) => {
 
 /* ---------- Share buttons ---------- */
 const shareUrl = location.origin + location.pathname;
-const shareText = "What if your dead vape could get a second life? Re-Charge is a concept turning vape waste into power banks — pre-orders decide if it gets built.";
+const shareText = "What if your dead vape could get a second life? Re-Charge is a concept turning vape waste into power banks — backers decide if it gets built.";
 
 const wa = document.getElementById('shareWhatsApp');
 if (wa) {
@@ -451,11 +451,20 @@ notifyForm.addEventListener('submit', async (e) => {
 
 /* ---------- social proof: shown only once the numbers are worth showing ---------- */
 (function () {
-  const el = document.getElementById('heroProof');
   const c = (window.RECHARGE_CONFIG || {}).PUBLIC_COUNTS;
-  if (!el || !c || !(c.builds >= 10)) return;
-  el.textContent = '⚡ ' + c.builds.toLocaleString('en-ZA') + ' builds backed' +
-    (c.bins > 0 ? ' · ' + c.bins.toLocaleString('en-ZA') + ' bins claimed' : '') +
-    ' — join them';
-  el.hidden = false;
+  if (!c || !(c.builds >= 10)) return;
+
+  const el = document.getElementById('heroProof');
+  if (el) {
+    el.textContent = '⚡ ' + c.builds.toLocaleString('en-ZA') + ' builds backed' +
+      (c.bins > 0 ? ' · ' + c.bins.toLocaleString('en-ZA') + ' bins claimed' : '') +
+      ' — join them';
+    el.hidden = false;
+  }
+
+  // demand counters ("N people want one") next to the product CTA
+  document.querySelectorAll('[data-demand-builds]').forEach((node) => {
+    node.textContent = '⚡ ' + c.builds.toLocaleString('en-ZA') + ' people want one';
+    node.hidden = false;
+  });
 })();

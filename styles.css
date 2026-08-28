@@ -737,6 +737,59 @@ h1 .line > span { display: inline-block; }
 .step h3 { margin-bottom: 0.5rem; }
 .step p { color: var(--text-muted); font-size: 0.94rem; }
 
+/* Meet the Cell: six-step variant of the steps grid (two rows of three) */
+.steps--cell { grid-template-columns: repeat(3, 1fr); padding-top: 0; }
+.steps--cell .steps__track,
+.steps--cell .step::before { display: none; }
+
+/* ---------- Business loop ---------- */
+
+.bizloop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem 0.7rem;
+  margin: 0 0 2.2rem;
+}
+
+.bizloop__node {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.5rem 1.1rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  box-shadow: var(--shadow);
+  white-space: nowrap;
+}
+
+.bizloop__node--return {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent-strong);
+  font-style: italic;
+  font-weight: 500;
+}
+
+.bizloop__arrow {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+#business-model .cards { margin-bottom: 1.6rem; }
+
+/* demand counter (“N people want one”) — hidden until worth showing */
+.product__demand,
+.store__demand {
+  display: inline-block;
+  margin-top: 0.6rem;
+  font-weight: 600;
+  color: var(--accent-strong);
+  font-size: 0.95rem;
+}
+
 .disclaimer {
   margin-top: 2.4rem;
   text-align: center;

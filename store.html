@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Back a Build — Re-Charge One Configurator</title>
-  <meta name="description" content="Back the Re-Charge One concept: configure a power bank built from waste and cast a free pre-order vote. Pre-orders decide whether it gets built — no payment taken." />
+  <title>Back the Build — Re-Charge One Configurator</title>
+  <meta name="description" content="Back the Build: configure a Re-Charge One power bank built from waste and cast a free vote — no payment, no obligation. If enough people back it, we build it." />
   <link rel="canonical" href="https://re-charge.co.za/store.html" />
   <meta property="og:url" content="https://re-charge.co.za/store.html" />
-  <meta property="og:title" content="Back Your Re-Charge One — A Pre-Order Is a Vote" />
-  <meta property="og:description" content="Configure a power bank built from waste — reclaimed vape cells, recycled-bottle shell — and cast a free pre-order vote. No payment taken." />
+  <meta property="og:title" content="Back the Build — Your Re-Charge One, Your Vote" />
+  <meta property="og:description" content="Configure a power bank built from waste — reclaimed vape cells, recycled-bottle shell — and back the build for free. No payment, no obligation." />
   <meta property="og:image" content="https://re-charge.co.za/store-og.png" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -65,13 +65,13 @@
     <section class="section store" id="configure">
       <div class="container">
         <div class="store__head">
-          <span class="pill"><span class="pill__dot" aria-hidden="true"></span> A pre-order is a vote, not a purchase</span>
-          <h1>Back your Re-Charge One.</h1>
+          <span class="pill"><span class="pill__dot" aria-hidden="true"></span> Back the Build — free, no payment, no obligation</span>
+          <h1>Back the Build.</h1>
           <p class="lead">
-            We're not selling anything yet — pre-orders are how we decide. Configure
-            the power bank you'd actually want, built from waste: reclaimed vape cells
-            inside, a recycled-bottle shell outside. If enough people back a build,
-            we make it real.
+            Tell us you'd buy one if the Re-Charge One becomes available — if enough
+            people back it, we build it. Configure the power bank you'd actually
+            want, built from waste: reclaimed vape cells inside, a recycled-bottle
+            shell outside. Your backing is a vote, not a purchase.
           </p>
         </div>
 
@@ -81,6 +81,7 @@
           <span>🧴 Shell 3D-printed from recycled bottles</span>
           <span>🗳️ Built only if enough people back it</span>
         </div>
+        <p class="store__demand" data-demand-builds hidden></p>
 
         <div class="configurator">
           <!-- 3D viewer -->
@@ -145,13 +146,13 @@
                 <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
                 <button type="submit" class="btn btn--primary btn--large btn--full">Cast My Vote — Back This Build</button>
                 <p class="preorder__small">
-                  A pre-order is a free, non-binding vote with your name on it. No
-                  payment details are taken and you can walk away at any time. If
-                  enough people back a build, Re-Charge becomes real — and you'll be
+                  Backing the build is a free, non-binding vote with your name on it.
+                  No payment details are taken and you can walk away at any time. If
+                  enough people back the build, Re-Charge becomes real — and you'll be
                   first in line at the estimated price.
                 </p>
                 <p class="preorder__small">
-                  <strong>Honest timeline:</strong> if enough people back a build, we'd
+                  <strong>Honest timeline:</strong> if enough people back the build, we'd
                   target a first prototype run in 2027. We'll email real progress —
                   or tell you straight if it doesn't work out.
                 </p>
@@ -196,7 +197,7 @@
 
         <p class="disclaimer store__disclaimer">
           Re-Charge One is a concept product and is not yet in production. Renders are
-          conceptual. Pre-orders are expressions of interest only — no payment is taken,
+          conceptual. Backings are expressions of interest only — no payment is taken,
           no contract is formed, and estimated prices may change. Any future product
           using reclaimed cells would be clearly labelled and sold only after
           independent safety testing and certification.
@@ -204,11 +205,11 @@
       </div>
     </section>
 
-    <!-- ============ HOW PRE-ORDERING WORKS ============ -->
+    <!-- ============ HOW BACKING THE BUILD WORKS ============ -->
     <section class="section section--tint">
       <div class="container">
         <div class="section__head section__head--center" style="margin-bottom:2.4rem">
-          <h2>How backing a build works.</h2>
+          <h2>How backing the build works.</h2>
         </div>
         <div class="cards">
           <div class="card">
@@ -219,12 +220,12 @@
           <div class="card">
             <div class="card__icon">🗳️</div>
             <h3>2. Cast your vote</h3>
-            <p>Leave your email. No payment, no card details, no commitment — a pre-order is a vote, not a purchase.</p>
+            <p>Leave your email. No payment, no card details, no commitment — backing is a vote, not a purchase.</p>
           </div>
           <div class="card">
             <div class="card__icon">🚀</div>
             <h3>3. We build if you believe</h3>
-            <p>Backing is how we measure real demand — it's a signal, not a guaranteed order. If enough people back a build, Re-Charge goes from concept to reality, and you'll be the first to know.</p>
+            <p>Backing is how we measure real demand — it's a signal, not a guaranteed order. If enough people back the build, Re-Charge goes from concept to reality, and you'll be the first to know.</p>
           </div>
         </div>
       </div>
@@ -239,10 +240,11 @@
             <p>
               A once-off <strong>R999</strong> puts a collection bin out into the
               world with your name on it — plus a monthly report of every vape it
-              saves from landfill.
+              saves from landfill. Register your interest now; no payment is taken
+              until the collection programme launches.
             </p>
           </div>
-          <a href="back-a-bin.html" class="btn btn--primary magnetic">Back a Bin →</a>
+          <a href="back-a-bin.html" class="btn btn--primary magnetic">Reserve My Bin →</a>
         </div>
       </div>
     </section>
@@ -294,6 +296,16 @@
       const open = navLinks.classList.toggle('is-open');
       navToggle.setAttribute('aria-expanded', String(open));
     });
+
+    // demand counter — same gating as the homepage: hidden until builds >= 10
+    (function () {
+      const c = (window.RECHARGE_CONFIG || {}).PUBLIC_COUNTS;
+      if (!c || !(c.builds >= 10)) return;
+      document.querySelectorAll('[data-demand-builds]').forEach((node) => {
+        node.textContent = '⚡ ' + c.builds.toLocaleString('en-ZA') + ' people want one';
+        node.hidden = false;
+      });
+    })();
   </script>
 
   <script type="importmap">
